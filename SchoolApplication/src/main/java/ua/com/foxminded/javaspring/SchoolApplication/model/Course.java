@@ -17,6 +17,10 @@ public class Course extends Entity<Long> {
 
 	}
 
+	public Course() {
+
+	}
+
 	public String getTitle() {
 		return title;
 	}

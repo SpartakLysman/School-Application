@@ -13,7 +13,7 @@ public class Student extends User {
 
 	public Student(long group_id, String name, String surname, String login, String passsword) {
 
-		super(name, surname, login, passsword);
+		super(group_id, name, surname, login, passsword);
 		this.group_id = group_id;
 
 	}
@@ -25,12 +25,6 @@ public class Student extends User {
 	}
 
 	public Student() {
-
-	}
-
-	public long getGroupId() {
-
-		return group_id;
 
 	}
 }

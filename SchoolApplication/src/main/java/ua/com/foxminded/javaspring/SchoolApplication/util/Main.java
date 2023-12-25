@@ -1,6 +1,6 @@
 package ua.com.foxminded.javaspring.SchoolApplication.util;
 
-import ua.com.foxminded.javaspring.SchoolApplication.dao.DaoFactory;
+import ua.com.foxminded.javaspring.SchoolApplication.dao.dao.DaoFactory;
 
 public class Main {
 

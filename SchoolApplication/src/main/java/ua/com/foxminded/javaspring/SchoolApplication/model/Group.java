@@ -1,26 +1,30 @@
 package ua.com.foxminded.javaspring.SchoolApplication.model;
 
 public class Group extends Entity<Long> {
-	private String name;
+	private String title;
 
-	public Group(long id, String name) {
+	public Group(long id, String title) {
 
 		super(id);
-		this.name = name;
+		this.title = title;
 
 	}
 
-	public String getName() {
-		return name;
+	public Group() {
+
 	}
 
-	public void setName(String newName) {
-		name = newName;
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String newTitle) {
+		title = newTitle;
 	}
 
 	public String toString() {
 
-		return "Name: " + name;
+		return "Title" + title;
 
 	}
 }
