@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import ua.com.foxminded.javaspring.SchoolApplication.util.Application;
+
 @TestConfiguration(proxyBeanMethods = false)
 public class TestSchoolApplication {
 
@@ -17,7 +19,7 @@ public class TestSchoolApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.from(SchoolApplication::main).with(TestSchoolApplication.class).run(args);
+		SpringApplication.from(Application::main).with(TestSchoolApplication.class).run(args);
 	}
 
 }

@@ -1,8 +1,11 @@
 package ua.com.foxminded.javaspring.SchoolApplication;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
+import javax.sql.DataSource;
+
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.test.context.jdbc.Sql;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlStudentDao;
@@ -18,10 +23,10 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Sql(scripts = { "/sql/clear_tables.sql",
-		"/sql/sample_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = { "/sql/clear_tables.sql", "/sql/Database.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 
 @SpringBootTest
+//@RunWith(Application.class)
 public class JDBCStudentDaoTest {
 
 	@Autowired
@@ -34,63 +39,69 @@ public class JDBCStudentDaoTest {
 
 	}
 
-	/*
-	 * @Test public void testFindAll() { List<Entity> expectedList =
-	 * entities().map(studentDao::save) .filter(student ->
-	 * student.getName().equals("Stark")).toList();
-	 * 
-	 * List<Entity> actualList = studentDao.findByName("Stark");
-	 * 
-	 * Assert.assertEquals(expectedList, actualList); }
-	 */
+	@Test
+	public void studentsCount() {
+		DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
+				.addScript("classpath:jdbc/schema.sql").addScript("classpath:jdbc/test-data.sql").build();
+
+		studentDao.setDataSource(dataSource);
+
+		assertEquals(200, studentDao.getCountOfStudents());
+
+	}
+
+	@Test
+	public void createStudent() {
+		Student student = new Student(201, 7, "Ivan", "Nenkovskiy", "1201", "two-hundred-first");
+		boolean isCreated = studentDao.create(student);
+
+		assertEquals(true, isCreated);
+
+	}
+
+	@Test
+	public void deleteStudent() {
+		Student student = new Student(109, 6, "Harper", "Daniels", "1109", "one-hundred-ninth");
+		boolean isDeleted = studentDao.delete(student);
+
+		assertEquals(true, isDeleted);
+
+	}
+
+	@Test
+	public void updateStudent() {
+		Student student = new Student(109, 6, "Harper", "Daniels", "1109", "one-hundred-ninth");
+
+		boolean isUpdated = studentDao.update(student);
+
+		assertEquals(true, isUpdated);
+
+	}
 
 	@Test
 	public void testFindByName() {
-		List<Entity> expectedList = entities().map(studentDao::save).filter(student -> student.getName().equals("Mia"))
-				.toList();
+		DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
+				.addScript("classpath:jdbc/schema.sql").addScript("classpath:jdbc/test-data.sql").build();
+		studentDao.setDataSource(dataSource);
 
-		List<Entity> actualList = studentDao.findByName("Mia");
+		List<Student> expectedList = studentDao.findByName("Mia");
 
-		Assert.assertEquals(expectedList, actualList);
+		assertEquals(expectedList.size(), 7);
+		assertEquals(expectedList.get(0).getName(), "Mia");
 	}
 
 	@Test
 	public void testFindById() {
-		Student expectedList = entities().map(studentDao::save).filter(student -> student.getKey.equalsIgnoreCase(60L))
-				.toList();
+		Student expected = studentDao.findById(3L);
 
-		Student actualList = studentDao.findById(2L);
-		Assert.assertEquals(expectedList, actualList);
+		assertEquals(expected.getName(), "Mason");
+		assertEquals(expected.getSurname(), "Cooper");
 	}
-	/*
-	 * @Test public void testCreate() { List<Student> expectedList =
-	 * entities().map(repository::save) .filter(student ->
-	 * student.getLastName().equals("Stark")).toList();
-	 * 
-	 * List<Student> actualList = repository.findByLastName("Stark");
-	 * 
-	 * Assert.assertEquals(expectedList, actualList); }
-	 * 
-	 * @Test public void testDelete() { List<Student> expectedList =
-	 * entities().map(repository::save) .filter(student ->
-	 * student.getLastName().equalsIgnoreCase("Stark")).toList();
-	 * 
-	 * List<Student> actualList = repository.findByLastNameIgnoreCase("Stark");
-	 * Assert.assertEquals(expectedList, actualList); }
-	 * 
-	 * 
-	 * @Test public void testUpdate() { List<Student> expectedList =
-	 * entities().map(repository::save) .filter(student ->
-	 * student.getLastName().equalsIgnoreCase("Stark")).toList();
-	 * 
-	 * List<Student> actualList = repository.findByLastNameIgnoreCase("Stark");
-	 * Assert.assertEquals(expectedList, actualList); }
-	 */
 
-	/*
-	 * private Stream<Student> entities() { return Stream.of(new Student(null,
-	 * "Arya", "Stark", 2023), new Student(null, "Jon", "Snow", 2023), new
-	 * Student(null, "Rob", "Stark", 2023), new Student(null, "Ned", "stark",
-	 * 2023)); }
-	 */
+	@Test
+	void findAlStudents() {
+		List<Entity> actualList = studentDao.findAll();
+
+		assertEquals(actualList.size(), 200);
+	}
 }
