@@ -11,5 +11,8 @@ public interface StudentDao extends DAO<User, Long> {
 
 	Student findById(Long key);
 
+	boolean ifExistFindById(Long key);
+
 	List<Student> findByName(String name);
+
 }

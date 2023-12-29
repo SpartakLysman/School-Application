@@ -10,10 +10,10 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.DaoException;
-import ua.com.foxminded.javaspring.SchoolApplication.db.dao.DaoFactory;
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.StudentDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
@@ -23,7 +23,6 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.User;
 @Service
 public class PostgreSqlStudentDao implements StudentDao {
 
-	private DaoFactory daoFactory = new DaoFactory();
 	private static Logger log = Logger.getLogger(PostgreSqlStudentDao.class.getName());
 	private DataSource dataSource;
 
@@ -41,7 +40,8 @@ public class PostgreSqlStudentDao implements StudentDao {
 			+ " where students.name = ? ";
 	private final String SQL_FIND_ALL = "select students.* " + " from application.students ";
 
-	public PostgreSqlStudentDao(JdbcTemplate jdbcTemplate) {
+	public PostgreSqlStudentDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+			StudentMapper studentMapper) {
 
 		this.jdbcTemplate = jdbcTemplate;
 
@@ -92,6 +92,11 @@ public class PostgreSqlStudentDao implements StudentDao {
 
 	public boolean delete(User student) {
 		return jdbcTemplate.update(SQL_DELETE_STUDENT, student.getKey()) > 0;
+	}
+
+	@Override
+	public boolean ifExistFindById(Long key) {
+		return jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_ID, new Object[] { key }, new StudentMapper()) != null;
 	}
 
 	@Override

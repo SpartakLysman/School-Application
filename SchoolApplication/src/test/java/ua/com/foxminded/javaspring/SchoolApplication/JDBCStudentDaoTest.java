@@ -1,7 +1,10 @@
 package ua.com.foxminded.javaspring.SchoolApplication;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -11,97 +14,94 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 
+import ua.com.foxminded.javaspring.SchoolApplication.db.dao.DaoException;
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlStudentDao;
-import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
+import ua.com.foxminded.javaspring.SchoolApplication.model.StudentMapper;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(scripts = { "/sql/clear_tables.sql", "/sql/Database.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 
-@SpringBootTest
-//@RunWith(Application.class)
+@JdbcTest
+@ContextConfiguration(classes = { PostgreSqlStudentDao.class, StudentMapper.class })
+@ActiveProfiles("test")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class JDBCStudentDaoTest {
 
 	@Autowired
+	private DataSource dataSource;
+	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	private PostgreSqlStudentDao studentDao;
+	@Autowired
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	@Autowired
+	private StudentMapper studentMapper;
+
+	private PostgreSqlStudentDao postgreSqlStudentDao;
+	private List<Student> studentList;
+	private Student studentFirst;
+	private Student studentTest;
+
+	{
+		studentList = new ArrayList<>();
+		for (int i = 1; i < 200; i++) {
+			Student student = new Student();
+			student.setKey((long) i);
+			student.setName("St" + i);
+			studentList.add(student);
+		}
+		studentFirst = studentList.get(0);
+		studentTest = new Student();
+		studentTest.setKey(200L);
+		studentTest.setName("St200");
+	}
 
 	@BeforeEach
-	void setUp() {
-		studentDao = new PostgreSqlStudentDao(jdbcTemplate);
-
+	void setUp() throws DaoException {
+		jdbcTemplate.setDataSource(dataSource);
+		postgreSqlStudentDao = new PostgreSqlStudentDao(jdbcTemplate, namedParameterJdbcTemplate, studentMapper);
 	}
 
 	@Test
-	public void studentsCount() {
-		DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
-				.addScript("classpath:jdbc/schema.sql").addScript("classpath:jdbc/test-data.sql").build();
-
-		studentDao.setDataSource(dataSource);
-
-		assertEquals(200, studentDao.getCountOfStudents());
-
+	void testGetObgect_InGroupId_OutGroupObject() {
+		assertEquals(studentFirst, postgreSqlStudentDao.findById(1L));
+		assertEquals(null, postgreSqlStudentDao.findById(10L));
 	}
 
 	@Test
-	public void createStudent() {
-		Student student = new Student(201, 7, "Ivan", "Nenkovskiy", "1201", "two-hundred-first");
-		boolean isCreated = studentDao.create(student);
-
-		assertEquals(true, isCreated);
-
+	void testGetAll_OutGroupsList() {
+		assertEquals(studentList, postgreSqlStudentDao.findAll());
 	}
 
 	@Test
-	public void deleteStudent() {
-		Student student = new Student(109, 6, "Harper", "Daniels", "1109", "one-hundred-ninth");
-		boolean isDeleted = studentDao.delete(student);
-
-		assertEquals(true, isDeleted);
-
+	void testAddObject_InGroupObject_OutGroupObject() {
+		assertEquals(studentTest, postgreSqlStudentDao.create(studentTest));
+		postgreSqlStudentDao.delete(studentTest);
 	}
 
 	@Test
-	public void updateStudent() {
-		Student student = new Student(109, 6, "Harper", "Daniels", "1109", "one-hundred-ninth");
-
-		boolean isUpdated = studentDao.update(student);
-
-		assertEquals(true, isUpdated);
-
+	void testUpdate_InGroupObject_OutGroupObject() {
+		studentFirst.setName("Gr10");
+		assertEquals(studentFirst, postgreSqlStudentDao.update(studentFirst));
+		studentFirst.setName("Gr1");
+		assertEquals(studentFirst, postgreSqlStudentDao.update(studentFirst));
 	}
 
 	@Test
-	public void testFindByName() {
-		DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
-				.addScript("classpath:jdbc/schema.sql").addScript("classpath:jdbc/test-data.sql").build();
-		studentDao.setDataSource(dataSource);
-
-		List<Student> expectedList = studentDao.findByName("Mia");
-
-		assertEquals(expectedList.size(), 7);
-		assertEquals(expectedList.get(0).getName(), "Mia");
+	void testDeleteObject_InGroupObject_OutBoolean() {
+		postgreSqlStudentDao.create(studentTest);
+		assertTrue(postgreSqlStudentDao.delete(studentTest));
+		assertFalse(postgreSqlStudentDao.delete(studentTest));
 	}
 
 	@Test
-	public void testFindById() {
-		Student expected = studentDao.findById(3L);
-
-		assertEquals(expected.getName(), "Mason");
-		assertEquals(expected.getSurname(), "Cooper");
-	}
-
-	@Test
-	void findAlStudents() {
-		List<Entity> actualList = studentDao.findAll();
-
-		assertEquals(actualList.size(), 200);
+	void testCheckIfExist_InIdGroup_OutBoolean() {
+		assertTrue(postgreSqlStudentDao.ifExistFindById(3L));
+		assertFalse(postgreSqlStudentDao.ifExistFindById(10L));
 	}
 }
