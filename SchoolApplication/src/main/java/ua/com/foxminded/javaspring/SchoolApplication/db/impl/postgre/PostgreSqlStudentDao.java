@@ -28,17 +28,17 @@ public class PostgreSqlStudentDao implements StudentDao {
 
 	private JdbcTemplate jdbcTemplate;
 
-	private final String SQL_CREATE_STUDENT = " insert into application.students (group_id, name, surname, login, password) "
+	private static final String SQL_CREATE_STUDENT = " insert into application.students (group_id, name, surname, login, password) "
 			+ " values (?, ?, ?, ?, ?) ";
-	private final String SQL_DELETE_STUDENT = "delete from students " + " where students.students_id = ? ";
-	private final String SQL_UPDATE_STUDENT = "update students set group_id = ?, name = ?, surname = ?, login = ?, password = ? "
+	private static final String SQL_DELETE_STUDENT = "delete from students " + " where students.students_id = ? ";
+	private static final String SQL_UPDATE_STUDENT = "update students set group_id = ?, name = ?, surname = ?, login = ?, password = ? "
 			+ " where students.id = ?";
-	private final String SQL_FIND_STUDENT_BY_ID = " select students.* " + " from application.students "
+	private static final String SQL_FIND_STUDENT_BY_ID = " select students.* " + " from application.students "
 			+ " where students.students_id = ? ";
 
-	private final String SQL_FIND_STUDENT_BY_NAME = " select students.* " + " from application.students "
+	private static final String SQL_FIND_STUDENT_BY_NAME = " select students.* " + " from application.students "
 			+ " where students.name = ? ";
-	private final String SQL_FIND_ALL = "select students.* " + " from application.students ";
+	private static final String SQL_FIND_ALL = "select students.* " + " from application.students ";
 
 	public PostgreSqlStudentDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
 			StudentMapper studentMapper) {
@@ -119,6 +119,6 @@ public class PostgreSqlStudentDao implements StudentDao {
 	}
 
 	public int getCountOfStudents() {
-		return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM Students", Integer.class);
+		return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM students", Integer.class);
 	}
 }

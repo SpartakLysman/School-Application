@@ -32,7 +32,7 @@ public class Entity<K> {
 			return false;
 		}
 
-		Entity entity = (Entity) object;
+		Entity<?> entity = (Entity<?>) object;
 		return entity.key.equals(key);
 	}
 

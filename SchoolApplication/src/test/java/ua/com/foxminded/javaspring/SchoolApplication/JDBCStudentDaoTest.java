@@ -25,7 +25,8 @@ import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlS
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 import ua.com.foxminded.javaspring.SchoolApplication.model.StudentMapper;
 
-@Sql(scripts = { "/sql/clear_tables.sql", "/sql/Database.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = { "/sql/clear_tables.sql",
+		"/sql/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 
 @JdbcTest
 @ContextConfiguration(classes = { PostgreSqlStudentDao.class, StudentMapper.class })
@@ -68,24 +69,24 @@ public class JDBCStudentDaoTest {
 	}
 
 	@Test
-	void testGetObgect_InGroupId_OutGroupObject() {
+	public void testGetObgect_InGroupId_OutGroupObject() {
 		assertEquals(studentFirst, postgreSqlStudentDao.findById(1L));
 		assertEquals(null, postgreSqlStudentDao.findById(10L));
 	}
 
 	@Test
-	void testGetAll_OutGroupsList() {
+	public void testGetAll_OutGroupsList() {
 		assertEquals(studentList, postgreSqlStudentDao.findAll());
 	}
 
 	@Test
-	void testAddObject_InGroupObject_OutGroupObject() {
+	public void testAddObject_InGroupObject_OutGroupObject() {
 		assertEquals(studentTest, postgreSqlStudentDao.create(studentTest));
 		postgreSqlStudentDao.delete(studentTest);
 	}
 
 	@Test
-	void testUpdate_InGroupObject_OutGroupObject() {
+	public void testUpdate_InGroupObject_OutGroupObject() {
 		studentFirst.setName("Gr10");
 		assertEquals(studentFirst, postgreSqlStudentDao.update(studentFirst));
 		studentFirst.setName("Gr1");
@@ -93,14 +94,14 @@ public class JDBCStudentDaoTest {
 	}
 
 	@Test
-	void testDeleteObject_InGroupObject_OutBoolean() {
+	public void testDeleteObject_InGroupObject_OutBoolean() {
 		postgreSqlStudentDao.create(studentTest);
 		assertTrue(postgreSqlStudentDao.delete(studentTest));
 		assertFalse(postgreSqlStudentDao.delete(studentTest));
 	}
 
 	@Test
-	void testCheckIfExist_InIdGroup_OutBoolean() {
+	public void testCheckIfExist_InIdGroup_OutBoolean() {
 		assertTrue(postgreSqlStudentDao.ifExistFindById(3L));
 		assertFalse(postgreSqlStudentDao.ifExistFindById(10L));
 	}

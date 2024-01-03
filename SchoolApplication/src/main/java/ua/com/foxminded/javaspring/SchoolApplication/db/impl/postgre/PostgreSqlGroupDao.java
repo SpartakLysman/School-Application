@@ -16,14 +16,15 @@ public class PostgreSqlGroupDao implements GroupDao {
 
 	private final JdbcTemplate jdbcTemplate;
 
-	private final String SQL_CREATE_GROUP = " insert into application.groups (group_id, title) " + " values (?, ?) ";
-	private final String SQL_DELETE_GROUP = "delete from groups " + " where groups.group_id = ? ";
-	private final String SQL_UPDATE_GROUP = "update groups set title = ? " + " where groups.group_id = ?";
-	private final String SQL_FIND_GROUP_BY_ID = " select groups.* " + " from application.groups "
+	private static final String SQL_CREATE_GROUP = " insert into application.groups (group_id, title) "
+			+ " values (?, ?) ";
+	private static final String SQL_DELETE_GROUP = "delete from groups " + " where groups.group_id = ? ";
+	private static final String SQL_UPDATE_GROUP = "update groups set title = ? " + " where groups.group_id = ?";
+	private static final String SQL_FIND_GROUP_BY_ID = " select groups.* " + " from application.groups "
 			+ " where groups.group_id = ? ";
-	private final String SQL_FIND_GROUP_BY_TITLE = " select groups.* " + " from application.groups "
+	private static final String SQL_FIND_GROUP_BY_TITLE = " select groups.* " + " from application.groups "
 			+ " where groups.title = ? ";
-	private final String SQL_FIND_ALL = "select groups.* " + " from application.groups ";
+	private static final String SQL_FIND_ALL = "select groups.* " + " from application.groups ";
 
 	public PostgreSqlGroupDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
 			GroupMapper groupMapper) {

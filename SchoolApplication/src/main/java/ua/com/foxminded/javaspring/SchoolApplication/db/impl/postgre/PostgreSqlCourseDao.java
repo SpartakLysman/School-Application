@@ -16,16 +16,16 @@ public class PostgreSqlCourseDao implements CourseDao {
 
 	private final JdbcTemplate jdbcTemplate;
 
-	private final String SQL_CREATE_COURSE = " insert into application.courses (course_id, title, desctibtion) "
+	private static final String SQL_CREATE_COURSE = " insert into application.courses (course_id, title, desctibtion) "
 			+ " values (?, ?, ?) ";
-	private final String SQL_DELETE_COURSE = "delete from courses " + " where courses.course_id = ? ";
-	private final String SQL_UPDATE_COURSE = "update courses set course_id = ?, title = ?, desctibtion = ? "
+	private static final String SQL_DELETE_COURSE = "delete from courses " + " where courses.course_id = ? ";
+	private static final String SQL_UPDATE_COURSE = "update courses set course_id = ?, title = ?, desctibtion = ? "
 			+ " where courses.course_id = ?";
-	private final String SQL_FIND_BY_ID = " select courses.* " + " from application.courses "
+	private static final String SQL_FIND_BY_ID = " select courses.* " + " from application.courses "
 			+ " where courses.course_id = ? ";
-	private final String SQL_FIND_BY_TITLE = " select courses.* " + " from application.courses "
+	private static final String SQL_FIND_BY_TITLE = " select courses.* " + " from application.courses "
 			+ " where courses.title = ? ";
-	private final String SQL_FIND_ALL = "select courses.* " + " from application.courses ";
+	private static final String SQL_FIND_ALL = "select courses.* " + " from application.courses ";
 
 	public PostgreSqlCourseDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
 			CourseMapper courseMapper) {
