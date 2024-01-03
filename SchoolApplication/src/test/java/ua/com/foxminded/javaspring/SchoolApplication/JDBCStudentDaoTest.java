@@ -9,8 +9,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -25,8 +25,8 @@ import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlS
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 import ua.com.foxminded.javaspring.SchoolApplication.model.StudentMapper;
 
-@Sql(scripts = { "/sql/clear_tables.sql",
-		"/sql/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = { "/clear_tables.sql",
+		"/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 
 @JdbcTest
 @ContextConfiguration(classes = { PostgreSqlStudentDao.class, StudentMapper.class })
