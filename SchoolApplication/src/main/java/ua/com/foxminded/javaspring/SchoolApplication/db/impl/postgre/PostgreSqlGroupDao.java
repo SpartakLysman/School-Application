@@ -16,15 +16,12 @@ public class PostgreSqlGroupDao implements GroupDao {
 
 	private final JdbcTemplate jdbcTemplate;
 
-	private static final String SQL_CREATE_GROUP = " insert into application.groups (group_id, title) "
-			+ " values (?, ?) ";
-	private static final String SQL_DELETE_GROUP = "delete from groups " + " where groups.group_id = ? ";
-	private static final String SQL_UPDATE_GROUP = "update groups set title = ? " + " where groups.group_id = ?";
-	private static final String SQL_FIND_GROUP_BY_ID = " select groups.* " + " from application.groups "
-			+ " where groups.group_id = ? ";
-	private static final String SQL_FIND_GROUP_BY_TITLE = " select groups.* " + " from application.groups "
-			+ " where groups.title = ? ";
-	private static final String SQL_FIND_ALL = "select groups.* " + " from application.groups ";
+	private static final String SQL_CREATE_GROUP = " insert into groups (group_id, title) " + " values (?, ?) ";
+	private static final String SQL_DELETE_GROUP = " delete from groups " + " where group_id = ? ";
+	private static final String SQL_UPDATE_GROUP = " update groups set title = ? " + " where group_id = ? ";
+	private static final String SQL_FIND_GROUP_BY_ID = " select * from groups " + " where group_id = ? ";
+	private static final String SQL_FIND_GROUP_BY_TITLE = " select * from groups " + " where title = ? ";
+	private static final String SQL_FIND_ALL = " select * from groups";
 
 	public PostgreSqlGroupDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
 			GroupMapper groupMapper) {
@@ -46,7 +43,7 @@ public class PostgreSqlGroupDao implements GroupDao {
 	}
 
 	@Override
-	public boolean ifExistfindById(Long key) {
+	public boolean ifExistFindById(Long key) {
 		return jdbcTemplate.queryForObject(SQL_FIND_GROUP_BY_ID, new Object[] { key }, new GroupMapper()) != null;
 	}
 

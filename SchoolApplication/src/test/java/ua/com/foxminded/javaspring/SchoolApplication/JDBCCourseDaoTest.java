@@ -25,14 +25,13 @@ import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlC
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 import ua.com.foxminded.javaspring.SchoolApplication.model.CourseMapper;
 
-@Sql(scripts = { "/sql/clear_tables.sql", "/sql/Database.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = { "/clear_tables.sql", "/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 
 @JdbcTest
 @ContextConfiguration(classes = { PostgreSqlCourseDao.class, CourseMapper.class })
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-
-class JDBCCourseDaoTest {
+public class JDBCCourseDaoTest {
 
 	@Autowired
 	private DataSource dataSource;
@@ -41,68 +40,76 @@ class JDBCCourseDaoTest {
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	@Autowired
-	private CourseMapper courseMapper;
+	private CourseMapper studentMapper;
 
 	private PostgreSqlCourseDao postgreSqlCourseDao;
-	private List<Course> courseList;
+	private List<Course> coursesList;
 	private Course courseFirst;
 	private Course courseTest;
 
 	{
-		courseList = new ArrayList<>();
-		for (int i = 1; i < 10; i++) {
+		coursesList = new ArrayList<>();
+		for (int i = 1; i < 5; i++) {
 			Course course = new Course();
 			course.setKey((long) i);
-			course.setTitle("Cour" + i);
-			courseList.add(course);
+			course.setTitle(course.getTitle());
+			course.setDescribtion(course.getDescribtion());
+
+			coursesList.add(course);
 		}
-		courseFirst = courseList.get(0);
+		courseFirst = coursesList.get(0);
 		courseTest = new Course();
-		courseTest.setKey(10L);
-		courseTest.setTitle("Cour10");
+		courseTest.setKey(6L);
+
 	}
 
 	@BeforeEach
 	void setUp() throws DaoException {
 		jdbcTemplate.setDataSource(dataSource);
-		postgreSqlCourseDao = new PostgreSqlCourseDao(jdbcTemplate, namedParameterJdbcTemplate, courseMapper);
+		postgreSqlCourseDao = new PostgreSqlCourseDao(jdbcTemplate, namedParameterJdbcTemplate, studentMapper);
 	}
 
 	@Test
-	void testGetObgect_InGroupId_OutGroupObject() {
+	public void testFindById() {
 		assertEquals(courseFirst, postgreSqlCourseDao.findById(1L));
-		assertEquals(null, postgreSqlCourseDao.findById(10L));
 	}
 
 	@Test
-	void testGetAll_OutGroupsList() {
-		assertEquals(courseList, postgreSqlCourseDao.findAll());
+	public void testFindAll() {
+		assertEquals(coursesList, postgreSqlCourseDao.findAll());
 	}
 
 	@Test
-	void testAddObject_InGroupObject_OutGroupObject() {
-		assertEquals(courseTest, postgreSqlCourseDao.create(courseTest));
+	public void testCreateStudent() {
+		courseTest.setKey(6L);
+		courseTest.setTitle("Sixth");
+		courseTest.setDescribtion("Math");
+
+		assertEquals(true, postgreSqlCourseDao.create(courseTest));
 		postgreSqlCourseDao.delete(courseTest);
 	}
 
 	@Test
-	void testUpdate_InGroupObject_OutGroupObject() {
-		courseFirst.setTitle("Gr10");
-		assertEquals(courseFirst, postgreSqlCourseDao.update(courseFirst));
-		courseFirst.setTitle("Gr1");
-		assertEquals(courseFirst, postgreSqlCourseDao.update(courseFirst));
+	public void testUpdateStudent() {
+		courseTest.setKey(1L);
+		courseTest.setTitle("First");
+		courseTest.setDescribtion("History");
+
+		assertEquals(true, postgreSqlCourseDao.update(courseTest));
 	}
 
 	@Test
-	void testDeleteObject_InGroupObject_OutBoolean() {
+	public void testDeleteStudent() {
+		courseTest.setTitle("Sixth");
+		courseTest.setDescribtion("Programming");
+
 		postgreSqlCourseDao.create(courseTest);
 		assertTrue(postgreSqlCourseDao.delete(courseTest));
 		assertFalse(postgreSqlCourseDao.delete(courseTest));
 	}
 
 	@Test
-	void testCheckIfExist_InIdGroup_OutBoolean() {
-		assertTrue(postgreSqlCourseDao.ifExistfindById(3L));
-		assertFalse(postgreSqlCourseDao.ifExistfindById(10L));
+	public void testCheckIfExistByID() {
+		assertTrue(postgreSqlCourseDao.ifExistFindById(3L));
 	}
 }

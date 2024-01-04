@@ -9,7 +9,7 @@ public interface GroupDao extends DAO<Group, Long> {
 
 	List<Entity> findByTitle(String title);
 
-	boolean ifExistfindById(Long key);
+	boolean ifExistFindById(Long key);
 
 	Group findById(Long key);
 }

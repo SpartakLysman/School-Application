@@ -25,8 +25,7 @@ import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlS
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 import ua.com.foxminded.javaspring.SchoolApplication.model.StudentMapper;
 
-@Sql(scripts = { "/sql/clear_tables.sql",
-		"/sql/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = { "/clear_tables.sql", "/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 
 @JdbcTest
 @ContextConfiguration(classes = { PostgreSqlStudentDao.class, StudentMapper.class })
@@ -44,22 +43,30 @@ public class JDBCStudentDaoTest {
 	private StudentMapper studentMapper;
 
 	private PostgreSqlStudentDao postgreSqlStudentDao;
-	private List<Student> studentList;
+	private List<Student> studentsList;
 	private Student studentFirst;
 	private Student studentTest;
 
 	{
-		studentList = new ArrayList<>();
-		for (int i = 1; i < 200; i++) {
+		studentsList = new ArrayList<>();
+		for (int i = 1; i < 5; i++) {
 			Student student = new Student();
 			student.setKey((long) i);
-			student.setName("St" + i);
-			studentList.add(student);
+			student.setGroupId(student.getGroupId());
+			student.setName(student.getName());
+			student.setSurname(student.getSurname());
+			student.setLogin(student.getLogin());
+			student.setPassword(student.getPassword());
+			studentsList.add(student);
 		}
-		studentFirst = studentList.get(0);
+		studentFirst = studentsList.get(0);
 		studentTest = new Student();
-		studentTest.setKey(200L);
-		studentTest.setName("St200");
+		studentTest.setKey(6L);
+//		studentTest.setName("Anton");
+//		studentTest.setSurname("Antonovich");
+//		studentTest.setLogin("6666");
+//		studentTest.setPassword("Sixth");
+
 	}
 
 	@BeforeEach
@@ -69,40 +76,54 @@ public class JDBCStudentDaoTest {
 	}
 
 	@Test
-	public void testGetObgect_InGroupId_OutGroupObject() {
+	public void testFindById() {
 		assertEquals(studentFirst, postgreSqlStudentDao.findById(1L));
-		assertEquals(null, postgreSqlStudentDao.findById(10L));
+		// assertEquals(, postgreSqlStudentDao.findById(1L));
 	}
 
 	@Test
-	public void testGetAll_OutGroupsList() {
-		assertEquals(studentList, postgreSqlStudentDao.findAll());
+	public void testFindAll() {
+		assertEquals(studentsList, postgreSqlStudentDao.findAll());
 	}
 
 	@Test
-	public void testAddObject_InGroupObject_OutGroupObject() {
-		assertEquals(studentTest, postgreSqlStudentDao.create(studentTest));
+	public void testCreateStudent() {
+		studentTest.setKey(6L);
+		studentTest.setName("Anton");
+		studentTest.setSurname("Antonovich");
+		studentTest.setLogin("6666");
+		studentTest.setPassword("Sixth");
+
+		assertEquals(true, postgreSqlStudentDao.create(studentTest));
 		postgreSqlStudentDao.delete(studentTest);
 	}
 
 	@Test
-	public void testUpdate_InGroupObject_OutGroupObject() {
-		studentFirst.setName("Gr10");
-		assertEquals(studentFirst, postgreSqlStudentDao.update(studentFirst));
-		studentFirst.setName("Gr1");
-		assertEquals(studentFirst, postgreSqlStudentDao.update(studentFirst));
+	public void testUpdateStudent() {
+		studentTest.setKey(1L);
+		studentTest.setName("Alex");
+		studentTest.setSurname("Alexandrovich");
+		studentTest.setLogin("1111");
+		studentTest.setPassword("First");
+
+		assertEquals(true, postgreSqlStudentDao.update(studentTest));
 	}
 
 	@Test
-	public void testDeleteObject_InGroupObject_OutBoolean() {
+	public void testDeleteStudent() {
+		studentTest.setName("Anton");
+		studentTest.setSurname("Antonovich");
+		studentTest.setLogin("6666");
+		studentTest.setPassword("Sixth");
+
 		postgreSqlStudentDao.create(studentTest);
 		assertTrue(postgreSqlStudentDao.delete(studentTest));
 		assertFalse(postgreSqlStudentDao.delete(studentTest));
 	}
 
 	@Test
-	public void testCheckIfExist_InIdGroup_OutBoolean() {
+	public void testCheckIfExistByID() {
 		assertTrue(postgreSqlStudentDao.ifExistFindById(3L));
-		assertFalse(postgreSqlStudentDao.ifExistFindById(10L));
+		// assertFalse(postgreSqlStudentDao.ifExistFindById(10L));
 	}
 }

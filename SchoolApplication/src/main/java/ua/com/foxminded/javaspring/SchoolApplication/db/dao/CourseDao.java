@@ -7,7 +7,7 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
 
 public interface CourseDao extends DAO<Course, Long> {
 
-	boolean ifExistfindById(Long key);
+	boolean ifExistFindById(Long key);
 
 	Course findById(Long key);
 
