@@ -25,7 +25,7 @@ import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlC
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 import ua.com.foxminded.javaspring.SchoolApplication.model.CourseMapper;
 
-@Sql(scripts = { "/sql/clear_tables.sql", "/sql/Database.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = { "/clear_tables.sql", "/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 
 @JdbcTest
 @ContextConfiguration(classes = { PostgreSqlCourseDao.class, CourseMapper.class })
