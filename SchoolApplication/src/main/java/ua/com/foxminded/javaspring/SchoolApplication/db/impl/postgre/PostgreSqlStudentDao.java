@@ -10,36 +10,38 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.DaoException;
-import ua.com.foxminded.javaspring.SchoolApplication.db.dao.DaoFactory;
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.StudentDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 import ua.com.foxminded.javaspring.SchoolApplication.model.StudentMapper;
 import ua.com.foxminded.javaspring.SchoolApplication.model.User;
 
+@Service
 public class PostgreSqlStudentDao implements StudentDao {
 
-	JdbcTemplate jdbcTemplate;
-
-	private DaoFactory daoFactory = new DaoFactory();
 	private static Logger log = Logger.getLogger(PostgreSqlStudentDao.class.getName());
 	private DataSource dataSource;
 
-	private final String SQL_CREATE_STUDENT = " insert into application.students (group_id, name, surname, login, password) "
+	private JdbcTemplate jdbcTemplate;
+
+	private static final String SQL_CREATE_STUDENT = " insert into application.students (group_id, name, surname, login, password) "
 			+ " values (?, ?, ?, ?, ?) ";
-	private final String SQL_DELETE_STUDENT = "delete from students " + " where students.students_id = ? ";
-	private final String SQL_UPDATE_STUDENT = "update students set group_id = ?, name = ?, surname = ?, login = ?, password = ? "
+	private static final String SQL_DELETE_STUDENT = "delete from students " + " where students.students_id = ? ";
+	private static final String SQL_UPDATE_STUDENT = "update students set group_id = ?, name = ?, surname = ?, login = ?, password = ? "
 			+ " where students.id = ?";
-	private final String SQL_FIND_STUDENT_BY_ID = " select students * " + " from application.students "
+	private static final String SQL_FIND_STUDENT_BY_ID = " select students.* " + " from application.students "
 			+ " where students.students_id = ? ";
 
-	private final String SQL_FIND_STUDENT_BY_NAME = " select students * " + " from application.students "
+	private static final String SQL_FIND_STUDENT_BY_NAME = " select students.* " + " from application.students "
 			+ " where students.name = ? ";
-	private final String SQL_FIND_ALL = "select students * " + " from application.students ";
+	private static final String SQL_FIND_ALL = "select students.* " + " from application.students ";
 
-	public PostgreSqlStudentDao(JdbcTemplate jdbcTemplate) {
+	public PostgreSqlStudentDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+			StudentMapper studentMapper) {
 
 		this.jdbcTemplate = jdbcTemplate;
 
@@ -93,17 +95,30 @@ public class PostgreSqlStudentDao implements StudentDao {
 	}
 
 	@Override
+	public boolean ifExistFindById(Long key) {
+		return jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_ID, new Object[] { key }, new StudentMapper()) != null;
+	}
+
+	@Override
 	public Student findById(Long key) {
 		return (Student) jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_ID, new Object[] { key }, new StudentMapper());
 	}
 
 	@Override
-	public List<Entity> findByName(String name) {
-		return (List<Entity>) jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_NAME, new Object[] { name },
+	public List<Student> findByName(String name) {
+		return (List<Student>) jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_NAME, new Object[] { name },
 				new StudentMapper());
 	}
 
 	public List<Entity> findAll() {
 		return jdbcTemplate.query(SQL_FIND_ALL, new StudentMapper());
+	}
+
+	public void setDataSource(DataSource dataSource) {
+		jdbcTemplate = new JdbcTemplate(dataSource);
+	}
+
+	public int getCountOfStudents() {
+		return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM students", Integer.class);
 	}
 }

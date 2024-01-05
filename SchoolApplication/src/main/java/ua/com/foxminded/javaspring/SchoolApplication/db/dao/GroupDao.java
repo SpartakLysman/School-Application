@@ -7,7 +7,9 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
 
 public interface GroupDao extends DAO<Group, Long> {
 
-	Group findById(Long key);
-
 	List<Entity> findByTitle(String title);
+
+	boolean ifExistfindById(Long key);
+
+	Group findById(Long key);
 }

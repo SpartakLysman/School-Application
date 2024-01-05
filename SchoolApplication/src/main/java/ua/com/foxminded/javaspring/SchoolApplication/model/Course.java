@@ -37,6 +37,7 @@ public class Course extends Entity<Long> {
 		describtion = newDescribtion;
 	}
 
+	@Override
 	public String toString() {
 		return "Title: " + title + ",  Describtion: " + describtion;
 	}
