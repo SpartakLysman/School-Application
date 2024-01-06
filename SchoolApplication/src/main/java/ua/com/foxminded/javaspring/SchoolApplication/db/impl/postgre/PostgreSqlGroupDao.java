@@ -35,7 +35,7 @@ public class PostgreSqlGroupDao implements GroupDao {
 	}
 
 	public boolean update(Group group) {
-		return jdbcTemplate.update(SQL_UPDATE_GROUP, group.getKey(), group.getTitle()) > 0;
+		return jdbcTemplate.update(SQL_UPDATE_GROUP, group.getTitle(), group.getKey()) > 0;
 	}
 
 	public boolean delete(Group group) {

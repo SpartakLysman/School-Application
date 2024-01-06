@@ -37,7 +37,7 @@ public class PostgreSqlCourseDao implements CourseDao {
 	}
 
 	public boolean update(Course course) {
-		return jdbcTemplate.update(SQL_UPDATE_COURSE, course.getKey(), course.getTitle(), course.getDescribtion()) > 0;
+		return jdbcTemplate.update(SQL_UPDATE_COURSE, course.getTitle(), course.getDescribtion(), course.getKey()) > 0;
 	}
 
 	public boolean delete(Course course) {

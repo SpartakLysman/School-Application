@@ -96,6 +96,7 @@ public class JDBCStudentDaoTest {
 
 		assertEquals(true, postgreSqlStudentDao.create(studentTest));
 		postgreSqlStudentDao.delete(studentTest);
+
 	}
 
 	@Test

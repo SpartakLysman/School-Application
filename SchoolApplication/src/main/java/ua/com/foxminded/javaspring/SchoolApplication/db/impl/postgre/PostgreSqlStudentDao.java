@@ -83,8 +83,8 @@ public class PostgreSqlStudentDao implements StudentDao {
 
 	public boolean update(User student) {
 
-		return jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getKey(), student.getGroupId(), student.getName(),
-				student.getSurname(), student.getLogin(), student.getPassword()) > 0;
+		return jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getGroupId(), student.getName(), student.getSurname(),
+				student.getLogin(), student.getPassword(), student.getKey()) > 0;
 	}
 
 	public boolean delete(User student) {

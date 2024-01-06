@@ -49,15 +49,16 @@ public class JDBCGroupDaoTest {
 
 	{
 		groupsList = new ArrayList<>();
-		for (int i = 1; i < 6; i++) {
+		for (int i = 1; i < 5; i++) {
 			Group group = new Group();
 			group.setKey((long) i);
 			group.setTitle(group.getTitle());
+
 			groupsList.add(group);
 		}
 		groupFirst = groupsList.get(0);
 		groupTest = new Group();
-		groupTest.setKey(6L);
+		groupTest.setKey(5L);
 
 	}
 
@@ -69,7 +70,7 @@ public class JDBCGroupDaoTest {
 
 	@Test
 	public void testFindById() {
-		assertEquals(groupFirst, postgreSqlGroupDao.findById(2L));
+		assertEquals(groupFirst, postgreSqlGroupDao.findById(1L));
 	}
 
 	@Test
