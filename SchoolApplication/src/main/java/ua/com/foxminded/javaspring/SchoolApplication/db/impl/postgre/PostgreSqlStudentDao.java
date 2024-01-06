@@ -28,17 +28,14 @@ public class PostgreSqlStudentDao implements StudentDao {
 
 	private JdbcTemplate jdbcTemplate;
 
-	private static final String SQL_CREATE_STUDENT = " insert into application.students (group_id, name, surname, login, password) "
-			+ " values (?, ?, ?, ?, ?) ";
-	private static final String SQL_DELETE_STUDENT = "delete from students " + " where students.students_id = ? ";
+	private static final String SQL_CREATE_STUDENT = " insert into students (students_id, group_id, name, surname, login, password) "
+			+ " values (?, ?, ?, ?, ?, ?) ";
+	private static final String SQL_DELETE_STUDENT = "delete from students where students_id = ? ";
 	private static final String SQL_UPDATE_STUDENT = "update students set group_id = ?, name = ?, surname = ?, login = ?, password = ? "
-			+ " where students.id = ?";
-	private static final String SQL_FIND_STUDENT_BY_ID = " select students.* " + " from application.students "
-			+ " where students.students_id = ? ";
-
-	private static final String SQL_FIND_STUDENT_BY_NAME = " select students.* " + " from application.students "
-			+ " where students.name = ? ";
-	private static final String SQL_FIND_ALL = "select students.* " + " from application.students ";
+			+ " where students_id = ? ";
+	private static final String SQL_FIND_STUDENT_BY_ID = "select * from students " + " where students_id = ? ";
+	private static final String SQL_FIND_STUDENT_BY_NAME = " select * from students " + " where name = ? ";
+	private static final String SQL_FIND_ALL = " select * from students ";
 
 	public PostgreSqlStudentDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
 			StudentMapper studentMapper) {
@@ -86,8 +83,8 @@ public class PostgreSqlStudentDao implements StudentDao {
 
 	public boolean update(User student) {
 
-		return jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getKey(), student.getName(), student.getSurname(),
-				student.getLogin(), student.getPassword()) > 0;
+		return jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getKey(), student.getGroupId(), student.getName(),
+				student.getSurname(), student.getLogin(), student.getPassword()) > 0;
 	}
 
 	public boolean delete(User student) {

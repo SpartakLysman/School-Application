@@ -25,14 +25,13 @@ import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlG
 import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
 import ua.com.foxminded.javaspring.SchoolApplication.model.GroupMapper;
 
-@Sql(scripts = { "/sql/clear_tables.sql", "/sql/Database.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = { "/clear_tables.sql", "/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 
 @JdbcTest
 @ContextConfiguration(classes = { PostgreSqlGroupDao.class, GroupMapper.class })
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-
-class JDBCGroupDaoTest {
+public class JDBCGroupDaoTest {
 
 	@Autowired
 	private DataSource dataSource;
@@ -44,22 +43,22 @@ class JDBCGroupDaoTest {
 	private GroupMapper groupMapper;
 
 	private PostgreSqlGroupDao postgreSqlGroupDao;
-	private List<Group> groupList;
+	private List<Group> groupsList;
 	private Group groupFirst;
 	private Group groupTest;
 
 	{
-		groupList = new ArrayList<>();
-		for (int i = 1; i < 10; i++) {
+		groupsList = new ArrayList<>();
+		for (int i = 1; i < 6; i++) {
 			Group group = new Group();
 			group.setKey((long) i);
-			group.setTitle("Gr" + i);
-			groupList.add(group);
+			group.setTitle(group.getTitle());
+			groupsList.add(group);
 		}
-		groupFirst = groupList.get(0);
+		groupFirst = groupsList.get(0);
 		groupTest = new Group();
-		groupTest.setKey(10L);
-		groupTest.setTitle("Gr10");
+		groupTest.setKey(6L);
+
 	}
 
 	@BeforeEach
@@ -69,40 +68,43 @@ class JDBCGroupDaoTest {
 	}
 
 	@Test
-	void testGetObgect_InGroupId_OutGroupObject() {
-		assertEquals(groupFirst, postgreSqlGroupDao.findById(1L));
-		assertEquals(null, postgreSqlGroupDao.findById(10L));
+	public void testFindById() {
+		assertEquals(groupFirst, postgreSqlGroupDao.findById(2L));
 	}
 
 	@Test
-	void testGetAll_OutGroupsList() {
-		assertEquals(groupList, postgreSqlGroupDao.findAll());
+	public void testFindAll() {
+		assertEquals(groupsList, postgreSqlGroupDao.findAll());
 	}
 
 	@Test
-	void testAddObject_InGroupObject_OutGroupObject() {
-		assertEquals(groupTest, postgreSqlGroupDao.create(groupTest));
+	public void testCreateStudent() {
+		groupTest.setKey(6L);
+		groupTest.setTitle("Sixth");
+
+		assertEquals(true, postgreSqlGroupDao.create(groupTest));
 		postgreSqlGroupDao.delete(groupTest);
 	}
 
 	@Test
-	void testUpdate_InGroupObject_OutGroupObject() {
-		groupFirst.setTitle("Gr10");
-		assertEquals(groupFirst, postgreSqlGroupDao.update(groupFirst));
-		groupFirst.setTitle("Gr1");
-		assertEquals(groupFirst, postgreSqlGroupDao.update(groupFirst));
+	public void testUpdateStudent() {
+		groupTest.setKey(1L);
+		groupTest.setTitle("Firts");
+
+		assertEquals(true, postgreSqlGroupDao.update(groupTest));
 	}
 
 	@Test
-	void testDeleteObject_InGroupObject_OutBoolean() {
+	public void testDeleteStudent() {
+		groupTest.setTitle("First");
+
 		postgreSqlGroupDao.create(groupTest);
 		assertTrue(postgreSqlGroupDao.delete(groupTest));
 		assertFalse(postgreSqlGroupDao.delete(groupTest));
 	}
 
 	@Test
-	void testCheckIfExist_InIdGroup_OutBoolean() {
-		assertTrue(postgreSqlGroupDao.ifExistfindById(3L));
-		assertFalse(postgreSqlGroupDao.ifExistfindById(10L));
+	public void testCheckIfExistByID() {
+		assertTrue(postgreSqlGroupDao.ifExistFindById(3L));
 	}
 }

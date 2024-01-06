@@ -25,6 +25,5 @@ public class Group extends Entity<Long> {
 	public String toString() {
 
 		return "Title" + title;
-
 	}
 }
