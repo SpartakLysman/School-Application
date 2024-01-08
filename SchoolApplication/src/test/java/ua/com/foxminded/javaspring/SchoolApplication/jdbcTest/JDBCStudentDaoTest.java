@@ -1,4 +1,4 @@
-package ua.com.foxminded.javaspring.SchoolApplication;
+package ua.com.foxminded.javaspring.SchoolApplication.jdbcTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -31,7 +31,7 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.StudentMapper;
 @ContextConfiguration(classes = { PostgreSqlStudentDao.class, StudentMapper.class })
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class JDBCStudentDaoTest {
+class JDBCStudentDaoTest {
 
 	@Autowired
 	private DataSource dataSource;
@@ -76,18 +76,18 @@ public class JDBCStudentDaoTest {
 	}
 
 	@Test
-	public void testFindById() {
+	void testFindById() {
 		assertEquals(studentFirst, postgreSqlStudentDao.findById(1L));
 		// assertEquals(, postgreSqlStudentDao.findById(1L));
 	}
 
 	@Test
-	public void testFindAll() {
+	void testFindAll() {
 		assertEquals(studentsList, postgreSqlStudentDao.findAll());
 	}
 
 	@Test
-	public void testCreateStudent() {
+	void testCreateStudent() {
 		studentTest.setKey(6L);
 		studentTest.setName("Anton");
 		studentTest.setSurname("Antonovich");
@@ -100,7 +100,7 @@ public class JDBCStudentDaoTest {
 	}
 
 	@Test
-	public void testUpdateStudent() {
+	void testUpdateStudent() {
 		studentTest.setKey(1L);
 		studentTest.setName("Alex");
 		studentTest.setSurname("Alexandrovich");
@@ -111,7 +111,7 @@ public class JDBCStudentDaoTest {
 	}
 
 	@Test
-	public void testDeleteStudent() {
+	void testDeleteStudent() {
 		studentTest.setName("Anton");
 		studentTest.setSurname("Antonovich");
 		studentTest.setLogin("6666");
@@ -123,7 +123,7 @@ public class JDBCStudentDaoTest {
 	}
 
 	@Test
-	public void testCheckIfExistByID() {
+	void testCheckIfExistByID() {
 		assertTrue(postgreSqlStudentDao.ifExistFindById(3L));
 		// assertFalse(postgreSqlStudentDao.ifExistFindById(10L));
 	}

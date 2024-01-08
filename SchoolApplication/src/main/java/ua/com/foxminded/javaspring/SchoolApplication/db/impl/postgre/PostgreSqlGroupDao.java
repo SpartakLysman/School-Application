@@ -1,5 +1,6 @@
 package ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,6 +35,17 @@ public class PostgreSqlGroupDao implements GroupDao {
 		return jdbcTemplate.update(SQL_CREATE_GROUP, group.getKey(), group.getTitle()) > 0;
 	}
 
+	public int[] createAll(List<Group> groupsList) {
+
+		List<Object[]> groupRows = new ArrayList<>();
+
+		for (Group group : groupsList) {
+			groupRows.add(new Object[] { group.getKey(), group.getTitle() });
+		}
+
+		return jdbcTemplate.batchUpdate(SQL_CREATE_GROUP, groupRows);
+	}
+
 	public boolean update(Group group) {
 		return jdbcTemplate.update(SQL_UPDATE_GROUP, group.getTitle(), group.getKey()) > 0;
 	}
@@ -48,8 +60,8 @@ public class PostgreSqlGroupDao implements GroupDao {
 	}
 
 	@Override
-	public List<Entity> findByTitle(String title) {
-		return (List<Entity>) jdbcTemplate.queryForObject(SQL_FIND_GROUP_BY_TITLE, new Object[] { title },
+	public List<Group> findByTitle(String title) {
+		return (List<Group>) jdbcTemplate.queryForObject(SQL_FIND_GROUP_BY_TITLE, new Object[] { title },
 				new GroupMapper());
 	}
 

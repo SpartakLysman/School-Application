@@ -1,4 +1,4 @@
-package ua.com.foxminded.javaspring.SchoolApplication;
+package ua.com.foxminded.javaspring.SchoolApplication.jdbcTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -31,7 +31,7 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.CourseMapper;
 @ContextConfiguration(classes = { PostgreSqlCourseDao.class, CourseMapper.class })
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class JDBCCourseDaoTest {
+class JDBCCourseDaoTest {
 
 	@Autowired
 	private DataSource dataSource;
@@ -70,17 +70,17 @@ public class JDBCCourseDaoTest {
 	}
 
 	@Test
-	public void testFindById() {
+	void testFindById() {
 		assertEquals(courseFirst, postgreSqlCourseDao.findById(1L));
 	}
 
 	@Test
-	public void testFindAll() {
+	void testFindAll() {
 		assertEquals(coursesList, postgreSqlCourseDao.findAll());
 	}
 
 	@Test
-	public void testCreateStudent() {
+	void testCreateStudent() {
 		courseTest.setKey(6L);
 		courseTest.setTitle("Sixth");
 		courseTest.setDescribtion("Math");
@@ -90,7 +90,7 @@ public class JDBCCourseDaoTest {
 	}
 
 	@Test
-	public void testUpdateStudent() {
+	void testUpdateStudent() {
 		courseTest.setKey(1L);
 		courseTest.setTitle("First");
 		courseTest.setDescribtion("History");
@@ -99,7 +99,7 @@ public class JDBCCourseDaoTest {
 	}
 
 	@Test
-	public void testDeleteStudent() {
+	void testDeleteStudent() {
 		courseTest.setTitle("Sixth");
 		courseTest.setDescribtion("Programming");
 
@@ -109,7 +109,7 @@ public class JDBCCourseDaoTest {
 	}
 
 	@Test
-	public void testCheckIfExistByID() {
+	void testCheckIfExistByID() {
 		assertTrue(postgreSqlCourseDao.ifExistFindById(3L));
 	}
 }

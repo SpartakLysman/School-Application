@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -79,6 +80,18 @@ public class PostgreSqlStudentDao implements StudentDao {
 
 		return jdbcTemplate.update(SQL_CREATE_STUDENT, student.getKey(), student.getGroupId(), student.getName(),
 				student.getSurname(), student.getLogin(), student.getPassword()) > 0;
+	}
+
+	public int[] createAll(List<User> studentsList) {
+
+		List<Object[]> studentRows = new ArrayList<>();
+
+		for (User student : studentsList) {
+			studentRows.add(new Object[] { student.getKey(), student.getGroupId(), student.getName(),
+					student.getSurname(), student.getLogin(), student.getPassword() });
+		}
+
+		return jdbcTemplate.batchUpdate(SQL_CREATE_STUDENT, studentRows);
 	}
 
 	public boolean update(User student) {

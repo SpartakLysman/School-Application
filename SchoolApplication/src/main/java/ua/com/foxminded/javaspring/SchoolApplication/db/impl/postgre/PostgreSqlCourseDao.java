@@ -1,5 +1,6 @@
 package ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,6 +37,17 @@ public class PostgreSqlCourseDao implements CourseDao {
 		return jdbcTemplate.update(SQL_CREATE_COURSE, course.getKey(), course.getTitle(), course.getDescribtion()) > 0;
 	}
 
+	public int[] createAll(List<Course> coursesList) {
+
+		List<Object[]> courseRows = new ArrayList<>();
+
+		for (Course course : coursesList) {
+			courseRows.add(new Object[] { course.getKey(), course.getTitle(), course.getDescribtion() });
+		}
+
+		return jdbcTemplate.batchUpdate(SQL_CREATE_COURSE, courseRows);
+	}
+
 	public boolean update(Course course) {
 		return jdbcTemplate.update(SQL_UPDATE_COURSE, course.getTitle(), course.getDescribtion(), course.getKey()) > 0;
 	}
@@ -55,8 +67,8 @@ public class PostgreSqlCourseDao implements CourseDao {
 	}
 
 	@Override
-	public List<Entity> findByTitle(String title) {
-		return (List<Entity>) jdbcTemplate.queryForObject(SQL_FIND_BY_TITLE, new Object[] { title },
+	public List<Course> findByTitle(String title) {
+		return (List<Course>) jdbcTemplate.queryForObject(SQL_FIND_BY_TITLE, new Object[] { title },
 				new CourseMapper());
 	}
 
