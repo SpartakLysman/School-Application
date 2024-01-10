@@ -41,8 +41,9 @@ public class PostgreSqlCourseDao implements CourseDao {
 
 		List<Object[]> courseRows = new ArrayList<>();
 
-		for (Course course : coursesList) {
-			courseRows.add(new Object[] { course.getKey(), course.getTitle(), course.getDescribtion() });
+		for (int i = 0; i < coursesList.size(); i++) {
+			courseRows.add(new Object[] { coursesList.get(i).getKey(), coursesList.get(i).getTitle(),
+					coursesList.get(i).getDescribtion() });
 		}
 
 		return jdbcTemplate.batchUpdate(SQL_CREATE_COURSE, courseRows);

@@ -3,12 +3,14 @@ package ua.com.foxminded.javaspring.SchoolApplication.db.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlStudentDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 import ua.com.foxminded.javaspring.SchoolApplication.model.User;
 
+@Service
 public class StudentService {
 
 	@Autowired
@@ -39,7 +41,7 @@ public class StudentService {
 
 	public String delete(Student student) {
 		studentRepository.delete(student);
-		return "Student was succesfully removed!! " + student.getKey();
+		return "Student was succesfully removed!!";
 	}
 
 	public boolean update(Student student) {
