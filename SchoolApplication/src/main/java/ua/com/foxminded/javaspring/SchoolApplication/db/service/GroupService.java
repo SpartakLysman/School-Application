@@ -31,11 +31,7 @@ public class GroupService {
 	}
 
 	public Group findById(long key) {
-
-		if (groupRepository.findById(key) != null) {
-			return groupRepository.findById(key);
-		}
-		return null;
+		return groupRepository.findById(key);
 	}
 
 	public List<Group> findByTitle(String title) {
@@ -51,14 +47,6 @@ public class GroupService {
 
 	public boolean update(Group group) {
 
-		Group existingGroup = groupRepository.findById(group.getKey());
-		if (existingGroup == null) {
-			return false;
-		}
-
-		existingGroup.setKey(group.getKey());
-		existingGroup.setTitle(group.getTitle());
-
-		return groupRepository.create(existingGroup);
+		return groupRepository.update(group);
 	}
 }

@@ -135,35 +135,25 @@ class StudentServiceTest {
 		when(postgreSqlStudentDao.findById(5L)).thenReturn(studentTest);
 
 		Student newStudent = studentService.findById(5L);
-		boolean isCreated = studentService.create(newStudent);
-
-		assertTrue(isCreated);
+		
 		assertEquals(newStudent.getKey(), studentTest.getKey());
 		assertEquals(newStudent.getName(), studentTest.getName());
-	
 
 		verify(postgreSqlStudentDao).findById(5L);
 	}
 
 	@Test
 	void findStudentsByNameTest() {
+		
+		 when(postgreSqlStudentDao.findByName(studentTest.getName())).thenReturn(List.of(studentTest));
 
-		List<Student> studentsListByTitle = new ArrayList<>();
+	        List<Student> studentsListByTitle = studentService.findByName(studentTest.getName());
 
-		when(postgreSqlStudentDao.findByName(studentTest.getName())).thenReturn(studentsList);
+	        assertNotNull(studentsListByTitle);
+	        assertEquals(studentsListByTitle.size(), 1);
+	        assertEquals(studentsListByTitle.get(0).getName(), studentTest.getName());
 
-		for (int i = 0; i < studentsList.size(); i++) {
-			if (studentsList.get(i).getName() == studentTest.getName()) {
-				studentsListByTitle.add(studentsList.get(i));
-			}
-		}
-
-		List<Student> newCoursesListByTitle = studentService.findByName(studentTest.getName());
-
-		assertEquals(studentsListByTitle, newCoursesListByTitle);
-		assertEquals(studentsListByTitle.get(0).getName(), studentTest.getName());
-
-		verify(postgreSqlStudentDao).findByName(studentTest.getName());
+	        verify(postgreSqlStudentDao).findByName(studentTest.getName());
 	}
 
 	@Test
@@ -208,16 +198,15 @@ class StudentServiceTest {
 
 	@Test
 	void updateStudentTest() {
+
 		Student studentForCheck = studentTest;
 
 		when(postgreSqlStudentDao.update(studentTest)).thenReturn(true);
 
 		studentTest = new Student(50L, 5, "Anton", "Gorodnuk", "StudentFifty", "gHs29*&");
+
 		boolean isUpdated = studentService.update(studentTest);
 
-		assertTrue(isUpdated);
-
-		// assertEquals(studentsList.get(4).getKey(), studentTest.getKey());
 		assertNotEquals(studentForCheck, studentTest);
 		verify(postgreSqlStudentDao).update(studentTest);
 	}

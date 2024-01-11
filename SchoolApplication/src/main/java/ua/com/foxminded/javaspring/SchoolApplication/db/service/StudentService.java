@@ -29,10 +29,8 @@ public class StudentService {
 	}
 
 	public Student findById(long key) {
-		if (studentRepository.findById(key) != null) {
-			return studentRepository.findById(key);
-		}
-		return null;
+
+		return studentRepository.findById(key);
 	}
 
 	public List<Student> findByName(String name) {
@@ -45,18 +43,7 @@ public class StudentService {
 	}
 
 	public boolean update(Student student) {
-		Student existingStudent = studentRepository.findById(student.getKey());
-		if (existingStudent == null) {
-			return false;
-		}
 
-		existingStudent.setKey(student.getKey());
-		existingStudent.setGroupId(student.getGroupId());
-		existingStudent.setName(student.getName());
-		existingStudent.setSurname(student.getSurname());
-		existingStudent.setLogin(student.getLogin());
-		existingStudent.setPassword(student.getPassword());
-
-		return studentRepository.create(existingStudent);
+		return studentRepository.update(student);
 	}
 }

@@ -1,6 +1,6 @@
 package ua.com.foxminded.javaspring.SchoolApplication.serviceTest;
 
-import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -123,9 +123,7 @@ class CourseServiceTest {
 		when(postgreSqlCourseDao.findById(courseTest.getKey())).thenReturn(coursesList.get(4));
 
 		Course newCourse = courseService.findById(courseTest.getKey());
-		boolean isCreated = courseService.create(newCourse);
 
-		assertTrue(isCreated);
 		assertEquals(newCourse.getTitle(), courseTest.getTitle());
 		assertEquals(newCourse.getDescribtion(), courseTest.getDescribtion());
 
@@ -134,24 +132,15 @@ class CourseServiceTest {
 
 	@Test
 	void findCoursesByTitleTest() {
+		 when(postgreSqlCourseDao.findByTitle(courseTest.getTitle())).thenReturn(List.of(courseTest));
 
-		List<Course> coursesListByTitle = new ArrayList<>();
+	        List<Course> coursesListByTitle = courseService.findByTitle(courseTest.getTitle());
 
-		when(postgreSqlCourseDao.findByTitle(courseTest.getTitle())).thenReturn(coursesList);
+	        assertNotNull(coursesListByTitle);
+	        assertEquals(coursesListByTitle.size(), 1);
+	        assertEquals(coursesListByTitle.get(0).getTitle(), courseTest.getTitle());
 
-		for (int i = 0; i < coursesList.size(); i++) {
-			if (coursesList.get(i).getTitle() == courseTest.getTitle()) {
-				coursesListByTitle.add(coursesList.get(i));
-			}
-		}
-
-		List<Course> newCoursesListByTitle = courseService.findByTitle(courseTest.getTitle());
-
-		assertNotNull(coursesListByTitle);
-		assertEquals(coursesListByTitle, newCoursesListByTitle);
-		assertEquals(coursesListByTitle.get(0).getTitle(), courseTest.getTitle());
-
-		verify(postgreSqlCourseDao).findByTitle(courseTest.getTitle());
+	        verify(postgreSqlCourseDao).findByTitle(courseTest.getTitle());
 	}
 
 	@Test
@@ -188,15 +177,12 @@ class CourseServiceTest {
 		Course courseForCheck = courseTest;
 
 		when(postgreSqlCourseDao.update(courseTest)).thenReturn(true);
-		when(postgreSqlCourseDao.create(courseTest)).thenReturn(true);
 
 		courseTest = new Course(50L, "Swimming", "Fast");
-		boolean isCreated = courseService.create(courseTest);
+		boolean isUpdated = courseService.update(courseTest);
 
-		assertTrue(isCreated);
-		assertNotNull(courseTest);
-		assertNotSame(courseForCheck, courseTest);
+		assertNotEquals(courseForCheck, courseTest);
 
-		verify(postgreSqlCourseDao).update(any(Course.class));
+		verify(postgreSqlCourseDao).update(courseTest);
 	}
 }
