@@ -32,10 +32,10 @@ public class CourseService {
 
 	public Course findById(long key) {
 
-		if (courseRepository.findById(key) != null) {
-			return courseRepository.findById(key);
-		}
-		return null;
+		// if (courseRepository.findById(key) != null) {
+		return courseRepository.findById(key);
+		// }
+		// return null;
 	}
 
 	public List<Course> findByTitle(String title) {
@@ -51,16 +51,6 @@ public class CourseService {
 
 	public boolean update(Course course) {
 
-		Course existingCourse = courseRepository.findById(course.getKey());
-		if (existingCourse == null) {
-			return false;
-		}
-
-		existingCourse.setKey(course.getKey());
-
-		existingCourse.setTitle(course.getTitle());
-		existingCourse.setDescribtion(course.getDescribtion());
-
-		return courseRepository.create(existingCourse);
+		return courseRepository.update(course);
 	}
 }

@@ -1,5 +1,6 @@
 package ua.com.foxminded.javaspring.SchoolApplication.serviceTest;
 
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -120,12 +121,10 @@ class GroupServiceTest {
 	@Test
 	void findGroupByIdTest() {
 
-		when(postgreSqlGroupDao.findById(4L)).thenReturn(groupTest);
+		when(postgreSqlGroupDao.findById(groupTest.getKey())).thenReturn(groupsList.get(4));
 
 		Group newGroup = groupService.findById(groupTest.getKey());
-		boolean isCreated = groupService.create(newGroup);
-
-		assertTrue(isCreated);
+		
 		assertEquals(newGroup.getKey(), groupTest.getKey());
 		assertEquals(newGroup.getTitle(), groupTest.getTitle());
 
@@ -134,24 +133,15 @@ class GroupServiceTest {
 
 	@Test
 	void findGroupsByTitleTest() {
+		 when(postgreSqlGroupDao.findByTitle(groupTest.getTitle())).thenReturn(List.of(groupTest));
 
-		List<Group> groupsListByTitle = new ArrayList<>();
+	        List<Group> groupsListByTitle = groupService.findByTitle(groupTest.getTitle());
 
-		when(postgreSqlGroupDao.findByTitle(groupTest.getTitle())).thenReturn(groupsList);
+	        assertNotNull(groupsListByTitle);
+	        assertEquals(groupsListByTitle.size(), 1);
+	        assertEquals(groupsListByTitle.get(0).getTitle(), groupTest.getTitle());
 
-		for (int i = 0; i < groupsList.size(); i++) {
-			if (groupsList.get(i).getTitle() == groupTest.getTitle()) {
-				groupsListByTitle.add(groupsList.get(i));
-			}
-		}
-
-		List<Group> newGroupsListByTitle = groupService.findByTitle(groupTest.getTitle());
-
-		assertNotNull(groupsListByTitle);
-		assertEquals(groupsListByTitle, newGroupsListByTitle);
-		assertEquals(groupsListByTitle.get(0).getTitle(), groupTest.getTitle());
-
-		verify(postgreSqlGroupDao).findByTitle(groupTest.getTitle());
+	        verify(postgreSqlGroupDao).findByTitle(groupTest.getTitle());
 	}
 
 	@Test
@@ -186,17 +176,15 @@ class GroupServiceTest {
 
 	@Test
 	void updateGroupTest() {
-		Group courseForCheck = groupTest;
+
+		Group groupForCheck = groupTest;
 
 		when(postgreSqlGroupDao.update(groupTest)).thenReturn(true);
-		when(postgreSqlGroupDao.create(groupTest)).thenReturn(true);
 
 		groupTest = new Group(50L, "1050");
-		boolean isCreated = groupService.create(groupTest);
+		boolean isUpdated = groupService.update(groupTest);
 
-		assertTrue(isCreated);
-		assertNotNull(groupTest);
-		// assertNotSame(courseForCheck, groupTest);
+		assertNotEquals(groupForCheck, groupTest);
 
 		verify(postgreSqlGroupDao).update(groupTest);
 	}
