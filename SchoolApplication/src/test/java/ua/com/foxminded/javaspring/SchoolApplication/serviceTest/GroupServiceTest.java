@@ -164,10 +164,9 @@ class GroupServiceTest {
 	List<Group> newGroupsList = List.of(gorupOne, gorupTwo, gorupTree, gorupFour, gorupSix, gorupSeven, gorupEight,
 			gorupNine, gorupTen);
 	
-		String isDeleted = groupService.delete(groupTest);
-		String whenDeletedMassege = "Group was succesfully removed!!";
+		boolean isDeleted = groupService.delete(groupTest);
 		
-		assertEquals(isDeleted, whenDeletedMassege);
+		assertEquals(isDeleted, true);
 			assertEquals(newGroupsList.size(), (groupsList.size() - 1));
 			//assertNotEquals(newStudentsList, studentsList);
 			

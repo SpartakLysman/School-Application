@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlCourseDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
@@ -19,54 +18,69 @@ public class CourseService {
 	@Autowired
 	private PostgreSqlCourseDao courseRepository;
 
-	Logger logger = LoggerFactory.getLogger(LoggingController.class);
-
-	@RequestMapping("/")
-	public String index() {
-		logger.debug("A DEBUG Message");
-		logger.info("An INFO Message");
-		logger.warn("A WARN Message");
-		logger.error("An ERROR Message");
-
-		return "Course Service";
-	}
+	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
 
 	public boolean create(Course course) {
 
-		return courseRepository.create(course);
+		LOGGER.debug("Course creating - " + course.toString());
+		boolean created = courseRepository.create(course);
+		LOGGER.info("Course was created successfully with id - " + course.getKey());
+
+		return created;
 	}
 
 	public int[] createAll(List<Course> coursesList) {
 
-		return courseRepository.createAll(coursesList);
+		LOGGER.debug("All courses creating...");
+		int[] createdAll = courseRepository.createAll(coursesList);
+		LOGGER.info("All courses were successfully created - " + coursesList.toString());
+
+		return createdAll;
 	}
 
 	public List<Entity> findAll() {
 
-		return courseRepository.findAll();
+		LOGGER.debug("All courses finding...");
+		List<Entity> coursesList = courseRepository.findAll();
+		LOGGER.info("All courses were successfully found");
+
+		return coursesList;
 	}
 
 	public Course findById(long key) {
 
-		// if (courseRepository.findById(key) != null) {
-		return courseRepository.findById(key);
-		// }
-		// return null;
+		LOGGER.debug("Course finding - " + key);
+		Course course = courseRepository.findById(key);
+		LOGGER.info("Course was successfully found by id - " + key);
+
+		return course;
+
 	}
 
 	public List<Course> findByTitle(String title) {
 
-		return courseRepository.findByTitle(title);
+		LOGGER.debug("Courses finding by title");
+		List<Course> coursesList = courseRepository.findByTitle(title);
+		LOGGER.info("Courses were successfully found by title - " + title);
+
+		return coursesList;
 	}
 
-	public String delete(Course course) {
+	public boolean delete(Course course) {
 
-		courseRepository.delete(course);
-		return "Course was succesfully removed!!";
+		LOGGER.debug("Course deleting - " + course.toString());
+		boolean deleted = courseRepository.delete(course);
+		LOGGER.info("Course successfully deleted with id - " + course.getKey());
+
+		return deleted;
 	}
 
 	public boolean update(Course course) {
 
-		return courseRepository.update(course);
+		LOGGER.debug("Course updating - " + course.toString());
+		boolean updated = courseRepository.update(course);
+		LOGGER.info("Course was successfully updated with id - " + course.getKey());
+
+		return updated;
 	}
 }

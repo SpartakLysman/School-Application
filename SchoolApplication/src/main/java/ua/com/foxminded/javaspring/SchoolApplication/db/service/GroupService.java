@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlGroupDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
@@ -19,50 +18,68 @@ public class GroupService {
 	@Autowired
 	private PostgreSqlGroupDao groupRepository;
 
-	Logger logger = LoggerFactory.getLogger(LoggingController.class);
-
-	@RequestMapping("/")
-	public String index() {
-		logger.debug("A DEBUG Message");
-		logger.info("An INFO Message");
-		logger.warn("A WARN Message");
-		logger.error("An ERROR Message");
-
-		return "Group Service";
-	}
+	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
 
 	public boolean create(Group group) {
 
-		return groupRepository.create(group);
+		LOGGER.debug("Group creating - " + group.toString());
+		boolean created = groupRepository.create(group);
+		LOGGER.info("Group was successfully created with id - " + group.getKey());
+
+		return created;
 	}
 
 	public int[] createAll(List<Group> groupsList) {
 
-		return groupRepository.createAll(groupsList);
+		LOGGER.debug("All groups creating...");
+		int[] createdAll = groupRepository.createAll(groupsList);
+		LOGGER.info("All groups were successfully created " + groupsList.toString());
+
+		return createdAll;
 	}
 
 	public List<Entity> findAll() {
 
-		return groupRepository.findAll();
+		LOGGER.debug("All groups findind...");
+		List<Entity> groupsList = groupRepository.findAll();
+		LOGGER.info("All groups were successfully found ");
+
+		return groupsList;
 	}
 
 	public Group findById(long key) {
-		return groupRepository.findById(key);
+
+		LOGGER.debug("Group findind by id");
+		Group group = groupRepository.findById(key);
+		LOGGER.info("Group was successfully found by id - " + key);
+
+		return group;
 	}
 
 	public List<Group> findByTitle(String title) {
 
-		return groupRepository.findByTitle(title);
+		LOGGER.debug("Group finding by title");
+		List<Group> groupsList = groupRepository.findByTitle(title);
+		LOGGER.info("Groups were successfully found by title - " + title);
+
+		return groupsList;
 	}
 
-	public String delete(Group group) {
+	public boolean delete(Group group) {
 
-		groupRepository.delete(group);
-		return "Group was succesfully removed!!";
+		LOGGER.debug("Group deleting - " + group.toString());
+		boolean deleted = groupRepository.delete(group);
+		LOGGER.info("Group was successfully removed with id - " + group.getKey());
+
+		return deleted;
 	}
 
 	public boolean update(Group group) {
 
-		return groupRepository.update(group);
+		LOGGER.debug("Group updating - " + group.toString());
+		boolean updated = groupRepository.update(group);
+		LOGGER.info("Group was successfully updated with id - " + group.getKey());
+
+		return updated;
 	}
 }
