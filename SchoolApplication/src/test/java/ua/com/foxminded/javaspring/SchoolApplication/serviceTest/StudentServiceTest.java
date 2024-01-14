@@ -158,41 +158,41 @@ class StudentServiceTest {
 
 	@Test
 	void deleteStudentTest() {
-		int listSize = studentsList.size();
+		
 		when(postgreSqlStudentDao.delete(studentTest)).thenReturn(true);
+		
+		Student studentOne = new Student(1L, 1, "Alexey", "Bionic", "StudentOne", "5r!A54");
+		Student studentTwo = new Student(2L, 1, "Dmitry", "Shwez", "StudentTwo", "f27&jvh");
+		Student studentThree = new Student(3L, 5, "Maxim", "Makilok", "StudentThree", "dfanS2e");
+		Student studentFour = new Student(4L, 4, "Dmitry", "Dolib", "StudentFoure", "Dfab29&");
+		
+		Student studentSix = new Student(6L, 5, "Pavel", "Dertinovskiy", "StudentSix", "@S!e4B");
+		Student studentSeven = new Student(7L, 3, "Artem", "Makyk", "StudentSeven", "Vr432!a");
+		Student studentEight = new Student(8L, 6, "Vladislav", "Uzumbiev", "StudentEight", "Uzum3!$4");
+		Student studentNine = new Student(9L, 1, "Makar", "Kiminok", "StudentNine", "ffA2er1");
+		Student studentTen = new Student(10L, 1, "Gleb", "Delokyz", "StudentTen", "12S!kk");
+		Student studentEleven = new Student(11L, 1, "Mark", "Dolyn", "StudentEleven", "*37FFS3");
+		Student studentTwelve = new Student(12L, 1, "Yuriy", "Dernisholz", "StudentTwelve", "FF2sa!!");
+		Student studenThirteen = new Student(13L, 2, "Ivan", "Fomin", "StudenThirteen", "Haapd3");
+		Student studentFourteen = new Student(14L, 2, "Ivan", "Abroktin", "StudentFourteen", "Dc3cdj#");
+		Student studentFivteen = new Student(15L, 6, "Artem", "Ernishev", "StudentFivteen", "adi&64L");
+		Student studentSixteen = new Student(16L, 4, "Makhail", "Goodman", "StudentSixteen", "KK37aY");
+		Student studentSeventeen = new Student(17L, 3, "Yaroslav", "Wertex", "StudentSeventeen", "YY28&a");
+		Student studentEighteen = new Student(18L, 5, "Bpogdan", "Dertalok", "StudentEighteen", "2p37H#3");
+		Student studentNineteen = new Student(19L, 5, "Michail", "Frukinchok", "StudentNineteen", "m81J!&");
+		Student studentTwenty = new Student(20L, 4, "Nikolay", "Sertilatov", "StudentTwenty", "D72xQ&");
+		
+	List<Student> newStudentsList = List.of(studentOne, studentTwo, studentThree, studentFour, studentSix, studentSeven,
+			studentEight, studentNine, studentTen, studentEleven, studentTwelve, studenThirteen, studentFourteen,
+			studentFivteen, studentSixteen, studentSeventeen, studentEighteen, studentNineteen, studentTwenty);
 
-//		Student studentOne = new Student(1L, 1, "Alexey", "Bionic", "StudentOne", "5r!A54");
-//		Student studentTwo = new Student(2L, 1, "Dmitry", "Shwez", "StudentTwo", "f27&jvh");
-//		Student studentThree = new Student(3L, 5, "Maxim", "Makilok", "StudentThree", "dfanS2e");
-//		Student studentFour = new Student(4L, 4, "Dmitry", "Dolib", "StudentFoure", "Dfab29&");
-//		
-//		Student studentSix = new Student(6L, 5, "Pavel", "Dertinovskiy", "StudentSix", "@S!e4B");
-//		Student studentSeven = new Student(7L, 3, "Artem", "Makyk", "StudentSeven", "Vr432!a");
-//		Student studentEight = new Student(8L, 6, "Vladislav", "Uzumbiev", "StudentEight", "Uzum3!$4");
-//		Student studentNine = new Student(9L, 1, "Makar", "Kiminok", "StudentNine", "ffA2er1");
-//		Student studentTen = new Student(10L, 1, "Gleb", "Delokyz", "StudentTen", "12S!kk");
-//		Student studentEleven = new Student(11L, 1, "Mark", "Dolyn", "StudentEleven", "*37FFS3");
-//		Student studentTwelve = new Student(12L, 1, "Yuriy", "Dernisholz", "StudentTwelve", "FF2sa!!");
-//		Student studenThirteen = new Student(13L, 2, "Ivan", "Fomin", "StudenThirteen", "Haapd3");
-//		Student studentFourteen = new Student(14L, 2, "Ivan", "Abroktin", "StudentFourteen", "Dc3cdj#");
-//		Student studentFivteen = new Student(15L, 6, "Artem", "Ernishev", "StudentFivteen", "adi&64L");
-//		Student studentSixteen = new Student(16L, 4, "Makhail", "Goodman", "StudentSixteen", "KK37aY");
-//		Student studentSeventeen = new Student(17L, 3, "Yaroslav", "Wertex", "StudentSeventeen", "YY28&a");
-//		Student studentEighteen = new Student(18L, 5, "Bpogdan", "Dertalok", "StudentEighteen", "2p37H#3");
-//		Student studentNineteen = new Student(19L, 5, "Michail", "Frukinchok", "StudentNineteen", "m81J!&");
-//		Student studentTwenty = new Student(20L, 4, "Nikolay", "Sertilatov", "StudentTwenty", "D72xQ&");
-//		
-//	List<Student> newStudentsList = List.of(studentOne, studentTwo, studentThree, studentFour, studentSix, studentSeven,
-//			studentEight, studentNine, studentTen, studentEleven, studentTwelve, studenThirteen, studentFourteen,
-//			studentFivteen, studentSixteen, studentSeventeen, studentEighteen, studentNineteen, studentTwenty);
-
-		String isDeleted = studentService.delete(studentTest);
-		String whenDeletedMassege = "Student was succesfully removed!!";
-
-		assertEquals(isDeleted, whenDeletedMassege);
-		assertEquals((listSize - 1), studentsList.size());
-		// assertNotEquals(newStudentsList, studentsList);
-
+	String isDeleted = studentService.delete(studentTest);
+	String whenDeletedMassege = "Student was succesfully removed!!";
+	
+	assertEquals(isDeleted, whenDeletedMassege);
+		assertEquals(newStudentsList.size(), (studentsList.size() - 1));
+		//assertNotEquals(newStudentsList, studentsList);
+		
 		verify(postgreSqlStudentDao).delete(studentTest);
 	}
 
