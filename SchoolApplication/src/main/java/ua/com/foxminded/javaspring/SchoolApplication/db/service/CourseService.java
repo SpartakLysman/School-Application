@@ -2,15 +2,20 @@ package ua.com.foxminded.javaspring.SchoolApplication.db.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlCourseDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
+import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
 
 @Service
 public class CourseService {
+
+	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
 
 	@Autowired
 	private PostgreSqlCourseDao courseRepository;
@@ -50,7 +55,9 @@ public class CourseService {
 	}
 
 	public boolean update(Course course) {
-
-		return courseRepository.update(course);
+		LOGGER.debug("Course updating - " + course.toString());
+		boolean updated = courseRepository.update(course);
+		LOGGER.info("Course updated successfully by id - " + course.getKey());
+		return updated;
 	}
 }
