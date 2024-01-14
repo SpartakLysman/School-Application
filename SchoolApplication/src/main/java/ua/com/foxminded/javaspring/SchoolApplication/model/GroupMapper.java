@@ -11,7 +11,7 @@ public class GroupMapper implements RowMapper<Entity> {
 
 		Group group = new Group();
 		group.setKey(resultSet.getLong("group_id"));
-		group.setTitle(resultSet.getString("group_name"));
+		group.setTitle(resultSet.getString("title"));
 
 		return group;
 	}

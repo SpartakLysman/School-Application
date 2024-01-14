@@ -1,4 +1,4 @@
-package ua.com.foxminded.javaspring.SchoolApplication;
+package ua.com.foxminded.javaspring.SchoolApplication.jdbcTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -31,7 +31,7 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.GroupMapper;
 @ContextConfiguration(classes = { PostgreSqlGroupDao.class, GroupMapper.class })
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class JDBCGroupDaoTest {
+class JDBCGroupDaoTest {
 
 	@Autowired
 	private DataSource dataSource;
@@ -49,15 +49,16 @@ public class JDBCGroupDaoTest {
 
 	{
 		groupsList = new ArrayList<>();
-		for (int i = 1; i < 6; i++) {
+		for (int i = 1; i < 5; i++) {
 			Group group = new Group();
 			group.setKey((long) i);
 			group.setTitle(group.getTitle());
+
 			groupsList.add(group);
 		}
 		groupFirst = groupsList.get(0);
 		groupTest = new Group();
-		groupTest.setKey(6L);
+		groupTest.setKey(5L);
 
 	}
 
@@ -68,17 +69,17 @@ public class JDBCGroupDaoTest {
 	}
 
 	@Test
-	public void testFindById() {
-		assertEquals(groupFirst, postgreSqlGroupDao.findById(2L));
+	void testFindById() {
+		assertEquals(groupFirst, postgreSqlGroupDao.findById(1L));
 	}
 
 	@Test
-	public void testFindAll() {
+	void testFindAll() {
 		assertEquals(groupsList, postgreSqlGroupDao.findAll());
 	}
 
 	@Test
-	public void testCreateStudent() {
+	void testCreateStudent() {
 		groupTest.setKey(6L);
 		groupTest.setTitle("Sixth");
 
@@ -87,7 +88,7 @@ public class JDBCGroupDaoTest {
 	}
 
 	@Test
-	public void testUpdateStudent() {
+	void testUpdateStudent() {
 		groupTest.setKey(1L);
 		groupTest.setTitle("Firts");
 
@@ -95,7 +96,7 @@ public class JDBCGroupDaoTest {
 	}
 
 	@Test
-	public void testDeleteStudent() {
+	void testDeleteStudent() {
 		groupTest.setTitle("First");
 
 		postgreSqlGroupDao.create(groupTest);
@@ -104,7 +105,7 @@ public class JDBCGroupDaoTest {
 	}
 
 	@Test
-	public void testCheckIfExistByID() {
+	void testCheckIfExistByID() {
 		assertTrue(postgreSqlGroupDao.ifExistFindById(3L));
 	}
 }
