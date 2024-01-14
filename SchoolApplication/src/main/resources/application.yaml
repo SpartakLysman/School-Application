@@ -1,21 +1,13 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://test
+    username: root
+    password: test
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 5
 
 logging:
   level:
-    ua.com.foxminded.javaspring.SchoolApplication.util: WARN, TRACE, ERROR
-
-#logging.pattern.console= %d [%level] %c{1.} [%t] %m%n
-#logging.file = appLog.log
-#logging-pattern.file= %d [%level] %c{1.} [%t] %m%n
-
-
-'''yaml
-spring:
-  datasource:
-	driver-class-name: org.postgresql.Driver
-	url: jdbc:postgresql://test
-	username: root
-	password: test
-	hikari:
-	  minimum-idle: 1
-	  maximum-pool-size: 5
-'''
+   root: DEBUG
