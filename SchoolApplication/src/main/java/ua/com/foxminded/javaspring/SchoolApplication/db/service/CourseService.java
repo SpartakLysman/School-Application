@@ -15,6 +15,8 @@ import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
 @Service
 public class CourseService {
 
+	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
+
 	@Autowired
 	private PostgreSqlCourseDao courseRepository;
 
