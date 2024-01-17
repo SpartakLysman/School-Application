@@ -186,13 +186,12 @@ class StudentServiceTest {
 			studentEight, studentNine, studentTen, studentEleven, studentTwelve, studenThirteen, studentFourteen,
 			studentFivteen, studentSixteen, studentSeventeen, studentEighteen, studentNineteen, studentTwenty);
 
-	String isDeleted = studentService.delete(studentTest);
-	String whenDeletedMassege = "Student was succesfully removed!!";
-	
-	assertEquals(isDeleted, whenDeletedMassege);
-		assertEquals(newStudentsList.size(), (studentsList.size() - 1));
-		//assertNotEquals(newStudentsList, studentsList);
-		
+		boolean isDeleted = studentService.delete(studentTest);
+
+		assertEquals(isDeleted, true);
+		assertEquals((listSize - 1), studentsList.size());
+		// assertNotEquals(newStudentsList, studentsList);
+
 		verify(postgreSqlStudentDao).delete(studentTest);
 	}
 

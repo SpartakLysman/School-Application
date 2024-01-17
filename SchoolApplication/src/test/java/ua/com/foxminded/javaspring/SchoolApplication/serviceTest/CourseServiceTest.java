@@ -162,10 +162,9 @@ class CourseServiceTest {
 		
 	List<Course> newCoursesList = List.of(courseOne, courseTwo, courseTree, courseFour, courseSix, courseSeven,
 				courseEight, courseNine, courseTen);
-	String isDeleted = courseService.delete(courseTest);
-	String whenDeletedMassege = "Course was succesfully removed!!";
+	boolean isDeleted = courseService.delete(courseTest);
 	
-	assertEquals(isDeleted, whenDeletedMassege);
+	assertEquals(isDeleted, true);
 		assertEquals(newCoursesList.size(), (coursesList.size() - 1));
 		//assertNotEquals(newStudentsList, studentsList);
 		

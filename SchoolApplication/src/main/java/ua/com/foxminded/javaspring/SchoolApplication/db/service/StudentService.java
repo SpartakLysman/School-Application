@@ -16,34 +16,68 @@ public class StudentService {
 	@Autowired
 	private PostgreSqlStudentDao studentRepository;
 
+	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
+
 	public boolean create(Student student) {
-		return studentRepository.create(student);
+
+		LOGGER.debug("Student creating...");
+		boolean created = studentRepository.create(student);
+		LOGGER.info("Students was successfully created" + student.toString());
+
+		return created;
 	}
 
 	public int[] createAll(List<User> studentsList) {
-		return studentRepository.createAll(studentsList);
+
+		LOGGER.debug("Student creating...");
+		int[] createdAll = studentRepository.createAll(studentsList);
+		LOGGER.info("All students were successfully created" + studentsList.toString());
+
+		return createdAll;
 	}
 
 	public List<Entity> findAll() {
-		return studentRepository.findAll();
+
+		LOGGER.debug("All student findind...");
+		List<Entity> studentsList = studentRepository.findAll();
+		LOGGER.info("All students were successfully found");
+
+		return studentsList;
 	}
 
 	public Student findById(long key) {
 
-		return studentRepository.findById(key);
+		LOGGER.debug("Student finding by id");
+		Student student = studentRepository.findById(key);
+		LOGGER.info("Student was successfully found by id - " + key);
+
+		return student;
 	}
 
 	public List<Student> findByName(String name) {
-		return studentRepository.findByName(name);
+
+		LOGGER.debug("Student findind by name");
+		List<Student> studentsList = studentRepository.findByName(name);
+		LOGGER.info("Students were successfully found by name - " + name);
+
+		return studentsList;
 	}
 
-	public String delete(Student student) {
-		studentRepository.delete(student);
-		return "Student was succesfully removed!!";
+	public boolean delete(Student student) {
+
+		LOGGER.debug("Student deleting - " + student.toString());
+		boolean deleted = studentRepository.delete(student);
+		LOGGER.info("Student was successfully deleted with id - " + student.getKey());
+
+		return deleted;
 	}
 
 	public boolean update(Student student) {
 
-		return studentRepository.update(student);
+		LOGGER.debug("Student updating - " + student.toString());
+		boolean updated = studentRepository.update(student);
+		LOGGER.info("Student was successfully updated with id - " + student.getKey());
+
+		return updated;
 	}
 }
