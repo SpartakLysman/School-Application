@@ -1,14 +1,15 @@
 package ua.com.foxminded.javaspring.SchoolApplication.db.service;
 
-import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlStudentDao;
-import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 import ua.com.foxminded.javaspring.SchoolApplication.model.User;
+import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
+
+import java.util.List;
 
 @Service
 public class StudentService {
@@ -27,7 +28,7 @@ public class StudentService {
 		return created;
 	}
 
-	public int[] createAll(List<User> studentsList) {
+	public int[] createAll(List<Student> studentsList) {
 
 		LOGGER.debug("Student creating...");
 		int[] createdAll = studentRepository.createAll(studentsList);
@@ -36,10 +37,10 @@ public class StudentService {
 		return createdAll;
 	}
 
-	public List<Entity> findAll() {
+	public List<Student> findAll() {
 
 		LOGGER.debug("All student findind...");
-		List<Entity> studentsList = studentRepository.findAll();
+		List<Student> studentsList = studentRepository.findAll();
 		LOGGER.info("All students were successfully found");
 
 		return studentsList;

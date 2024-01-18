@@ -85,7 +85,7 @@ class StudentServiceTest {
 	@Test
 	void createAllStudentsTest() {
 
-		List<User> usersStudent = new ArrayList<>();
+		List<Student> usersStudent = new ArrayList<>();
 
 		Student studentNewOne = new Student(21L, 6, "Vasiliy", "Manumanian", "StudentTwentyFirst", "Gj4fss&");
 		Student studentNewTwo = new Student(22L, 4, "Ignat", "Fidokib", "StudentTwentySecond", "LL46@!S");
@@ -96,7 +96,7 @@ class StudentServiceTest {
 
 		when(postgreSqlStudentDao.createAll(usersStudent)).thenReturn(sizeNew);
 
-		List<User> newStudentsList = List.of(studentNewOne, studentNewTwo);
+		List<Student> newStudentsList = List.of(studentNewOne, studentNewTwo);
 		int[] create = studentService.createAll(newStudentsList);
 
 		assertNotNull(create);
@@ -110,17 +110,17 @@ class StudentServiceTest {
 	@Test
 	void findAllStudentsTest() {
 
-		List<Entity> studentsEntity = new ArrayList<>();
+		List<Student> studentsEntity = new ArrayList<>();
 
 		for (int i = 1; i < studentsList.size(); i++) {
 			studentsEntity.add(studentsList.get(i));
 		}
 
-		Entity studentFirst = studentsEntity.get(0);
+		Student studentFirst = studentsEntity.get(0);
 
 		when(postgreSqlStudentDao.findAll()).thenReturn(studentsEntity);
 
-		List<Entity> newStudentsEntity = studentService.findAll();
+		List<Student> newStudentsEntity = studentService.findAll();
 
 		assertNotNull(studentsEntity);
 		assertEquals(studentsEntity, newStudentsEntity);
@@ -189,7 +189,7 @@ class StudentServiceTest {
 		boolean isDeleted = studentService.delete(studentTest);
 
 		assertEquals(isDeleted, true);
-		assertEquals((listSize - 1), studentsList.size());
+		assertEquals((newStudentsList.size() - 1), studentsList.size());
 		// assertNotEquals(newStudentsList, studentsList);
 
 		verify(postgreSqlStudentDao).delete(studentTest);

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-public class GroupMapper implements RowMapper<Entity> {
+public class GroupMapper implements RowMapper<Group> {
 
 	public Group mapRow(ResultSet resultSet, int i) throws SQLException {
 

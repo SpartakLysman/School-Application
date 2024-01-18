@@ -15,45 +15,8 @@ public class CreateStudentCommand implements Command {
 	}
 
 	@Override
-	public List<Group> getGroupsWithLessOrEqualStudentCount() {
-		// TODO Auto-generated method stub
+	public String getCommandName() {
 		return null;
-	}
-
-	@Override
-	public List<Student> getStudentsRelatedToCourse(String courseTitle) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean deleteStudentFromCourse() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean deleteDtudentByID() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean createStudent() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean addStudentToCourse(List<Course> coursesList) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean exit() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

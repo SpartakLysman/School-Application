@@ -5,7 +5,7 @@ import java.util.List;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 import ua.com.foxminded.javaspring.SchoolApplication.model.User;
 
-public interface StudentDao extends DAO<User, Long> {
+public interface StudentDao extends DAO<Student, Long> {
 
 	User login(String login, String password) throws DaoException;
 

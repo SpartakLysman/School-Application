@@ -2,7 +2,9 @@ package ua.com.foxminded.javaspring.SchoolApplication.db.dao;
 
 import java.util.List;
 
+import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
+import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 
 public interface DAO<E extends Entity<K>, K> {
 
@@ -12,7 +14,7 @@ public interface DAO<E extends Entity<K>, K> {
 
 	boolean delete(E e);
 
-	List<Entity> findAll();
+	List<E> findAll();
 
 	boolean update(E e);
 

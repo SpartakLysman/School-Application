@@ -1,59 +1,39 @@
 package ua.com.foxminded.javaspring.SchoolApplication.command.commands;
 
-import java.util.List;
-
-import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
-import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
+import org.springframework.stereotype.Service;
+import ua.com.foxminded.javaspring.SchoolApplication.db.service.CourseService;
+import ua.com.foxminded.javaspring.SchoolApplication.db.service.StudentService;
+import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 
+import java.util.List;
+import java.util.Scanner;
+
+@Service
 public class AddStudentToCourseCommand implements Command {
 
-	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
+    public static final String COMMAND_NAME = "addStudentToCourse";
 
-	}
+    private final CourseService courseService;
+    private final StudentService studentService;
+    private final Scanner scanner = new Scanner(System.in);
 
-	@Override
-	public List<Group> getGroupsWithLessOrEqualStudentCount() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public AddStudentToCourseCommand(CourseService courseService,
+                                     StudentService studentService) {
+        this.courseService = courseService;
+        this.studentService = studentService;
+    }
 
-	@Override
-	public List<Student> getStudentsRelatedToCourse(String courseTitle) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public void execute() {
+        List<Student> students = studentService.findAll();
+        System.out.println(students);
+        // TODO написати логіку для додання студента в курс
+    }
 
-	@Override
-	public boolean deleteStudentFromCourse() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean deleteDtudentByID() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean createStudent() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean addStudentToCourse(List<Course> coursesList) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean exit() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public String getCommandName() {
+        return COMMAND_NAME;
+    }
 
 }

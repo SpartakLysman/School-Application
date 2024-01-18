@@ -10,18 +10,6 @@ public interface Command {
 
 	void execute();
 
-	List<Group> getGroupsWithLessOrEqualStudentCount();
-
-	List<Student> getStudentsRelatedToCourse(String courseTitle);
-
-	boolean deleteStudentFromCourse();
-
-	boolean deleteDtudentByID();
-
-	boolean createStudent();
-
-	boolean addStudentToCourse(List<Course> coursesList);
-
-	boolean exit();
+	String getCommandName();
 
 }

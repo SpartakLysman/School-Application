@@ -1,110 +1,62 @@
 package ua.com.foxminded.javaspring.SchoolApplication.util;
 
-import java.util.HashMap;
-import java.util.Scanner;
-
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-
-import ua.com.foxminded.javaspring.SchoolApplication.command.commands.AddStudentToCourseCommand;
+import org.springframework.context.ApplicationContext;
 import ua.com.foxminded.javaspring.SchoolApplication.command.commands.Command;
-import ua.com.foxminded.javaspring.SchoolApplication.command.commands.CreateStudentCommand;
-import ua.com.foxminded.javaspring.SchoolApplication.command.commands.GetGroupsCommand;
-import ua.com.foxminded.javaspring.SchoolApplication.command.commands.GetStudentsCommand;
-import ua.com.foxminded.javaspring.SchoolApplication.command.commands.RemoveStudentByIdCommand;
-import ua.com.foxminded.javaspring.SchoolApplication.command.commands.RemoveStudentFromCourseCommand;
+import ua.com.foxminded.javaspring.SchoolApplication.command.commands.CommandConfig;
 
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
+import java.util.Map;
+import java.util.Scanner;
 
-public class Application {
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+public class Application implements CommandLineRunner {
 
-	private static HashMap<String, Command> commandsMap = new HashMap<>();
+    private final ApplicationContext applicationContext;
 
-	private static String[] actionsList = { "1. Find all the groups with less or equal student count" + "\n"
-			+ "2. Find all students related to the course with the given name" + "\n"
-			+ "3. Delete the student from one of their courses" + "\n" + "4. Delete student by ID" + "\n"
-			+ "5. Add a new student" + "\n" + "6. Add a student to the course from the list" + "\n" + "7. Exit" };
+    private static String[] actionsList = {"1. Find all the groups with less or equal student count" + "\n"
+            + "2. Find all students related to the course with the given name" + "\n"
+            + "3. Delete the student from one of their courses" + "\n" + "4. Delete student by ID" + "\n"
+            + "5. Add a new student" + "\n" + "6. Add a student to the course from the list" + "\n" + "7. Exit"};
 
-	public static void main(String[] args) throws Exception {
-		SpringApplication.run(Application.class, args);
+    public Application(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
-		printMenu(actionsList);
-		actionProcessing();
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 
-	public Application() {
-		commandsMap.put("Find all groups with less or equal student count", new GetGroupsCommand());
-		commandsMap.put("Find all students related to the course", new GetStudentsCommand());
-		commandsMap.put("Delete student from one course", new RemoveStudentFromCourseCommand());
-		commandsMap.put("Delete student by ID", new RemoveStudentByIdCommand());
-		commandsMap.put("Add student", new CreateStudentCommand());
-		commandsMap.put("Add student to course from list", new AddStudentToCourseCommand());
-	}
+    @Override
+    public void run(String... args) throws Exception {
+        CommandConfig commandConfig = applicationContext.getBean(CommandConfig.class);
+        actionProcessing(commandConfig);
+    }
 
-	public static void printMenu(String[] actionsList) {
+    public void printMenu(Map<String, Command> commandMap) {
+        System.out.print("Choose one of the actions: ");
 
-		for (String action : actionsList) {
-			System.out.println(action);
-		}
+        for (String action : commandMap.keySet()) {
+            System.out.println(" - " + action);
+        }
+        System.out.print(" - exit");
+    }
 
-		System.out.print("Choose one of the actions: ");
-	}
+    private void actionProcessing(CommandConfig commandConfig) {
+        Map<String, Command> commandMap = commandConfig.commandMap();
 
-	private static void actionProcessing() throws Exception {
+        String selectedAction = "";
+        while (!"exit".equals(selectedAction)) {
+            printMenu(commandMap);
 
-		Scanner scanner = new Scanner(System.in);
-		int selectedAction = scanner.nextInt();
+            Scanner scanner = new Scanner(System.in);
+            selectedAction = scanner.nextLine();
 
-		if (selectedAction >= 1 && selectedAction <= actionsList.length) {
+            Command command = commandMap.get(selectedAction);
 
-			if (selectedAction == 1) {
-				
-				System.out.print("Action number " + selectedAction + " was selected" + "\n");
-				for (int i = 0; i < commandsMap.size(); i++) {
-					if (commandsMap.containsKey("Find all groups with less or equal student count")) {
-						commandsMap.values()
-					}
-				}
-			}
-
-			if (selectedAction == 2) {
-
-				System.out.print("Action number " + selectedAction + " was selected" + "\n");
-
-			}
-
-			if (selectedAction == 3) {
-
-				System.out.print("Action number " + selectedAction + " was selected" + "\n");
-
-			}
-
-			if (selectedAction == 4) {
-
-				System.out.print("Action number " + selectedAction + " was selected" + "\n");
-
-			}
-
-			if (selectedAction == 5) {
-				System.out.print("Action number " + selectedAction + " was selected" + "\n");
-
-			}
-
-			if (selectedAction == 6) {
-				System.out.print("Action number " + selectedAction + " was selected" + "\n");
-
-			}
-
-			if (selectedAction == 7) {
-
-				System.out.print("Bye ;) ");
-				return;
-			}
-
-		} else {
-			throw new Exception("Action number should be between 1 and " + actionsList.length + "!");
-		}
-	}
-
+            command.execute();
+        }
+    }
 }
