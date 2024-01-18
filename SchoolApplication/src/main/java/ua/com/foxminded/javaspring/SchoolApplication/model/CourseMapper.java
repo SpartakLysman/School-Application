@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-public class CourseMapper implements RowMapper<Entity> {
+public class CourseMapper implements RowMapper<Course> {
 
 	public Course mapRow(ResultSet resultSet, int i) throws SQLException {
 

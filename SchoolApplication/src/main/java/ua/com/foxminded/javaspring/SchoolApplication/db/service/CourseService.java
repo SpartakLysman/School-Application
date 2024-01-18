@@ -20,8 +20,6 @@ public class CourseService {
 	@Autowired
 	private PostgreSqlCourseDao courseRepository;
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
-
 	public boolean create(Course course) {
 
 		LOGGER.debug("Course creating - " + course.toString());
@@ -40,10 +38,10 @@ public class CourseService {
 		return createdAll;
 	}
 
-	public List<Entity> findAll() {
+	public List<Course> findAll() {
 
 		LOGGER.debug("All courses finding...");
-		List<Entity> coursesList = courseRepository.findAll();
+		List<Course> coursesList = courseRepository.findAll();
 		LOGGER.info("All courses were successfully found");
 
 		return coursesList;

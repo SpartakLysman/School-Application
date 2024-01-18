@@ -76,13 +76,13 @@ public class PostgreSqlStudentDao implements StudentDao {
 		return null;
 	}
 
-	public boolean create(User student) {
+	public boolean create(Student student) {
 
 		return jdbcTemplate.update(SQL_CREATE_STUDENT, student.getKey(), student.getGroupId(), student.getName(),
 				student.getSurname(), student.getLogin(), student.getPassword()) > 0;
 	}
 
-	public int[] createAll(List<User> studentsList) {
+	public int[] createAll(List<Student> studentsList) {
 
 		List<Object[]> studentRows = new ArrayList<>();
 
@@ -94,13 +94,13 @@ public class PostgreSqlStudentDao implements StudentDao {
 		return jdbcTemplate.batchUpdate(SQL_CREATE_STUDENT, studentRows);
 	}
 
-	public boolean update(User student) {
+	public boolean update(Student student) {
 
 		return jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getGroupId(), student.getName(), student.getSurname(),
 				student.getLogin(), student.getPassword(), student.getKey()) > 0;
 	}
 
-	public boolean delete(User student) {
+	public boolean delete(Student student) {
 		return jdbcTemplate.update(SQL_DELETE_STUDENT, student.getKey()) > 0;
 	}
 
@@ -111,7 +111,7 @@ public class PostgreSqlStudentDao implements StudentDao {
 
 	@Override
 	public Student findById(Long key) {
-		return (Student) jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_ID, new Object[] { key }, new StudentMapper());
+		return jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_ID, new Object[] { key }, new StudentMapper());
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class PostgreSqlStudentDao implements StudentDao {
 				new StudentMapper());
 	}
 
-	public List<Entity> findAll() {
+	public List<Student> findAll() {
 		return jdbcTemplate.query(SQL_FIND_ALL, new StudentMapper());
 	}
 

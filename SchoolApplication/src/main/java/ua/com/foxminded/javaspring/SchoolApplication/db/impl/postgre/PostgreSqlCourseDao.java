@@ -73,7 +73,7 @@ public class PostgreSqlCourseDao implements CourseDao {
 				new CourseMapper());
 	}
 
-	public List<Entity> findAll() {
+	public List<Course> findAll() {
 		return jdbcTemplate.query(SQL_FIND_ALL, new CourseMapper());
 	}
 }
