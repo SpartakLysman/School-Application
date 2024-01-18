@@ -18,7 +18,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlGroupDao;
 import ua.com.foxminded.javaspring.SchoolApplication.db.service.GroupService;
-import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
 
 @SpringBootTest(classes = { GroupService.class })
@@ -99,17 +98,17 @@ class GroupServiceTest {
 	@Test
 	void findAllGroupsTest() {
 
-		List<Entity> groupsEntity = new ArrayList<>();
+		List<Group> groupsEntity = new ArrayList<>();
 
 		for (int i = 1; i < groupsList.size(); i++) {
 			groupsEntity.add(groupsList.get(i));
 		}
 
-		Entity courseFirst = groupsEntity.get(0);
+		Group courseFirst = groupsEntity.get(0);
 
 		when(postgreSqlGroupDao.findAll()).thenReturn(groupsEntity);
 
-		List<Entity> newGroupsEntity = groupService.findAll();
+		List<Group> newGroupsEntity = groupService.findAll();
 
 		assertNotNull(groupsEntity);
 		assertEquals(groupsEntity, newGroupsEntity);

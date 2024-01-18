@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlCourseDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
-import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
 import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
 
 @Service
@@ -38,10 +37,10 @@ public class CourseService {
 		return createdAll;
 	}
 
-	public List<Entity> findAll() {
+	public List<Course> findAll() {
 
 		LOGGER.debug("All courses finding...");
-		List<Entity> coursesList = courseRepository.findAll();
+		List<Course> coursesList = courseRepository.findAll();
 		LOGGER.info("All courses were successfully found");
 
 		return coursesList;

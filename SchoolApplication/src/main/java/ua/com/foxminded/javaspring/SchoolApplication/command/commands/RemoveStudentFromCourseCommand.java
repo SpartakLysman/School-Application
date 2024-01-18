@@ -1,61 +1,39 @@
 package ua.com.foxminded.javaspring.SchoolApplication.command.commands;
 
 import java.util.List;
+import java.util.Scanner;
 
-import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
-import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
+import ua.com.foxminded.javaspring.SchoolApplication.db.service.CourseService;
+import ua.com.foxminded.javaspring.SchoolApplication.db.service.StudentService;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 
 public class RemoveStudentFromCourseCommand implements Command {
 
-	public RemoveStudentFromCourseCommand() {
+	public static final String COMMAND_NAME = "RemoveStudentFromCourse";
 
+	private final CourseService courseService;
+	private final StudentService studentService;
+	private final Scanner scanner = new Scanner(System.in);
+
+	public RemoveStudentFromCourseCommand(CourseService courseService, StudentService studentService) {
+		this.courseService = courseService;
+		this.studentService = studentService;
 	}
 
 	@Override
 	public void execute() {
 
+		List<Student> students = studentService.findAll();
+		System.out.println("Enter the id for student: ");
+		students.forEach(a -> System.out.println(a));
+
+		long studentId = scanner.nextLong();
+//... .
+		System.out.println("Student was removed");
 	}
 
 	@Override
-	public List<Group> getGroupsWithLessOrEqualStudentCount() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Student> getStudentsRelatedToCourse(String courseTitle) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean deleteStudentFromCourse() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean deleteDtudentByID() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean createStudent() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean addStudentToCourse(List<Course> coursesList) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean exit() {
-		// TODO Auto-generated method stub
-		return false;
+	public String getCommandName() {
+		return COMMAND_NAME;
 	}
 }

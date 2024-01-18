@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.GroupDao;
-import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
 import ua.com.foxminded.javaspring.SchoolApplication.model.GroupMapper;
 
@@ -70,7 +69,7 @@ public class PostgreSqlGroupDao implements GroupDao {
 		return (Group) jdbcTemplate.queryForObject(SQL_FIND_GROUP_BY_ID, new Object[] { key }, new GroupMapper());
 	}
 
-	public List<Entity> findAll() {
+	public List<Group> findAll() {
 		return jdbcTemplate.query(SQL_FIND_ALL, new GroupMapper());
 	}
 }

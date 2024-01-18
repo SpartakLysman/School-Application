@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlGroupDao;
-import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
 import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
 
@@ -38,10 +37,10 @@ public class GroupService {
 		return createdAll;
 	}
 
-	public List<Entity> findAll() {
+	public List<Group> findAll() {
 
 		LOGGER.debug("All groups findind...");
-		List<Entity> groupsList = groupRepository.findAll();
+		List<Group> groupsList = groupRepository.findAll();
 		LOGGER.info("All groups were successfully found ");
 
 		return groupsList;

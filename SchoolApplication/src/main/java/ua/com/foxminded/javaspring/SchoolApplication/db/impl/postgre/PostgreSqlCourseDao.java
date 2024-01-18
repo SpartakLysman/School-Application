@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.CourseDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 import ua.com.foxminded.javaspring.SchoolApplication.model.CourseMapper;
-import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
 
 @Service
 public class PostgreSqlCourseDao implements CourseDao {
@@ -73,7 +72,7 @@ public class PostgreSqlCourseDao implements CourseDao {
 				new CourseMapper());
 	}
 
-	public List<Entity> findAll() {
+	public List<Course> findAll() {
 		return jdbcTemplate.query(SQL_FIND_ALL, new CourseMapper());
 	}
 }

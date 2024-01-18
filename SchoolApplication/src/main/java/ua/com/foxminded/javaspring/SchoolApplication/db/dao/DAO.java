@@ -12,7 +12,7 @@ public interface DAO<E extends Entity<K>, K> {
 
 	boolean delete(E e);
 
-	List<Entity> findAll();
+	List<E> findAll();
 
 	boolean update(E e);
 

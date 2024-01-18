@@ -6,29 +6,26 @@ import java.util.Scanner;
 import ua.com.foxminded.javaspring.SchoolApplication.db.service.StudentService;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 
-public class RemoveStudentByIdCommand implements Command {
+public class GetStudentsByNameCommand implements Command {
 
-	public static final String COMMAND_NAME = "RemoveStudentsById";
+	public static final String COMMAND_NAME = "GetStudentsByName";
 
 	private final StudentService studentService;
 	private final Scanner scanner = new Scanner(System.in);
 
-	public RemoveStudentByIdCommand(StudentService studentService) {
-
+	public GetStudentsByNameCommand(StudentService studentService) {
 		this.studentService = studentService;
 	}
 
 	@Override
 	public void execute() {
 
-		List<Student> students = studentService.findAll();
-		System.out.println("Enter id: ");
-		int id = scanner.nextInt();
+		System.out.println("Enter name: ");
 
-		Student student = studentService.findById(id);
-		students.remove(student);
+		String name = scanner.next();
+		List<Student> studentsWithName = studentService.findByName(name);
 
-		System.out.println(student + " was removed");
+		studentsWithName.forEach(a -> System.out.println(a));
 	}
 
 	@Override

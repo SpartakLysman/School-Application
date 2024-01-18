@@ -19,7 +19,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlCourseDao;
 import ua.com.foxminded.javaspring.SchoolApplication.db.service.CourseService;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
-import ua.com.foxminded.javaspring.SchoolApplication.model.Entity;
 
 @SpringBootTest(classes = { CourseService.class })
 class CourseServiceTest {
@@ -100,7 +99,7 @@ class CourseServiceTest {
 	@Test
 	void findAllCoursesTest() {
 
-		List<Entity> coursesEntity = new ArrayList<>();
+		List<Course> coursesEntity = new ArrayList<>();
 
 		for (int i = 1; i < coursesList.size(); i++) {
 			coursesEntity.add(coursesList.get(i));
@@ -108,7 +107,7 @@ class CourseServiceTest {
 
 		when(postgreSqlCourseDao.findAll()).thenReturn(coursesEntity);
 
-		List<Entity> newCoursesEntity = courseService.findAll();
+		List<Course> newCoursesEntity = courseService.findAll();
 
 		assertNotNull(coursesEntity);
 		assertEquals(coursesEntity, newCoursesEntity);
