@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.CourseDao;
@@ -12,6 +11,7 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 import ua.com.foxminded.javaspring.SchoolApplication.model.CourseMapper;
 
 @Service
+
 public class PostgreSqlCourseDao implements CourseDao {
 
 	private final JdbcTemplate jdbcTemplate;
@@ -25,8 +25,7 @@ public class PostgreSqlCourseDao implements CourseDao {
 	private static final String SQL_FIND_BY_TITLE = " select courses * from courses " + " where title = ? ";
 	private static final String SQL_FIND_ALL = " select * from courses ";
 
-	public PostgreSqlCourseDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-			CourseMapper courseMapper) {
+	public PostgreSqlCourseDao(JdbcTemplate jdbcTemplate, CourseMapper courseMapper) {
 
 		this.jdbcTemplate = jdbcTemplate;
 

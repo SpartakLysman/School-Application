@@ -3,6 +3,7 @@ package ua.com.foxminded.javaspring.SchoolApplication.command.commands;
 import java.util.List;
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.service.CourseService;
@@ -11,6 +12,8 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 
 @Service
+@Qualifier("first")
+
 public class AddStudentToCourseCommand implements Command {
 
 	public static final String COMMAND_NAME = "addStudentToCourse";

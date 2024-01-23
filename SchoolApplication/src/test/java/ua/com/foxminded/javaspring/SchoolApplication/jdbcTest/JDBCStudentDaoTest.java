@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -37,8 +36,7 @@ class JDBCStudentDaoTest {
 	private DataSource dataSource;
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	@Autowired
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
 	@Autowired
 	private StudentMapper studentMapper;
 
@@ -72,7 +70,7 @@ class JDBCStudentDaoTest {
 	@BeforeEach
 	void setUp() throws DaoException {
 		jdbcTemplate.setDataSource(dataSource);
-		postgreSqlStudentDao = new PostgreSqlStudentDao(jdbcTemplate, namedParameterJdbcTemplate, studentMapper);
+		postgreSqlStudentDao = new PostgreSqlStudentDao(jdbcTemplate, studentMapper);
 	}
 
 	@Test

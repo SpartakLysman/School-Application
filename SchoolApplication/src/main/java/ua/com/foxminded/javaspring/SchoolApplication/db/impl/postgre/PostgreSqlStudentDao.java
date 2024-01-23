@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.DaoException;
@@ -37,8 +36,7 @@ public class PostgreSqlStudentDao implements StudentDao {
 	private static final String SQL_FIND_STUDENT_BY_NAME = " select * from students " + " where name = ? ";
 	private static final String SQL_FIND_ALL = " select * from students ";
 
-	public PostgreSqlStudentDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-			StudentMapper studentMapper) {
+	public PostgreSqlStudentDao(JdbcTemplate jdbcTemplate, StudentMapper studentMapper) {
 
 		this.jdbcTemplate = jdbcTemplate;
 

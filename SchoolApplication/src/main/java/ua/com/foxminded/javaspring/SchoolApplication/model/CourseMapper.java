@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CourseMapper implements RowMapper<Course> {
 
 	public Course mapRow(ResultSet resultSet, int i) throws SQLException {

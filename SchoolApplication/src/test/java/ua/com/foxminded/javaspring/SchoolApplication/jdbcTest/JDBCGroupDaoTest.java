@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -37,8 +36,7 @@ class JDBCGroupDaoTest {
 	private DataSource dataSource;
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	@Autowired
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
 	@Autowired
 	private GroupMapper groupMapper;
 
@@ -65,7 +63,7 @@ class JDBCGroupDaoTest {
 	@BeforeEach
 	void setUp() throws DaoException {
 		jdbcTemplate.setDataSource(dataSource);
-		postgreSqlGroupDao = new PostgreSqlGroupDao(jdbcTemplate, namedParameterJdbcTemplate, groupMapper);
+		postgreSqlGroupDao = new PostgreSqlGroupDao(jdbcTemplate, groupMapper);
 	}
 
 	@Test

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.GroupDao;
@@ -23,8 +22,7 @@ public class PostgreSqlGroupDao implements GroupDao {
 	private static final String SQL_FIND_GROUP_BY_TITLE = " select * from groups " + " where title = ? ";
 	private static final String SQL_FIND_ALL = " select * from groups";
 
-	public PostgreSqlGroupDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-			GroupMapper groupMapper) {
+	public PostgreSqlGroupDao(JdbcTemplate jdbcTemplate, GroupMapper groupMapper) {
 
 		this.jdbcTemplate = jdbcTemplate;
 
