@@ -14,10 +14,19 @@ import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
 @Service
 public class GroupService {
 
-	@Autowired
 	private PostgreSqlGroupDao groupRepository;
 
+	private CourseService courseService;
+	private StudentService studentService;
+	private Group group;
+
 	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
+
+	@Autowired
+	public GroupService() {
+		this.group = new Group();
+
+	}
 
 	public boolean create(Group group) {
 

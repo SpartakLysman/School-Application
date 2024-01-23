@@ -3,18 +3,24 @@ package ua.com.foxminded.javaspring.SchoolApplication.command.commands;
 import java.util.List;
 import java.util.Scanner;
 
+import org.springframework.stereotype.Service;
+
+import ua.com.foxminded.javaspring.SchoolApplication.db.service.CourseService;
 import ua.com.foxminded.javaspring.SchoolApplication.db.service.StudentService;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 
+@Service
 public class RemoveStudentByIdCommand implements Command {
 
-	public static final String COMMAND_NAME = "RemoveStudentsById";
+	public static final String COMMAND_NAME = "RemoveStudentById";
 
+	private final CourseService courseService;
 	private final StudentService studentService;
 	private final Scanner scanner = new Scanner(System.in);
 
-	public RemoveStudentByIdCommand(StudentService studentService) {
+	public RemoveStudentByIdCommand(StudentService studentService, CourseService courseService) {
 
+		this.courseService = courseService;
 		this.studentService = studentService;
 	}
 
@@ -22,7 +28,10 @@ public class RemoveStudentByIdCommand implements Command {
 	public void execute() {
 
 		List<Student> students = studentService.findAll();
-		System.out.println("Enter id: ");
+
+		System.out.println("Enter id for student: ");
+		students.forEach((a) -> System.out.println(a));
+
 		int id = scanner.nextInt();
 
 		Student student = studentService.findById(id);

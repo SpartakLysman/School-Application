@@ -3,9 +3,12 @@ package ua.com.foxminded.javaspring.SchoolApplication.command.commands;
 import java.util.List;
 import java.util.Scanner;
 
+import org.springframework.stereotype.Service;
+
 import ua.com.foxminded.javaspring.SchoolApplication.db.service.StudentService;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 
+@Service
 public class GetStudentsByNameCommand implements Command {
 
 	public static final String COMMAND_NAME = "GetStudentsByName";
@@ -25,7 +28,8 @@ public class GetStudentsByNameCommand implements Command {
 		String name = scanner.next();
 		List<Student> studentsWithName = studentService.findByName(name);
 
-		studentsWithName.forEach(a -> System.out.println(a));
+		studentsWithName.forEach((a) -> System.out.println(a));
+
 	}
 
 	@Override

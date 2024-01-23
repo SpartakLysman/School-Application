@@ -1,17 +1,24 @@
 package ua.com.foxminded.javaspring.SchoolApplication.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Course extends Entity<Long> {
 
 	private String title;
 	private String describtion;
+	private List<Student> students;
+	private int capacity = 5;
+
+	public Course(String title, String describtion) {
+		this.title = title;
+		this.describtion = describtion;
+		students = new ArrayList<>();
+
+	}
 
 	public Course(Long id, String title, String describtion) {
 		super(id);
-		this.title = title;
-		this.describtion = describtion;
-	}
-
-	public Course(String title, String describtion) {
 		this.title = title;
 		this.describtion = describtion;
 
@@ -19,6 +26,26 @@ public class Course extends Entity<Long> {
 
 	public Course() {
 
+	}
+
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void addStudent(Student student) {
+		this.students.add(student);
+	}
+
+	public void deleteStudent(Student student) {
+		this.students.remove(student);
+	}
+
+	public void setCapacity(int capacity) {
+		//
+	}
+
+	public List<Student> getStudents() {
+		return students;
 	}
 
 	public String getTitle() {
@@ -39,6 +66,7 @@ public class Course extends Entity<Long> {
 
 	@Override
 	public String toString() {
-		return "Title: " + title + ",  Describtion: " + describtion;
+		return "Course info: " + " \nTitle: " + title + ",  Describtion: " + describtion + ", " + "\n"
+				+ "Number Of Students: " + students.size() + ", capacity: " + capacity;
 	}
 }

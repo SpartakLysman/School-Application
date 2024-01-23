@@ -8,16 +8,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlStudentDao;
+import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
 
 @Service
 public class StudentService {
 
-	@Autowired
 	private PostgreSqlStudentDao studentRepository;
+	private CourseService courseService;
+	private Student student;
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
+
+	@Autowired
+	public StudentService() {
+		this.student = new Student();
+	}
 
 	public boolean create(Student student) {
 
@@ -35,6 +42,41 @@ public class StudentService {
 		LOGGER.info("All students were successfully created" + studentsList.toString());
 
 		return createdAll;
+	}
+
+	public boolean addStudentToCourse(Student student, long courseId) {
+
+		boolean isStudentNotOnCourse = !student.getCourses().contains(student);
+		boolean isCourseExist = courseService.findById(courseId) != null;
+		boolean isStudentExist = studentRepository.findById(student.getKey()) != null;
+		boolean isStudentAddedToCourse = false;
+
+		if (isStudentExist && isCourseExist && isStudentNotOnCourse) {
+			Course course = courseService.findById(courseId);
+			student.addCourse(course);
+
+			studentRepository.update(student);
+			isStudentAddedToCourse = true;
+		}
+
+		return isStudentAddedToCourse;
+	}
+
+	public boolean deleteStudentFromCourse(Student student, long courseId) {
+
+		boolean studentDeletedFromCourse = false;
+		boolean isCourseExist = courseService.findById(courseId) != null;
+		boolean isStudentExist = studentRepository.findById(student.getKey()) != null;
+		boolean studentOnCourse = student.getCourses().contains(student);
+
+		if (isStudentExist && isCourseExist && studentOnCourse) {
+			Course course = courseService.findById(courseId);
+			student.deleteCourse(course);
+			studentRepository.update(student);
+			studentDeletedFromCourse = true;
+		}
+
+		return studentDeletedFromCourse;
 	}
 
 	public List<Student> findAll() {

@@ -2,9 +2,12 @@ package ua.com.foxminded.javaspring.SchoolApplication.command.commands;
 
 import java.util.Scanner;
 
+import org.springframework.stereotype.Service;
+
 import ua.com.foxminded.javaspring.SchoolApplication.db.service.StudentService;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 
+@Service
 public class CreateStudentCommand implements Command {
 
 	public static final String COMMAND_NAME = "CreateStudent";
@@ -38,7 +41,7 @@ public class CreateStudentCommand implements Command {
 
 		boolean create = studentService.create(newStudent);
 		if (create == true) {
-			System.out.println(newStudent + " was added");
+			System.out.println(newStudent + " was сreated");
 
 		} else {
 

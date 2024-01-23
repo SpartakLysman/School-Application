@@ -29,15 +29,19 @@ public class AddStudentToCourseCommand implements Command {
 
 		List<Student> students = studentService.findAll();
 		System.out.println("Enter the id for your student: ");
-		students.forEach(a -> System.out.println(a));
+		students.forEach((a) -> System.out.println(a));
+
 		long studentId = scanner.nextLong();
+		Student student = studentService.findById(studentId);
 
 		List<Course> courses = courseService.findAll();
 		System.out.println("Enter the id for your course: ");
-		courses.forEach(a -> System.out.println(a));
+		courses.forEach((a) -> System.out.println(a));
+
 		long courseId = scanner.nextLong();
 
-		// ... .
+		studentService.addStudentToCourse(student, courseId);
+		System.out.println("Student was added");
 	}
 
 	@Override
