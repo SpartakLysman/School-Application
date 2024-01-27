@@ -65,7 +65,7 @@ class JDBCCourseDaoTest {
 	@BeforeEach
 	void setUp() throws DaoException {
 		jdbcTemplate.setDataSource(dataSource);
-		postgreSqlCourseDao = new PostgreSqlCourseDao(jdbcTemplate, courseMapper);
+		postgreSqlCourseDao = new PostgreSqlCourseDao(jdbcTemplate);
 	}
 
 	@Test

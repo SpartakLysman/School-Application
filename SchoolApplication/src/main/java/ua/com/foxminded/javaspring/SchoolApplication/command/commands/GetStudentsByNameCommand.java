@@ -11,7 +11,7 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 @Service
 public class GetStudentsByNameCommand implements Command {
 
-	public static final String COMMAND_NAME = "GetStudentsByName";
+	public static final String COMMAND_NAME = "get_students_by_name";
 
 	private final StudentService studentService;
 	private final Scanner scanner = new Scanner(System.in);
@@ -28,7 +28,7 @@ public class GetStudentsByNameCommand implements Command {
 		String name = scanner.next();
 		List<Student> studentsWithName = studentService.findByName(name);
 
-		studentsWithName.forEach((a) -> System.out.println(a));
+		studentsWithName.forEach((a) -> System.out.println(a.getName() + ", " + a.getKey()));
 
 	}
 

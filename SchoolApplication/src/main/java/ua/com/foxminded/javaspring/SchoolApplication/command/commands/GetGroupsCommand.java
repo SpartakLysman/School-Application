@@ -13,7 +13,7 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
 @Service
 public class GetGroupsCommand implements Command {
 
-	public static final String COMMAND_NAME = "GetGroupsWithLessOrEqualStudentCount";
+	public static final String COMMAND_NAME = "get_groups_with_less_or_equal_student_count";
 
 	private final GroupService groupService;
 	private final StudentService studentService;
@@ -32,8 +32,10 @@ public class GetGroupsCommand implements Command {
 		int number = scanner.nextInt();
 
 		List<Group> groupsWithLessOrEqualStudentCount = new ArrayList<>();
+
 		for (int i = 0; i < groups.size(); i++) {
-			if (groups.get(i).getStudentsCounter() < number) {
+
+			if (groups.get(i).getCourses().get(i).getStudents().size() < number) {
 				groupsWithLessOrEqualStudentCount.add(groups.get(i));
 			}
 		}

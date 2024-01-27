@@ -1,15 +1,12 @@
 package ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -27,16 +24,19 @@ public class PostgreSqlStudentDao implements StudentDao {
 
 	private JdbcTemplate jdbcTemplate;
 
-	private static final String SQL_CREATE_STUDENT = " insert into students (students_id, group_id, name, surname, login, password) "
-			+ " values (?, ?, ?, ?, ?, ?) ";
-	private static final String SQL_DELETE_STUDENT = "delete from students where students_id = ? ";
-	private static final String SQL_UPDATE_STUDENT = "update students set group_id = ?, name = ?, surname = ?, login = ?, password = ? "
-			+ " where students_id = ? ";
-	private static final String SQL_FIND_STUDENT_BY_ID = "select * from students " + " where students_id = ? ";
-	private static final String SQL_FIND_STUDENT_BY_NAME = " select * from students " + " where name = ? ";
-	private static final String SQL_FIND_ALL = " select * from students ";
+	private static final String SQL_CREATE_STUDENT = "insert into application.students (students_id, group_id, name, surname, login, password)"
+			+ "	values (?, ?, ?, ?, ?, ?) ";
 
-	public PostgreSqlStudentDao(JdbcTemplate jdbcTemplate, StudentMapper studentMapper) {
+	private static final String SQL_DELETE_STUDENT = "delete from application.students where students_id = ? ";
+	private static final String SQL_UPDATE_STUDENT = "update application.students set group_id = ?, name = ?, surname = ?, login = ?, password = ? "
+			+ " where students_id = ? ";
+	private static final String SQL_FIND_STUDENT_BY_ID = "select * from application.students "
+			+ " where students_id = ? ";
+	private static final String SQL_FIND_STUDENT_BY_NAME = " select * from application.students " + " where name = ? ";
+	private static final String SQL_FIND_ALL = " select * from application.students ";
+
+	@Autowired
+	public PostgreSqlStudentDao(JdbcTemplate jdbcTemplate) {
 
 		this.jdbcTemplate = jdbcTemplate;
 
@@ -46,31 +46,10 @@ public class PostgreSqlStudentDao implements StudentDao {
 	public Student login(String login, String password) throws DaoException {
 		log.config("Looking for customer with the login: " + login + " and password: " + password);
 
-		String sql = " select students * " + " from application.students " + " where students.login = ? "
-				+ " and students.password = ? ";
+		String sql = "SELECT * FROM students WHERE login = ? AND password = ?";
 
-		try (Connection connection = dataSource.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-			preparedStatement.setString(1, login);
-			preparedStatement.setString(2, password);
-
-			ResultSet resultSet = preparedStatement.executeQuery();
-			if (resultSet.next()) {
-
-				long student_id = resultSet.getLong(1);
-				long group_id = resultSet.getLong(2);
-				String studentName = resultSet.getString(3);
-				String studentSurname = resultSet.getString(4);
-
-				return new Student(student_id, group_id, studentName, studentSurname, login, password);
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return null;
+		return jdbcTemplate.query(sql, new Object[] { login, password }, new StudentMapper()).stream().findFirst()
+				.orElse(null);
 	}
 
 	public boolean create(Student student) {
@@ -113,8 +92,7 @@ public class PostgreSqlStudentDao implements StudentDao {
 
 	@Override
 	public List<Student> findByName(String name) {
-		return (List<Student>) jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_NAME, new Object[] { name },
-				new StudentMapper());
+		return (List<Student>) jdbcTemplate.query(SQL_FIND_STUDENT_BY_NAME, new Object[] { name }, new StudentMapper());
 	}
 
 	public List<Student> findAll() {

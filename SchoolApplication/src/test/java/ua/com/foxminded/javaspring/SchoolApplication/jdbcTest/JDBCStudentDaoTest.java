@@ -70,7 +70,7 @@ class JDBCStudentDaoTest {
 	@BeforeEach
 	void setUp() throws DaoException {
 		jdbcTemplate.setDataSource(dataSource);
-		postgreSqlStudentDao = new PostgreSqlStudentDao(jdbcTemplate, studentMapper);
+		postgreSqlStudentDao = new PostgreSqlStudentDao(jdbcTemplate);
 	}
 
 	@Test

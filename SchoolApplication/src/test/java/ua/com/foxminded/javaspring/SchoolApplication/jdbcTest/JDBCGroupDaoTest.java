@@ -63,7 +63,7 @@ class JDBCGroupDaoTest {
 	@BeforeEach
 	void setUp() throws DaoException {
 		jdbcTemplate.setDataSource(dataSource);
-		postgreSqlGroupDao = new PostgreSqlGroupDao(jdbcTemplate, groupMapper);
+		postgreSqlGroupDao = new PostgreSqlGroupDao(jdbcTemplate);
 	}
 
 	@Test

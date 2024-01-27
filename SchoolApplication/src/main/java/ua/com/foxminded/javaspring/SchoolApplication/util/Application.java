@@ -60,37 +60,27 @@ public class Application implements CommandLineRunner {
 	}
 
 	private void actionProcessing(CommandConfig commandConfig) {
-
 		Map<String, Command> commandMap = commandConfig.commandMap();
+
+		System.out.println("Available commands: " + commandMap.keySet());
 
 		String selectedAction = "";
 		while (!"exit".equalsIgnoreCase(selectedAction)) {
 			printMenu(commandMap);
 
 			Scanner scanner = new Scanner(System.in);
-			selectedAction = scanner.nextLine().trim();
+			selectedAction = scanner.nextLine().trim().toLowerCase();
 
 			System.out.println("Selected action: " + selectedAction);
-			selectedAction = selectedAction.toLowerCase();
-			Command command = commandMap.get(selectedAction);
 
-			if (command != null) {
+			if (commandMap.containsKey(selectedAction)) {
+				Command command = commandMap.get(selectedAction);
+				System.out.println("Executing command: " + command.getClass().getSimpleName());
 				command.execute();
 			} else {
 				System.out.println("Invalid action. Please choose a valid action.");
+				System.out.println("Available actions: " + String.join(", ", commandMap.keySet()));
 			}
 		}
 	}
 }
-//		Map<String, Command> commandMap = commandConfig.commandMap();
-//
-//		String selectedAction = "";
-//		while (!"exit".equals(selectedAction)) {
-//			printMenu(commandMap);
-//
-//			Scanner scanner = new Scanner(System.in);
-//			selectedAction = scanner.nextLine();
-//			Command command = commandMap.get(selectedAction);
-//
-//			command.execute();
-//		}

@@ -20,7 +20,6 @@ public class CommandConfig {
 
 	@Bean
 	public Map<String, Command> commandMap() {
-		return commands.stream()
-				.collect(Collectors.toMap(command -> command.getCommandName() + "\n", command -> command));
+		return commands.stream().collect(Collectors.toMap(command -> command.getCommandName(), command -> command));
 	}
 }

@@ -3,6 +3,7 @@ package ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +16,16 @@ public class PostgreSqlGroupDao implements GroupDao {
 
 	private final JdbcTemplate jdbcTemplate;
 
-	private static final String SQL_CREATE_GROUP = " insert into groups (group_id, title) " + " values (?, ?) ";
-	private static final String SQL_DELETE_GROUP = " delete from groups " + " where group_id = ? ";
-	private static final String SQL_UPDATE_GROUP = " update groups set title = ? " + " where group_id = ? ";
-	private static final String SQL_FIND_GROUP_BY_ID = " select * from groups " + " where group_id = ? ";
-	private static final String SQL_FIND_GROUP_BY_TITLE = " select * from groups " + " where title = ? ";
-	private static final String SQL_FIND_ALL = " select * from groups";
+	private static final String SQL_CREATE_GROUP = " insert into application.groups (group_id, title) "
+			+ " values (?, ?) ";
+	private static final String SQL_DELETE_GROUP = " delete from application.groups " + " where group_id = ? ";
+	private static final String SQL_UPDATE_GROUP = " update application.groups set title = ? " + " where group_id = ? ";
+	private static final String SQL_FIND_GROUP_BY_ID = " select * from application.groups " + " where group_id = ? ";
+	private static final String SQL_FIND_GROUP_BY_TITLE = " select * from application.groups " + " where title = ? ";
+	private static final String SQL_FIND_ALL = " select * from application.groups";
 
-	public PostgreSqlGroupDao(JdbcTemplate jdbcTemplate, GroupMapper groupMapper) {
+	@Autowired
+	public PostgreSqlGroupDao(JdbcTemplate jdbcTemplate) {
 
 		this.jdbcTemplate = jdbcTemplate;
 

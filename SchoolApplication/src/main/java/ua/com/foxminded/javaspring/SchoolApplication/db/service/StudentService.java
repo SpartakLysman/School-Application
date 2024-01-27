@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlStudentDao;
@@ -15,15 +16,25 @@ import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
 @Service
 public class StudentService {
 
-	private PostgreSqlStudentDao studentRepository;
+	private Course course;
+	private JdbcTemplate jdbcTemplate;
 	private CourseService courseService;
-	private Student student;
+	private PostgreSqlStudentDao studentRepository;
+
+	private static final String SQL_ADD_STUDENT_TO_COURSE = " insert into application.students_courses (student_id, course_id) "
+			+ "	values (?, ?) ";
+	private static final String SQL_DELETE_STUDENT_FROM_COURSE = " delete from application.students_courses where student_id = ? and course_id = ? ";
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
 
 	@Autowired
-	public StudentService() {
-		this.student = new Student();
+	public StudentService(JdbcTemplate jdbcTemplate) {
+
+		this.course = new Course();
+		this.jdbcTemplate = jdbcTemplate;
+		this.courseService = new CourseService(jdbcTemplate);
+		this.studentRepository = new PostgreSqlStudentDao(jdbcTemplate);
+
 	}
 
 	public boolean create(Student student) {
@@ -46,37 +57,42 @@ public class StudentService {
 
 	public boolean addStudentToCourse(Student student, long courseId) {
 
-		boolean isStudentNotOnCourse = !student.getCourses().contains(student);
+		boolean isStudentNotOnCourse = !course.getStudents().contains(student);
 		boolean isCourseExist = courseService.findById(courseId) != null;
 		boolean isStudentExist = studentRepository.findById(student.getKey()) != null;
-		boolean isStudentAddedToCourse = false;
 
 		if (isStudentExist && isCourseExist && isStudentNotOnCourse) {
 			Course course = courseService.findById(courseId);
+			course.addStudent(student);
 			student.addCourse(course);
-
 			studentRepository.update(student);
-			isStudentAddedToCourse = true;
+
+		} else {
+
+			System.out.println("Some problems");
 		}
 
-		return isStudentAddedToCourse;
+		return jdbcTemplate.update(SQL_ADD_STUDENT_TO_COURSE, student.getKey(), courseId) > 0;
 	}
 
 	public boolean deleteStudentFromCourse(Student student, long courseId) {
 
-		boolean studentDeletedFromCourse = false;
 		boolean isCourseExist = courseService.findById(courseId) != null;
 		boolean isStudentExist = studentRepository.findById(student.getKey()) != null;
-		boolean studentOnCourse = student.getCourses().contains(student);
+		boolean isStudentOnCourse = course.getStudents().contains(student);
 
-		if (isStudentExist && isCourseExist && studentOnCourse) {
+		if (isStudentExist && isCourseExist && isStudentOnCourse) {
 			Course course = courseService.findById(courseId);
+			course.deleteStudent(student);
 			student.deleteCourse(course);
 			studentRepository.update(student);
-			studentDeletedFromCourse = true;
+
+		} else {
+
+			System.out.println("Some problems");
 		}
 
-		return studentDeletedFromCourse;
+		return jdbcTemplate.update(SQL_DELETE_STUDENT_FROM_COURSE, student.getKey(), courseId) > 0;
 	}
 
 	public List<Student> findAll() {

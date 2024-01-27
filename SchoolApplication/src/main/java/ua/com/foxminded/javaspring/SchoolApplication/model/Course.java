@@ -7,13 +7,12 @@ public class Course extends Entity<Long> {
 
 	private String title;
 	private String describtion;
-	private List<Student> students;
-	private int capacity = 5;
+	private List<Student> students = new ArrayList<>();
+	private List<Group> groups = new ArrayList<>();
 
 	public Course(String title, String describtion) {
 		this.title = title;
 		this.describtion = describtion;
-		students = new ArrayList<>();
 
 	}
 
@@ -28,10 +27,6 @@ public class Course extends Entity<Long> {
 
 	}
 
-	public int getCapacity() {
-		return capacity;
-	}
-
 	public void addStudent(Student student) {
 		this.students.add(student);
 	}
@@ -40,12 +35,24 @@ public class Course extends Entity<Long> {
 		this.students.remove(student);
 	}
 
+	public void addGroup(Group group) {
+		this.groups.add(group);
+	}
+
+	public void deleteGroup(Group group) {
+		this.groups.remove(group);
+	}
+
 	public void setCapacity(int capacity) {
 		//
 	}
 
 	public List<Student> getStudents() {
 		return students;
+	}
+
+	public List<Group> getGroups() {
+		return groups;
 	}
 
 	public String getTitle() {
@@ -67,6 +74,6 @@ public class Course extends Entity<Long> {
 	@Override
 	public String toString() {
 		return "Course info: " + " \nTitle: " + title + ",  Describtion: " + describtion + ", " + "\n"
-				+ "Number Of Students: " + students.size() + ", capacity: " + capacity;
+				+ "Number Of Students: " + students.size();
 	}
 }

@@ -13,7 +13,7 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 @Service
 public class RemoveStudentFromCourseCommand implements Command {
 
-	public static final String COMMAND_NAME = "RemoveStudentFromCourse";
+	public static final String COMMAND_NAME = "remove_student_from_course";
 
 	private final CourseService courseService;
 	private final StudentService studentService;
@@ -29,14 +29,14 @@ public class RemoveStudentFromCourseCommand implements Command {
 
 		List<Student> students = studentService.findAll();
 		System.out.println("Enter the id for student: ");
-		students.forEach(a -> System.out.println(a));
+		students.forEach(a -> System.out.println(a.getKey()));
 
 		long studentId = scanner.nextLong();
 		Student student = studentService.findById(studentId);
 
 		List<Course> courses = courseService.findAll();
 		System.out.println("Enter the id for your course: ");
-		courses.forEach(a -> System.out.println(a));
+		courses.forEach(a -> System.out.println(a.getKey()));
 
 		long courseId = scanner.nextLong();
 

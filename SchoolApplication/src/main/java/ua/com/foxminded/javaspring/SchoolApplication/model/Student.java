@@ -6,14 +6,13 @@ import java.util.List;
 public class Student extends User {
 
 	private long group_id;
-	private List<Course> courses;
+	private List<Course> courses = new ArrayList<>();
 	private final int maxCourses = 4;
 
 	public Student(long id, long group_id, String name, String surname, String login, String passsword) {
 
 		super(id, name, surname, login, passsword);
 		this.setGroupId(group_id);
-		courses = new ArrayList();
 
 	}
 
@@ -43,6 +42,7 @@ public class Student extends User {
 	}
 
 	public void addCourse(Course course) {
+
 		if (courses.size() < maxCourses) {
 			this.courses.add(course);
 			course.addStudent(this);
@@ -52,8 +52,13 @@ public class Student extends User {
 	}
 
 	public void deleteCourse(Course course) {
-		this.courses.remove(course);
-		course.deleteStudent(this);
+
+		if (courses.contains(course)) {
+			this.courses.remove(course);
+			course.deleteStudent(this);
+		} else {
+			System.out.println("The course not faund");
+		}
 	}
 
 	public List<Course> getCourses() {

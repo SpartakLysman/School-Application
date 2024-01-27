@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlCourseDao;
@@ -15,17 +16,26 @@ import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
 @Service
 public class CourseService {
 
-	private PostgreSqlCourseDao courseRepository;
-	private GroupService groupService;
-	private Course course;
 	private Group group;
+	private JdbcTemplate jdbcTemplate;
+	private GroupService groupService;
+	private PostgreSqlCourseDao courseRepository;
+
+	private static final String SQL_ADD_COURSE_TO_GROUP = " insert into application.groups_courses (group_id, course_id) "
+			+ "	values (?, ?) ";
+
+	private static final String SQL_DELETE_COURSE_FROM_GROUP = " delete from application.groups_courses where group_id = ? ";
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
 
 	@Autowired
-	public CourseService() {
-		this.course = new Course();
+	public CourseService(JdbcTemplate jdbcTemplate) {
+
 		this.group = new Group();
+		this.jdbcTemplate = jdbcTemplate;
+		this.groupService = new GroupService(jdbcTemplate);
+		this.courseRepository = new PostgreSqlCourseDao(jdbcTemplate);
+
 	}
 
 	public boolean create(Course course) {
@@ -51,34 +61,39 @@ public class CourseService {
 		boolean isCourseNotInGroup = !group.getCourses().contains(course);
 		boolean isGroupExist = groupService.findById(groupId) != null;
 		boolean isCourseExist = courseRepository.findById(course.getKey()) != null;
-		boolean isCourseAddedToGroup = false;
 
 		if (isGroupExist && isCourseExist && isCourseNotInGroup) {
 			Group group = groupService.findById(groupId);
 			group.addCourse(course);
-
+			course.addGroup(group);
 			courseRepository.update(course);
-			isCourseAddedToGroup = true;
+
+		} else {
+
+			System.out.println("Some problems");
 		}
 
-		return isCourseAddedToGroup;
+		return jdbcTemplate.update(SQL_ADD_COURSE_TO_GROUP, groupId, course.getKey()) > 0;
 	}
 
 	public boolean deleteCourseFromGroup(Course course, long groupId) {
 
-		boolean isCourseNotInGroup = !group.getCourses().contains(course);
+		boolean isCourseInGroup = group.getCourses().contains(course);
 		boolean isGroupExist = groupService.findById(groupId) != null;
 		boolean isCourseExist = courseRepository.findById(course.getKey()) != null;
-		boolean isCourseDeletedFromGroup = false;
 
-		if (isGroupExist && isCourseExist && isCourseNotInGroup) {
+		if (isGroupExist && isCourseExist && isCourseInGroup) {
 			Group group = groupService.findById(groupId);
 			group.deleteCourse(course);
+			course.deleteGroup(group);
 			courseRepository.update(course);
-			isCourseDeletedFromGroup = true;
+
+		} else {
+
+			System.out.println("Some problems");
 		}
 
-		return isCourseDeletedFromGroup;
+		return jdbcTemplate.update(SQL_DELETE_COURSE_FROM_GROUP, groupId) > 0;
 	}
 
 	public List<Course> findAll() {

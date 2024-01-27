@@ -3,6 +3,7 @@ package ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -16,16 +17,17 @@ public class PostgreSqlCourseDao implements CourseDao {
 
 	private final JdbcTemplate jdbcTemplate;
 
-	private static final String SQL_CREATE_COURSE = " insert into courses (course_id, title, describtion) "
+	private static final String SQL_CREATE_COURSE = " insert into application.courses (course_id, title, describtion) "
 			+ " values (?, ?, ?) ";
-	private static final String SQL_DELETE_COURSE = " delete from courses " + " where course_id = ? ";
-	private static final String SQL_UPDATE_COURSE = " update courses set title = ?, describtion = ? "
+	private static final String SQL_DELETE_COURSE = " delete from application.courses " + " where course_id = ? ";
+	private static final String SQL_UPDATE_COURSE = " update application.courses set title = ?, describtion = ? "
 			+ " where course_id = ? ";
-	private static final String SQL_FIND_BY_ID = " select * from courses " + " where course_id = ? ";
-	private static final String SQL_FIND_BY_TITLE = " select courses * from courses " + " where title = ? ";
-	private static final String SQL_FIND_ALL = " select * from courses ";
+	private static final String SQL_FIND_BY_ID = " select * from application.courses " + " where course_id = ? ";
+	private static final String SQL_FIND_BY_TITLE = " select courses * from application.courses " + " where title = ? ";
+	private static final String SQL_FIND_ALL = " select * from application.courses ";
 
-	public PostgreSqlCourseDao(JdbcTemplate jdbcTemplate, CourseMapper courseMapper) {
+	@Autowired
+	public PostgreSqlCourseDao(JdbcTemplate jdbcTemplate) {
 
 		this.jdbcTemplate = jdbcTemplate;
 
