@@ -1,13 +1,32 @@
 package ua.com.foxminded.javaspring.SchoolApplication.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Student extends User {
+import org.hibernate.annotations.Table;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+
+@Entity
+@Table(name = "students", schema = "application")
+public class Student extends User implements Serializable {
+
+	@Column(name = "group_id")
 	private long group_id;
-	private List<Course> courses = new ArrayList<>();
+
 	private final int maxCourses = 4;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "students_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
+	private List<Course> courses = new ArrayList<>();
+
+	private static final long serialVersionUID = -7353839263354063173L;
 
 	public Student(long id, long group_id, String name, String surname, String login, String passsword) {
 

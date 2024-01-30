@@ -64,7 +64,7 @@ class CourseServiceTest {
 			
 		assertTrue(isCreated);
 		assertEquals(newCourse.getTitle(), coursesList.get(4).getTitle());
-		assertEquals(newCourse.getDescribtion(), coursesList.get(4).getDescribtion());
+		assertEquals(newCourse.getDescription(), coursesList.get(4).getDescription());
 
 		verify(postgreSqlCourseDao).create(any(Course.class));
 	}
@@ -88,7 +88,6 @@ class CourseServiceTest {
 		int[] create = courseService.createAll(newCoursesList);
 
 		assertNotNull(create);
-		// assertEquals(newStudentsList.size(), create.length);
 		assertEquals(newCoursesList.get(0).getTitle(), courseNewOne.getTitle());
 		assertEquals(newCoursesList.get(1).getTitle(), courseNewTwo.getTitle());
 
@@ -124,7 +123,7 @@ class CourseServiceTest {
 		Course newCourse = courseService.findById(courseTest.getKey());
 
 		assertEquals(newCourse.getTitle(), courseTest.getTitle());
-		assertEquals(newCourse.getDescribtion(), courseTest.getDescribtion());
+		assertEquals(newCourse.getDescription(), courseTest.getDescription());
 
 		verify(postgreSqlCourseDao).findById(courseTest.getKey());
 	}
@@ -165,7 +164,6 @@ class CourseServiceTest {
 	
 	assertEquals(isDeleted, true);
 		assertEquals(newCoursesList.size(), (coursesList.size() - 1));
-		//assertNotEquals(newStudentsList, studentsList);
 		
 		verify(postgreSqlCourseDao).delete(courseTest);
 	}

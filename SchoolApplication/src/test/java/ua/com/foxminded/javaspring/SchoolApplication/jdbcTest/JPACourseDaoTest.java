@@ -13,33 +13,25 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.DaoException;
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlCourseDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
-import ua.com.foxminded.javaspring.SchoolApplication.model.CourseMapper;
 
-@Sql(scripts = { "/clear_tables.sql", "/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-
-@JdbcTest
-@ContextConfiguration(classes = { PostgreSqlCourseDao.class, CourseMapper.class })
-@ActiveProfiles("test")
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+		PostgreSqlCourseDao.class }))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class JDBCCourseDaoTest {
+@Sql(scripts = { "/clear_tables.sql", "/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+class JPACourseDaoTest {
 
 	@Autowired
 	private DataSource dataSource;
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-//	@Autowired
-//	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	@Autowired
-	private CourseMapper courseMapper;
 
 	private PostgreSqlCourseDao postgreSqlCourseDao;
 	private List<Course> coursesList;
@@ -52,7 +44,7 @@ class JDBCCourseDaoTest {
 			Course course = new Course();
 			course.setKey((long) i);
 			course.setTitle(course.getTitle());
-			course.setDescribtion(course.getDescribtion());
+			course.setDescription(course.getDescription());
 
 			coursesList.add(course);
 		}
@@ -82,7 +74,7 @@ class JDBCCourseDaoTest {
 	void testCreateStudent() {
 		courseTest.setKey(6L);
 		courseTest.setTitle("Sixth");
-		courseTest.setDescribtion("Math");
+		courseTest.setDescription("Math");
 
 		assertEquals(true, postgreSqlCourseDao.create(courseTest));
 		postgreSqlCourseDao.delete(courseTest);
@@ -92,7 +84,7 @@ class JDBCCourseDaoTest {
 	void testUpdateStudent() {
 		courseTest.setKey(1L);
 		courseTest.setTitle("First");
-		courseTest.setDescribtion("History");
+		courseTest.setDescription("History");
 
 		assertEquals(true, postgreSqlCourseDao.update(courseTest));
 	}
@@ -100,7 +92,7 @@ class JDBCCourseDaoTest {
 	@Test
 	void testDeleteStudent() {
 		courseTest.setTitle("Sixth");
-		courseTest.setDescribtion("Programming");
+		courseTest.setDescription("Programming");
 
 		postgreSqlCourseDao.create(courseTest);
 		assertTrue(postgreSqlCourseDao.delete(courseTest));

@@ -1,28 +1,32 @@
 package ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.DaoException;
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.StudentDao;
+import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 import ua.com.foxminded.javaspring.SchoolApplication.model.StudentMapper;
-import ua.com.foxminded.javaspring.SchoolApplication.model.User;
 
-@Service
+@Repository
+@Transactional
 public class PostgreSqlStudentDao implements StudentDao {
 
 	private static Logger log = Logger.getLogger(PostgreSqlStudentDao.class.getName());
 	private DataSource dataSource;
 
-	private JdbcTemplate jdbcTemplate;
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	private static final String SQL_CREATE_STUDENT = "insert into application.students (students_id, group_id, name, surname, login, password)"
 			+ "	values (?, ?, ?, ?, ?, ?) ";
@@ -36,10 +40,9 @@ public class PostgreSqlStudentDao implements StudentDao {
 	private static final String SQL_FIND_ALL = " select * from application.students ";
 
 	@Autowired
-	public PostgreSqlStudentDao(JdbcTemplate jdbcTemplate) {
+	public PostgreSqlStudentDao(EntityManager entityManager) {
 
-		this.jdbcTemplate = jdbcTemplate;
-
+		this.entityManager = entityManager;
 	}
 
 	@Override
@@ -48,62 +51,88 @@ public class PostgreSqlStudentDao implements StudentDao {
 
 		String sql = "SELECT * FROM students WHERE login = ? AND password = ?";
 
-		return jdbcTemplate.query(sql, new Object[] { login, password }, new StudentMapper()).stream().findFirst()
-				.orElse(null);
+		return entityManager.createQuery(sql, new Student[] { login, password }, new StudentMapper()).stream()
+				.findFirst().orElse(null);
 	}
 
 	public boolean create(Student student) {
+		try {
+			entityManager.persist(student);
+			return true;
 
-		return jdbcTemplate.update(SQL_CREATE_STUDENT, student.getKey(), student.getGroupId(), student.getName(),
-				student.getSurname(), student.getLogin(), student.getPassword()) > 0;
+		} catch (Exception e) {
+
+			return false;
+		}
 	}
 
-	public int[] createAll(List<Student> studentsList) {
+	public boolean createAll(List<Student> studentsList) {
 
-		List<Object[]> studentRows = new ArrayList<>();
+		try {
+			for (Student student : studentsList) {
+				entityManager.persist(student);
+			}
+			return true;
 
-		for (User student : studentsList) {
-			studentRows.add(new Object[] { student.getKey(), student.getGroupId(), student.getName(),
-					student.getSurname(), student.getLogin(), student.getPassword() });
+		} catch (Exception e) {
+
+			return false;
 		}
-
-		return jdbcTemplate.batchUpdate(SQL_CREATE_STUDENT, studentRows);
 	}
 
 	public boolean update(Student student) {
 
-		return jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getGroupId(), student.getName(), student.getSurname(),
-				student.getLogin(), student.getPassword(), student.getKey()) > 0;
+		try {
+			entityManager.merge(student);
+			return true;
+
+		} catch (Exception e) {
+
+			return false;
+		}
 	}
 
 	public boolean delete(Student student) {
-		return jdbcTemplate.update(SQL_DELETE_STUDENT, student.getKey()) > 0;
+
+		try {
+			Student student1 = entityManager.find(Course.class, student.getKey);
+			if (student1 != null) {
+				entityManager.remove(student1);
+				return true;
+
+			} else {
+
+				return false;
+			}
+
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override
 	public boolean ifExistFindById(Long key) {
-		return jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_ID, new Object[] { key }, new StudentMapper()) != null;
-	}
-
-	@Override
-	public Student findById(Long key) {
-		return jdbcTemplate.queryForObject(SQL_FIND_STUDENT_BY_ID, new Object[] { key }, new StudentMapper());
+		return entityManager.find(Student.class, key) != null;
 	}
 
 	@Override
 	public List<Student> findByName(String name) {
-		return (List<Student>) jdbcTemplate.query(SQL_FIND_STUDENT_BY_NAME, new Object[] { name }, new StudentMapper());
+		return entityManager.createQuery(SQL_FIND_STUDENT_BY_NAME, Student.class).setParameter("name", name)
+				.getResultList();
+	}
+
+	@Override
+	public Student findById(Long key) {
+
+		return entityManager.find(Student.class, key);
 	}
 
 	public List<Student> findAll() {
-		return jdbcTemplate.query(SQL_FIND_ALL, new StudentMapper());
+		return entityManager.createQuery(SQL_FIND_ALL, Student.class).getResultList();
 	}
 
-	public void setDataSource(DataSource dataSource) {
-		jdbcTemplate = new JdbcTemplate(dataSource);
-	}
+	public TypedQuery<Integer> getCountOfStudents() {
+		return entityManager.createQuery("SELECT COUNT(*) FROM students", Integer.class);
 
-	public int getCountOfStudents() {
-		return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM students", Integer.class);
 	}
 }

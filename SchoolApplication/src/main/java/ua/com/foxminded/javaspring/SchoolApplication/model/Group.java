@@ -1,12 +1,24 @@
 package ua.com.foxminded.javaspring.SchoolApplication.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Group extends Entity<Long> {
+import org.hibernate.annotations.Table;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+
+@Entity
+@Table(name = "groups", schema = "application")
+public class Group extends Entity<Long> implements Serializable {
+
+	@Column(name = "title")
 	private String title;
+
 	private List<Course> courses = new ArrayList<>();;
+
+	private static final long serialVersionUID = -7353839263354063173L;
 
 	public Group(long id, String title) {
 

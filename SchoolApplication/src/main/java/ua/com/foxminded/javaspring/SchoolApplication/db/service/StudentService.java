@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlStudentDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
@@ -17,6 +19,10 @@ import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
 public class StudentService {
 
 	private Course course;
+
+	@PersistenceContext
+	private EntityManager em;
+
 	private JdbcTemplate jdbcTemplate;
 	private CourseService courseService;
 	private PostgreSqlStudentDao studentRepository;

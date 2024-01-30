@@ -1,20 +1,22 @@
 package ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.GroupDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
-import ua.com.foxminded.javaspring.SchoolApplication.model.GroupMapper;
 
-@Service
+@Repository
+@Transactional
 public class PostgreSqlGroupDao implements GroupDao {
 
-	private final JdbcTemplate jdbcTemplate;
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	private static final String SQL_CREATE_GROUP = " insert into application.groups (group_id, title) "
 			+ " values (?, ?) ";
@@ -25,52 +27,84 @@ public class PostgreSqlGroupDao implements GroupDao {
 	private static final String SQL_FIND_ALL = " select * from application.groups";
 
 	@Autowired
-	public PostgreSqlGroupDao(JdbcTemplate jdbcTemplate) {
+	public PostgreSqlGroupDao(EntityManager entityManager) {
 
-		this.jdbcTemplate = jdbcTemplate;
-
+		this.entityManager = entityManager;
 	}
 
 	public boolean create(Group group) {
-		return jdbcTemplate.update(SQL_CREATE_GROUP, group.getKey(), group.getTitle()) > 0;
+
+		try {
+			entityManager.persist(group);
+			return true;
+
+		} catch (Exception e) {
+
+			return false;
+		}
 	}
 
-	public int[] createAll(List<Group> groupsList) {
+	public boolean createAll(List<Group> groupsList) {
 
-		List<Object[]> groupRows = new ArrayList<>();
+		try {
+			for (Group group : groupsList) {
+				entityManager.persist(group);
+			}
+			return true;
 
-		for (Group group : groupsList) {
-			groupRows.add(new Object[] { group.getKey(), group.getTitle() });
+		} catch (Exception e) {
+
+			return false;
 		}
-
-		return jdbcTemplate.batchUpdate(SQL_CREATE_GROUP, groupRows);
 	}
 
 	public boolean update(Group group) {
-		return jdbcTemplate.update(SQL_UPDATE_GROUP, group.getTitle(), group.getKey()) > 0;
+
+		try {
+			entityManager.merge(group);
+			return true;
+
+		} catch (Exception e) {
+
+			return false;
+		}
 	}
 
 	public boolean delete(Group group) {
-		return jdbcTemplate.update(SQL_DELETE_GROUP, group.getKey()) > 0;
+
+		try {
+
+			Group group1 = entityManager.find(Group.class, group.getKey);
+			if (group1 != null) {
+				entityManager.remove(group1);
+				return true;
+
+			} else {
+
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override
 	public boolean ifExistFindById(Long key) {
-		return jdbcTemplate.queryForObject(SQL_FIND_GROUP_BY_ID, new Object[] { key }, new GroupMapper()) != null;
+		return entityManager.find(Group.class, key) != null;
 	}
 
 	@Override
 	public List<Group> findByTitle(String title) {
-		return (List<Group>) jdbcTemplate.queryForObject(SQL_FIND_GROUP_BY_TITLE, new Object[] { title },
-				new GroupMapper());
+		return entityManager.createQuery(SQL_FIND_GROUP_BY_TITLE, Group.class).setParameter("title", title)
+				.getResultList();
 	}
 
 	@Override
 	public Group findById(Long key) {
-		return (Group) jdbcTemplate.queryForObject(SQL_FIND_GROUP_BY_ID, new Object[] { key }, new GroupMapper());
+		return entityManager.find(Group.class, key);
 	}
 
 	public List<Group> findAll() {
-		return jdbcTemplate.query(SQL_FIND_ALL, new GroupMapper());
+		return entityManager.createQuery(SQL_FIND_ALL, Group.class).getResultList();
 	}
 }

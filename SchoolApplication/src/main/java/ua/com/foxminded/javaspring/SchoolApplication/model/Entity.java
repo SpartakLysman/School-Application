@@ -1,7 +1,16 @@
 package ua.com.foxminded.javaspring.SchoolApplication.model;
 
+import org.springframework.data.annotation.Id;
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.MappedSuperclass;
+
+@MappedSuperclass
 public class Entity<K> {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private K key;
 
 	public Entity(K key) {

@@ -1,11 +1,22 @@
 package ua.com.foxminded.javaspring.SchoolApplication.model;
 
+import jakarta.persistence.Column;
+
 public abstract class User extends Entity<Long> {
 
+	@Column(name = "group_id")
 	private long group_id;
+
+	@Column(name = "name")
 	private String name;
+
+	@Column(name = "surname")
 	private String surname;
+
+	@Column(name = "login")
 	private String login;
+
+	@Column(name = "password")
 	private String passsword;
 
 	public User(Long id, long grouop_id, String name, String surname, String login, String passsword) {

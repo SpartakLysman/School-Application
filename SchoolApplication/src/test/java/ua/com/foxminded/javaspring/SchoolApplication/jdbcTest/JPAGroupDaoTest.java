@@ -13,10 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.DaoException;
@@ -24,13 +23,11 @@ import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlG
 import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
 import ua.com.foxminded.javaspring.SchoolApplication.model.GroupMapper;
 
-@Sql(scripts = { "/clear_tables.sql", "/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-
-@JdbcTest
-@ContextConfiguration(classes = { PostgreSqlGroupDao.class, GroupMapper.class })
-@ActiveProfiles("test")
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+		PostgreSqlGroupDao.class }))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class JDBCGroupDaoTest {
+@Sql(scripts = { "/clear_tables.sql", "/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+class JPAGroupDaoTest {
 
 	@Autowired
 	private DataSource dataSource;

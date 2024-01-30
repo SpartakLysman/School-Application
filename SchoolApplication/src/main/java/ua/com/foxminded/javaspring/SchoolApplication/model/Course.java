@@ -1,25 +1,43 @@
 package ua.com.foxminded.javaspring.SchoolApplication.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Course extends Entity<Long> {
+import org.hibernate.annotations.Table;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
+
+@Entity
+@Table(name = "courses", schema = "application")
+public class Course extends Entity<Long> implements Serializable {
+
+	@Column(name = "title")
 	private String title;
-	private String describtion;
-	private List<Student> students = new ArrayList<>();
+
+	@Column(name = "description")
+	private String description;
+
 	private List<Group> groups = new ArrayList<>();
 
-	public Course(String title, String describtion) {
+	@ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+	private List<Student> students = new ArrayList<>();
+
+	private static final long serialVersionUID = -7353839263354063173L;
+
+	public Course(String title, String description) {
 		this.title = title;
-		this.describtion = describtion;
+		this.description = description;
 
 	}
 
-	public Course(Long id, String title, String describtion) {
+	public Course(Long id, String title, String description) {
 		super(id);
 		this.title = title;
-		this.describtion = describtion;
+		this.description = description;
 
 	}
 
@@ -59,21 +77,21 @@ public class Course extends Entity<Long> {
 		return title;
 	}
 
-	public String getDescribtion() {
-		return describtion;
+	public String getDescription() {
+		return description;
 	}
 
 	public void setTitle(String newTitle) {
 		title = newTitle;
 	}
 
-	public void setDescribtion(String newDescribtion) {
-		describtion = newDescribtion;
+	public void setDescription(String newDescription) {
+		description = newDescription;
 	}
 
 	@Override
 	public String toString() {
-		return "Course info: " + " \nTitle: " + title + ",  Describtion: " + describtion + ", " + "\n"
+		return "Course info: " + " \nTitle: " + title + ",  Description: " + description + ", " + "\n"
 				+ "Number Of Students: " + students.size();
 	}
 }

@@ -8,7 +8,7 @@ public interface DAO<E extends Entity<K>, K> {
 
 	boolean create(E e);
 
-	int[] createAll(List<E> e);
+	boolean createAll(List<E> e);
 
 	boolean delete(E e);
 
