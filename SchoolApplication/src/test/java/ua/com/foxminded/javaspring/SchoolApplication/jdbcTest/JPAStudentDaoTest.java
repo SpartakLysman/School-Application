@@ -7,21 +7,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.jdbc.Sql;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.DaoException;
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlStudentDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
-import ua.com.foxminded.javaspring.SchoolApplication.model.StudentMapper;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
 		PostgreSqlStudentDao.class }))
@@ -29,13 +27,8 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.StudentMapper;
 @Sql(scripts = { "/clear_tables.sql", "/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class JPAStudentDaoTest {
 
-	@Autowired
-	private DataSource dataSource;
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	private StudentMapper studentMapper;
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	private PostgreSqlStudentDao postgreSqlStudentDao;
 	private List<Student> studentsList;
@@ -57,23 +50,17 @@ class JPAStudentDaoTest {
 		studentFirst = studentsList.get(0);
 		studentTest = new Student();
 		studentTest.setKey(6L);
-//		studentTest.setName("Anton");
-//		studentTest.setSurname("Antonovich");
-//		studentTest.setLogin("6666");
-//		studentTest.setPassword("Sixth");
 
 	}
 
 	@BeforeEach
 	void setUp() throws DaoException {
-		jdbcTemplate.setDataSource(dataSource);
-		postgreSqlStudentDao = new PostgreSqlStudentDao(jdbcTemplate);
+		postgreSqlStudentDao = new PostgreSqlStudentDao(entityManager);
 	}
 
 	@Test
 	void testFindById() {
 		assertEquals(studentFirst, postgreSqlStudentDao.findById(1L));
-		// assertEquals(, postgreSqlStudentDao.findById(1L));
 	}
 
 	@Test
@@ -120,6 +107,5 @@ class JPAStudentDaoTest {
 	@Test
 	void testCheckIfExistByID() {
 		assertTrue(postgreSqlStudentDao.ifExistFindById(3L));
-		// assertFalse(postgreSqlStudentDao.ifExistFindById(10L));
 	}
 }

@@ -4,14 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.Table;
-
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 
-@Entity
+@jakarta.persistence.Entity
 @Table(name = "courses", schema = "application")
 public class Course extends Entity<Long> implements Serializable {
 
@@ -21,6 +19,7 @@ public class Course extends Entity<Long> implements Serializable {
 	@Column(name = "description")
 	private String description;
 
+	@ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
 	private List<Group> groups = new ArrayList<>();
 
 	@ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)

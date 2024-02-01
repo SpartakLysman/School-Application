@@ -5,7 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
@@ -23,7 +22,6 @@ public class CourseService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	private JdbcTemplate jdbcTemplate;
 	private GroupService groupService;
 	private PostgreSqlCourseDao courseRepository;
 
@@ -35,12 +33,11 @@ public class CourseService {
 	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
 
 	@Autowired
-	public CourseService(JdbcTemplate jdbcTemplate) {
+	public CourseService(EntityManager entityManager) {
 
 		this.group = new Group();
-		this.jdbcTemplate = jdbcTemplate;
-		this.groupService = new GroupService(jdbcTemplate);
-		this.courseRepository = new PostgreSqlCourseDao(jdbcTemplate);
+		this.groupService = new GroupService(entityManager);
+		this.courseRepository = new PostgreSqlCourseDao(entityManager);
 
 	}
 
@@ -53,10 +50,10 @@ public class CourseService {
 		return created;
 	}
 
-	public int[] createAll(List<Course> coursesList) {
+	public boolean createAll(List<Course> coursesList) {
 
 		LOGGER.debug("All courses creating...");
-		int[] createdAll = courseRepository.createAll(coursesList);
+		boolean createdAll = courseRepository.createAll(coursesList);
 		LOGGER.info("All courses were successfully created - " + coursesList.toString());
 
 		return createdAll;
@@ -79,7 +76,10 @@ public class CourseService {
 			System.out.println("Some problems");
 		}
 
-		return jdbcTemplate.update(SQL_ADD_COURSE_TO_GROUP, groupId, course.getKey()) > 0;
+		int updated = entityManager.createNativeQuery(SQL_ADD_COURSE_TO_GROUP).setParameter("groupId", groupId)
+				.setParameter("courseKey", course.getKey()).executeUpdate();
+
+		return updated > 0;
 	}
 
 	public boolean deleteCourseFromGroup(Course course, long groupId) {
@@ -99,7 +99,10 @@ public class CourseService {
 			System.out.println("Some problems");
 		}
 
-		return jdbcTemplate.update(SQL_DELETE_COURSE_FROM_GROUP, groupId) > 0;
+		int deleted = entityManager.createNativeQuery(SQL_DELETE_COURSE_FROM_GROUP).setParameter("groupId", groupId)
+				.executeUpdate();
+
+		return deleted > 0;
 	}
 
 	public List<Course> findAll() {

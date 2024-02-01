@@ -30,7 +30,7 @@ class GroupServiceTest {
 	GroupService groupService;
 
 	private List<Group> groupsList;
-	private Group groupFirst;
+
 	private Group groupTest;
 	private int[] size = new int[1];
 
@@ -49,7 +49,6 @@ class GroupServiceTest {
 		groupsList = List.of(gorupOne, gorupTwo, gorupTree, gorupFour, gorupFive, gorupSix, gorupSeven, gorupEight,
 				gorupNine, gorupTen);
 
-		groupFirst = groupsList.get(0);
 		groupTest = groupsList.get(4);
 		size[0] = 10;
 	}
@@ -80,12 +79,12 @@ class GroupServiceTest {
 		groupslist.add(groupNewOne);
 		groupslist.add(groupNewTwo);
 
-		int[] sizeNew = new int[2];
+		// int[] sizeNew = new int[2];
 
-		when(postgreSqlGroupDao.createAll(groupslist)).thenReturn(sizeNew);
+		when(postgreSqlGroupDao.createAll(groupslist)).thenReturn(true);
 
 		List<Group> newGroupsList = List.of(groupNewOne, groupNewTwo);
-		int[] create = groupService.createAll(newGroupsList);
+		boolean create = groupService.createAll(newGroupsList);
 
 		assertNotNull(create);
 		// assertEquals(newStudentsList.size(), create.length);
@@ -103,8 +102,6 @@ class GroupServiceTest {
 		for (int i = 1; i < groupsList.size(); i++) {
 			groupsEntity.add(groupsList.get(i));
 		}
-
-		Group courseFirst = groupsEntity.get(0);
 
 		when(postgreSqlGroupDao.findAll()).thenReturn(groupsEntity);
 

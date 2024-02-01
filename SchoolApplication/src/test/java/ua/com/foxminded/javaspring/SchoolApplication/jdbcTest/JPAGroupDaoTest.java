@@ -7,21 +7,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.jdbc.Sql;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.DaoException;
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlGroupDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
-import ua.com.foxminded.javaspring.SchoolApplication.model.GroupMapper;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
 		PostgreSqlGroupDao.class }))
@@ -29,13 +27,8 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.GroupMapper;
 @Sql(scripts = { "/clear_tables.sql", "/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class JPAGroupDaoTest {
 
-	@Autowired
-	private DataSource dataSource;
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	private GroupMapper groupMapper;
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	private PostgreSqlGroupDao postgreSqlGroupDao;
 	private List<Group> groupsList;
@@ -59,8 +52,7 @@ class JPAGroupDaoTest {
 
 	@BeforeEach
 	void setUp() throws DaoException {
-		jdbcTemplate.setDataSource(dataSource);
-		postgreSqlGroupDao = new PostgreSqlGroupDao(jdbcTemplate);
+		postgreSqlGroupDao = new PostgreSqlGroupDao(entityManager);
 	}
 
 	@Test

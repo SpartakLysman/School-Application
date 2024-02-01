@@ -5,7 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
@@ -21,9 +20,8 @@ public class StudentService {
 	private Course course;
 
 	@PersistenceContext
-	private EntityManager em;
+	private EntityManager entityManager;
 
-	private JdbcTemplate jdbcTemplate;
 	private CourseService courseService;
 	private PostgreSqlStudentDao studentRepository;
 
@@ -34,12 +32,11 @@ public class StudentService {
 	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
 
 	@Autowired
-	public StudentService(JdbcTemplate jdbcTemplate) {
+	public StudentService(EntityManager entityManager) {
 
 		this.course = new Course();
-		this.jdbcTemplate = jdbcTemplate;
-		this.courseService = new CourseService(jdbcTemplate);
-		this.studentRepository = new PostgreSqlStudentDao(jdbcTemplate);
+		this.courseService = new CourseService(entityManager);
+		this.studentRepository = new PostgreSqlStudentDao(entityManager);
 
 	}
 
@@ -52,10 +49,10 @@ public class StudentService {
 		return created;
 	}
 
-	public int[] createAll(List<Student> studentsList) {
+	public boolean createAll(List<Student> studentsList) {
 
 		LOGGER.debug("Student creating...");
-		int[] createdAll = studentRepository.createAll(studentsList);
+		boolean createdAll = studentRepository.createAll(studentsList);
 		LOGGER.info("All students were successfully created" + studentsList.toString());
 
 		return createdAll;
@@ -78,7 +75,10 @@ public class StudentService {
 			System.out.println("Some problems");
 		}
 
-		return jdbcTemplate.update(SQL_ADD_STUDENT_TO_COURSE, student.getKey(), courseId) > 0;
+		int updated = entityManager.createNativeQuery(SQL_ADD_STUDENT_TO_COURSE)
+				.setParameter("students_id", student.getKey()).setParameter("course_id", courseId).executeUpdate();
+
+		return updated > 0;
 	}
 
 	public boolean deleteStudentFromCourse(Student student, long courseId) {
@@ -98,7 +98,10 @@ public class StudentService {
 			System.out.println("Some problems");
 		}
 
-		return jdbcTemplate.update(SQL_DELETE_STUDENT_FROM_COURSE, student.getKey(), courseId) > 0;
+		int deleted = entityManager.createNativeQuery(SQL_DELETE_STUDENT_FROM_COURSE)
+				.setParameter("students_id", student.getKey()).setParameter("course_id", courseId).executeUpdate();
+
+		return deleted > 0;
 	}
 
 	public List<Student> findAll() {

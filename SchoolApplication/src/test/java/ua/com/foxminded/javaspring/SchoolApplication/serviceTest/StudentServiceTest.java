@@ -30,7 +30,6 @@ class StudentServiceTest {
 	StudentService studentService;
 
 	private List<Student> studentsList;
-	private Student studentFirst;
 	private Student studentTest;
 	private int[] size = new int[1];
 
@@ -60,7 +59,6 @@ class StudentServiceTest {
 				studentEight, studentNine, studentTen, studentEleven, studentTwelve, studenThirteen, studentFourteen,
 				studentFivteen, studentSixteen, studentSeventeen, studentEighteen, studentNineteen, studentTwenty);
 
-		studentFirst = studentsList.get(0);
 		studentTest = studentsList.get(4);
 		size[0] = 10;
 	}
@@ -90,15 +88,15 @@ class StudentServiceTest {
 
 		usersStudent.add(studentNewOne);
 		usersStudent.add(studentNewTwo);
-		int[] sizeNew = new int[2];
 
-		when(postgreSqlStudentDao.createAll(usersStudent)).thenReturn(sizeNew);
+		// int[] sizeNew = new int[2];
+
+		when(postgreSqlStudentDao.createAll(usersStudent)).thenReturn(true);
 
 		List<Student> newStudentsList = List.of(studentNewOne, studentNewTwo);
-		int[] create = studentService.createAll(newStudentsList);
+		boolean create = studentService.createAll(newStudentsList);
 
 		assertNotNull(create);
-		// assertEquals(newStudentsList.size(), create.length);
 		assertEquals(newStudentsList.get(0).getName(), studentNewOne.getName());
 		assertEquals(newStudentsList.get(1).getName(), studentNewTwo.getName());
 

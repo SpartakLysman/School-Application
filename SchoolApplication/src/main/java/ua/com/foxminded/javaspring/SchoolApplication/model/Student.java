@@ -4,17 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.Table;
-
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 
-@Entity
-@Table(name = "students", schema = "application")
 public class Student extends User implements Serializable {
 
 	@Column(name = "group_id")

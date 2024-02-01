@@ -5,9 +5,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityManager;
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlGroupDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
 import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
@@ -20,9 +20,9 @@ public class GroupService {
 	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
 
 	@Autowired
-	public GroupService(JdbcTemplate jdbcTemplate) {
+	public GroupService(EntityManager entityManager) {
 
-		this.groupRepository = new PostgreSqlGroupDao(jdbcTemplate);
+		this.groupRepository = new PostgreSqlGroupDao(entityManager);
 
 	}
 
@@ -35,10 +35,10 @@ public class GroupService {
 		return created;
 	}
 
-	public int[] createAll(List<Group> groupsList) {
+	public boolean createAll(List<Group> groupsList) {
 
 		LOGGER.debug("All groups creating...");
-		int[] createdAll = groupRepository.createAll(groupsList);
+		boolean createdAll = groupRepository.createAll(groupsList);
 		LOGGER.info("All groups were successfully created " + groupsList.toString());
 
 		return createdAll;

@@ -30,7 +30,6 @@ class CourseServiceTest {
 	CourseService courseService;
 
 	private List<Course> coursesList;
-	private Course courseFirst;
 	private Course courseTest;
 	private int[] size = new int[1];
 
@@ -49,7 +48,6 @@ class CourseServiceTest {
 		coursesList = List.of(courseOne, courseTwo, courseTree, courseFour, courseFive, courseSix, courseSeven,
 				courseEight, courseNine, courseTen);
 
-		courseFirst = coursesList.get(0);
 		courseTest = coursesList.get(4);
 		size[0] = 10;
 	}
@@ -80,14 +78,14 @@ class CourseServiceTest {
 		courseslist.add(courseNewOne);
 		courseslist.add(courseNewTwo);
 
-		int[] sizeNew = new int[2];
+		// int[] sizeNew = new int[2];
 
-		when(postgreSqlCourseDao.createAll(courseslist)).thenReturn(sizeNew);
+		when(postgreSqlCourseDao.createAll(courseslist)).thenReturn(true);
 
 		List<Course> newCoursesList = List.of(courseNewOne, courseNewTwo);
-		int[] create = courseService.createAll(newCoursesList);
+		boolean create = courseService.createAll(newCoursesList);
 
-		assertNotNull(create);
+		assertTrue(create);
 		assertEquals(newCoursesList.get(0).getTitle(), courseNewOne.getTitle());
 		assertEquals(newCoursesList.get(1).getTitle(), courseNewTwo.getTitle());
 

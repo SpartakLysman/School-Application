@@ -7,17 +7,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.jdbc.Sql;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.DaoException;
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlCourseDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
@@ -28,10 +27,8 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 @Sql(scripts = { "/clear_tables.sql", "/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class JPACourseDaoTest {
 
-	@Autowired
-	private DataSource dataSource;
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	private PostgreSqlCourseDao postgreSqlCourseDao;
 	private List<Course> coursesList;
@@ -56,8 +53,7 @@ class JPACourseDaoTest {
 
 	@BeforeEach
 	void setUp() throws DaoException {
-		jdbcTemplate.setDataSource(dataSource);
-		postgreSqlCourseDao = new PostgreSqlCourseDao(jdbcTemplate);
+		postgreSqlCourseDao = new PostgreSqlCourseDao(entityManager);
 	}
 
 	@Test

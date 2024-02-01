@@ -9,14 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.DaoException;
 import ua.com.foxminded.javaspring.SchoolApplication.db.dao.StudentDao;
-import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
-import ua.com.foxminded.javaspring.SchoolApplication.model.StudentMapper;
 
 @Repository
 @Transactional
@@ -47,12 +46,16 @@ public class PostgreSqlStudentDao implements StudentDao {
 
 	@Override
 	public Student login(String login, String password) throws DaoException {
-		log.config("Looking for customer with the login: " + login + " and password: " + password);
+		try {
+			log.config("Looking for student with the login: " + login + " and password: " + password);
 
-		String sql = "SELECT * FROM students WHERE login = ? AND password = ?";
-
-		return entityManager.createQuery(sql, new Student[] { login, password }, new StudentMapper()).stream()
-				.findFirst().orElse(null);
+			String jpql = "SELECT s FROM Student s WHERE s.login = :login AND s.password = :password";
+			return entityManager.createQuery(jpql, Student.class).setParameter("login", login)
+					.setParameter("password", password).getSingleResult();
+		} catch (NoResultException e) {
+			System.out.println("Some proplems with your data :(");
+			return null;
+		}
 	}
 
 	public boolean create(Student student) {
@@ -95,7 +98,7 @@ public class PostgreSqlStudentDao implements StudentDao {
 	public boolean delete(Student student) {
 
 		try {
-			Student student1 = entityManager.find(Course.class, student.getKey);
+			Student student1 = entityManager.find(Student.class, student.getKey());
 			if (student1 != null) {
 				entityManager.remove(student1);
 				return true;

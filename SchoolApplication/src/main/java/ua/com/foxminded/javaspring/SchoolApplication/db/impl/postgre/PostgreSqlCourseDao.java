@@ -77,7 +77,7 @@ public class PostgreSqlCourseDao implements CourseDao {
 
 		try {
 
-			Course course1 = entityManager.find(Course.class, course.getKey);
+			Course course1 = entityManager.find(Course.class, course.getKey());
 			if (course1 != null) {
 				entityManager.remove(course1);
 				return true;

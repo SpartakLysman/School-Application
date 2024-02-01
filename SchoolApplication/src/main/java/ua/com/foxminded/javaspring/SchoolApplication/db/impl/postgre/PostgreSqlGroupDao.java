@@ -74,7 +74,7 @@ public class PostgreSqlGroupDao implements GroupDao {
 
 		try {
 
-			Group group1 = entityManager.find(Group.class, group.getKey);
+			Group group1 = entityManager.find(Group.class, group.getKey());
 			if (group1 != null) {
 				entityManager.remove(group1);
 				return true;

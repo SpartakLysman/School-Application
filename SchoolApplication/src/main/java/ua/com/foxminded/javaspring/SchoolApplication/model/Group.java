@@ -4,19 +4,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.Table;
-
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "groups", schema = "application")
+@jakarta.persistence.Entity
+@Table(name = "courses", schema = "application")
 public class Group extends Entity<Long> implements Serializable {
 
 	@Column(name = "title")
 	private String title;
 
-	private List<Course> courses = new ArrayList<>();;
+	private List<Course> courses = new ArrayList<>();
 
 	private static final long serialVersionUID = -7353839263354063173L;
 
