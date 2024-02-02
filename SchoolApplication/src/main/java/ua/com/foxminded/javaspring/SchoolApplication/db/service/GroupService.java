@@ -44,33 +44,6 @@ public class GroupService {
 		return createdAll;
 	}
 
-	public List<Group> findAll() {
-
-		LOGGER.debug("All groups findind...");
-		List<Group> groupsList = groupRepository.findAll();
-		LOGGER.info("All groups were successfully found ");
-
-		return groupsList;
-	}
-
-	public Group findById(long key) {
-
-		LOGGER.debug("Group findind by id");
-		Group group = groupRepository.findById(key);
-		LOGGER.info("Group was successfully found by id - " + key);
-
-		return group;
-	}
-
-	public List<Group> findByTitle(String title) {
-
-		LOGGER.debug("Group finding by title");
-		List<Group> groupsList = groupRepository.findByTitle(title);
-		LOGGER.info("Groups were successfully found by title - " + title);
-
-		return groupsList;
-	}
-
 	public boolean delete(Group group) {
 
 		LOGGER.debug("Group deleting - " + group.toString());
@@ -87,5 +60,32 @@ public class GroupService {
 		LOGGER.info("Group was successfully updated with id - " + group.getKey());
 
 		return updated;
+	}
+
+	public List<Group> findByTitle(String title) {
+
+		LOGGER.debug("Group finding by title");
+		List<Group> groupsList = groupRepository.findByTitle(title);
+		LOGGER.info("Groups were successfully found by title - " + title);
+
+		return groupsList;
+	}
+
+	public Group findById(long key) {
+
+		LOGGER.debug("Group findind by id");
+		Group group = groupRepository.findById(key);
+		LOGGER.info("Group was successfully found by id - " + key);
+
+		return group;
+	}
+
+	public List<Group> findAll() {
+
+		LOGGER.debug("All groups findind...");
+		List<Group> groupsList = groupRepository.findAll();
+		LOGGER.info("All groups were successfully found ");
+
+		return groupsList;
 	}
 }

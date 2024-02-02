@@ -94,52 +94,6 @@ class CourseServiceTest {
 	}
 
 	@Test
-	void findAllCoursesTest() {
-
-		List<Course> coursesEntity = new ArrayList<>();
-
-		for (int i = 1; i < coursesList.size(); i++) {
-			coursesEntity.add(coursesList.get(i));
-		}
-
-		when(postgreSqlCourseDao.findAll()).thenReturn(coursesEntity);
-
-		List<Course> newCoursesEntity = courseService.findAll();
-
-		assertNotNull(coursesEntity);
-		assertEquals(coursesEntity, newCoursesEntity);
-		assertEquals(coursesEntity.get(0).getKey(), newCoursesEntity.get(0).getKey());
-
-		verify(postgreSqlCourseDao).findAll();
-	}
-
-	@Test
-	void findCoursesByIdTest() {	
-
-		when(postgreSqlCourseDao.findById(courseTest.getKey())).thenReturn(coursesList.get(4));
-
-		Course newCourse = courseService.findById(courseTest.getKey());
-
-		assertEquals(newCourse.getTitle(), courseTest.getTitle());
-		assertEquals(newCourse.getDescription(), courseTest.getDescription());
-
-		verify(postgreSqlCourseDao).findById(courseTest.getKey());
-	}
-
-	@Test
-	void findCoursesByTitleTest() {
-		 when(postgreSqlCourseDao.findByTitle(courseTest.getTitle())).thenReturn(List.of(courseTest));
-
-	        List<Course> coursesListByTitle = courseService.findByTitle(courseTest.getTitle());
-
-	        assertNotNull(coursesListByTitle);
-	        assertEquals(coursesListByTitle.size(), 1);
-	        assertEquals(coursesListByTitle.get(0).getTitle(), courseTest.getTitle());
-
-	        verify(postgreSqlCourseDao).findByTitle(courseTest.getTitle());
-	}
-
-	@Test
 	void deleteCourseTest() {
 		
 		when(postgreSqlCourseDao.delete(courseTest)).thenReturn(true);
@@ -178,5 +132,51 @@ class CourseServiceTest {
 		assertNotEquals(courseForCheck, courseTest);
 
 		verify(postgreSqlCourseDao).update(courseTest);
+	}
+
+	@Test
+	void findCoursesByTitleTest() {
+		 when(postgreSqlCourseDao.findByTitle(courseTest.getTitle())).thenReturn(List.of(courseTest));
+
+	        List<Course> coursesListByTitle = courseService.findByTitle(courseTest.getTitle());
+
+	        assertNotNull(coursesListByTitle);
+	        assertEquals(coursesListByTitle.size(), 1);
+	        assertEquals(coursesListByTitle.get(0).getTitle(), courseTest.getTitle());
+
+	        verify(postgreSqlCourseDao).findByTitle(courseTest.getTitle());
+	}
+
+	@Test
+	void findCoursesByIdTest() {	
+
+		when(postgreSqlCourseDao.findById(courseTest.getKey())).thenReturn(coursesList.get(4));
+
+		Course newCourse = courseService.findById(courseTest.getKey());
+
+		assertEquals(newCourse.getTitle(), courseTest.getTitle());
+		assertEquals(newCourse.getDescription(), courseTest.getDescription());
+
+		verify(postgreSqlCourseDao).findById(courseTest.getKey());
+	}
+
+	@Test
+	void findAllCoursesTest() {
+
+		List<Course> coursesEntity = new ArrayList<>();
+
+		for (int i = 1; i < coursesList.size(); i++) {
+			coursesEntity.add(coursesList.get(i));
+		}
+
+		when(postgreSqlCourseDao.findAll()).thenReturn(coursesEntity);
+
+		List<Course> newCoursesEntity = courseService.findAll();
+
+		assertNotNull(coursesEntity);
+		assertEquals(coursesEntity, newCoursesEntity);
+		assertEquals(coursesEntity.get(0).getKey(), newCoursesEntity.get(0).getKey());
+
+		verify(postgreSqlCourseDao).findAll();
 	}
 }

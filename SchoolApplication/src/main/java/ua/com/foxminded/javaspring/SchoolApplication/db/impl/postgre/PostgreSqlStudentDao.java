@@ -64,7 +64,6 @@ public class PostgreSqlStudentDao implements StudentDao {
 			return true;
 
 		} catch (Exception e) {
-
 			return false;
 		}
 	}
@@ -78,19 +77,6 @@ public class PostgreSqlStudentDao implements StudentDao {
 			return true;
 
 		} catch (Exception e) {
-
-			return false;
-		}
-	}
-
-	public boolean update(Student student) {
-
-		try {
-			entityManager.merge(student);
-			return true;
-
-		} catch (Exception e) {
-
 			return false;
 		}
 	}
@@ -104,9 +90,19 @@ public class PostgreSqlStudentDao implements StudentDao {
 				return true;
 
 			} else {
-
 				return false;
 			}
+
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public boolean update(Student student) {
+
+		try {
+			entityManager.merge(student);
+			return true;
 
 		} catch (Exception e) {
 			return false;
@@ -136,6 +132,5 @@ public class PostgreSqlStudentDao implements StudentDao {
 
 	public TypedQuery<Integer> getCountOfStudents() {
 		return entityManager.createQuery("SELECT COUNT(*) FROM students", Integer.class);
-
 	}
 }

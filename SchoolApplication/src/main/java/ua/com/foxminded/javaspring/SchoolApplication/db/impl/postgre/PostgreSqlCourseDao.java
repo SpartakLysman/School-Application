@@ -41,7 +41,6 @@ public class PostgreSqlCourseDao implements CourseDao {
 			return true;
 
 		} catch (Exception e) {
-
 			return false;
 		}
 	}
@@ -55,7 +54,23 @@ public class PostgreSqlCourseDao implements CourseDao {
 			return true;
 
 		} catch (Exception e) {
+			return false;
+		}
+	}
 
+	@Override
+	public boolean delete(Course course) {
+
+		try {
+			Course course1 = entityManager.find(Course.class, course.getKey());
+			if (course1 != null) {
+				entityManager.remove(course1);
+				return true;
+
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
 			return false;
 		}
 	}
@@ -66,26 +81,6 @@ public class PostgreSqlCourseDao implements CourseDao {
 			entityManager.merge(course);
 			return true;
 
-		} catch (Exception e) {
-
-			return false;
-		}
-	}
-
-	@Override
-	public boolean delete(Course course) {
-
-		try {
-
-			Course course1 = entityManager.find(Course.class, course.getKey());
-			if (course1 != null) {
-				entityManager.remove(course1);
-				return true;
-
-			} else {
-
-				return false;
-			}
 		} catch (Exception e) {
 			return false;
 		}

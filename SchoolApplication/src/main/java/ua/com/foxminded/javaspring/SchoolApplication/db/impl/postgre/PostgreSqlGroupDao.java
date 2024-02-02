@@ -39,7 +39,6 @@ public class PostgreSqlGroupDao implements GroupDao {
 			return true;
 
 		} catch (Exception e) {
-
 			return false;
 		}
 	}
@@ -53,19 +52,6 @@ public class PostgreSqlGroupDao implements GroupDao {
 			return true;
 
 		} catch (Exception e) {
-
-			return false;
-		}
-	}
-
-	public boolean update(Group group) {
-
-		try {
-			entityManager.merge(group);
-			return true;
-
-		} catch (Exception e) {
-
 			return false;
 		}
 	}
@@ -80,9 +66,19 @@ public class PostgreSqlGroupDao implements GroupDao {
 				return true;
 
 			} else {
-
 				return false;
 			}
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public boolean update(Group group) {
+
+		try {
+			entityManager.merge(group);
+			return true;
+
 		} catch (Exception e) {
 			return false;
 		}

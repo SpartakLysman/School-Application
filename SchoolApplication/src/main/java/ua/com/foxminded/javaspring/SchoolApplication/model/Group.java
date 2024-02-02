@@ -61,10 +61,6 @@ public class Group extends Entity<Long> implements Serializable {
 		title = newTitle;
 	}
 
-//	public int getStudentsCounter() {
-//		return students.size();
-//	}
-
 	public String toString() {
 
 		return "Title" + title;

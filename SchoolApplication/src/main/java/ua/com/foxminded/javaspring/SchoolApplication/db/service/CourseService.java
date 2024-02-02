@@ -82,6 +82,15 @@ public class CourseService {
 		return updated > 0;
 	}
 
+	public boolean delete(Course course) {
+
+		LOGGER.debug("Course deleting - " + course.toString());
+		boolean deleted = courseRepository.delete(course);
+		LOGGER.info("Course successfully deleted with id - " + course.getKey());
+
+		return deleted;
+	}
+
 	public boolean deleteCourseFromGroup(Course course, long groupId) {
 
 		boolean isCourseInGroup = group.getCourses().contains(course);
@@ -105,11 +114,20 @@ public class CourseService {
 		return deleted > 0;
 	}
 
-	public List<Course> findAll() {
+	public boolean update(Course course) {
 
-		LOGGER.debug("All courses finding...");
-		List<Course> coursesList = courseRepository.findAll();
-		LOGGER.info("All courses were successfully found");
+		LOGGER.debug("Course updating - " + course.toString());
+		boolean updated = courseRepository.update(course);
+		LOGGER.info("Course was successfully updated with id - " + course.getKey());
+
+		return updated;
+	}
+
+	public List<Course> findByTitle(String title) {
+
+		LOGGER.debug("Courses finding by title");
+		List<Course> coursesList = courseRepository.findByTitle(title);
+		LOGGER.info("Courses were successfully found by title - " + title);
 
 		return coursesList;
 	}
@@ -124,30 +142,12 @@ public class CourseService {
 
 	}
 
-	public List<Course> findByTitle(String title) {
+	public List<Course> findAll() {
 
-		LOGGER.debug("Courses finding by title");
-		List<Course> coursesList = courseRepository.findByTitle(title);
-		LOGGER.info("Courses were successfully found by title - " + title);
+		LOGGER.debug("All courses finding...");
+		List<Course> coursesList = courseRepository.findAll();
+		LOGGER.info("All courses were successfully found");
 
 		return coursesList;
-	}
-
-	public boolean delete(Course course) {
-
-		LOGGER.debug("Course deleting - " + course.toString());
-		boolean deleted = courseRepository.delete(course);
-		LOGGER.info("Course successfully deleted with id - " + course.getKey());
-
-		return deleted;
-	}
-
-	public boolean update(Course course) {
-
-		LOGGER.debug("Course updating - " + course.toString());
-		boolean updated = courseRepository.update(course);
-		LOGGER.info("Course was successfully updated with id - " + course.getKey());
-
-		return updated;
 	}
 }

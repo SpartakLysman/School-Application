@@ -87,57 +87,10 @@ class GroupServiceTest {
 		boolean create = groupService.createAll(newGroupsList);
 
 		assertNotNull(create);
-		// assertEquals(newStudentsList.size(), create.length);
 		assertEquals(newGroupsList.get(0).getTitle(), groupNewOne.getTitle());
 		assertEquals(newGroupsList.get(1).getTitle(), groupNewTwo.getTitle());
 
 		verify(postgreSqlGroupDao).createAll(newGroupsList);
-	}
-
-	@Test
-	void findAllGroupsTest() {
-
-		List<Group> groupsEntity = new ArrayList<>();
-
-		for (int i = 1; i < groupsList.size(); i++) {
-			groupsEntity.add(groupsList.get(i));
-		}
-
-		when(postgreSqlGroupDao.findAll()).thenReturn(groupsEntity);
-
-		List<Group> newGroupsEntity = groupService.findAll();
-
-		assertNotNull(groupsEntity);
-		assertEquals(groupsEntity, newGroupsEntity);
-		assertEquals(groupsEntity.get(0).getKey(), newGroupsEntity.get(0).getKey());
-
-		verify(postgreSqlGroupDao).findAll();
-	}
-
-	@Test
-	void findGroupByIdTest() {
-
-		when(postgreSqlGroupDao.findById(groupTest.getKey())).thenReturn(groupsList.get(4));
-
-		Group newGroup = groupService.findById(groupTest.getKey());
-		
-		assertEquals(newGroup.getKey(), groupTest.getKey());
-		assertEquals(newGroup.getTitle(), groupTest.getTitle());
-
-		verify(postgreSqlGroupDao).findById(groupTest.getKey());
-	}
-
-	@Test
-	void findGroupsByTitleTest() {
-		 when(postgreSqlGroupDao.findByTitle(groupTest.getTitle())).thenReturn(List.of(groupTest));
-
-	        List<Group> groupsListByTitle = groupService.findByTitle(groupTest.getTitle());
-
-	        assertNotNull(groupsListByTitle);
-	        assertEquals(groupsListByTitle.size(), 1);
-	        assertEquals(groupsListByTitle.get(0).getTitle(), groupTest.getTitle());
-
-	        verify(postgreSqlGroupDao).findByTitle(groupTest.getTitle());
 	}
 
 	@Test
@@ -182,5 +135,51 @@ class GroupServiceTest {
 		assertNotEquals(groupForCheck, groupTest);
 
 		verify(postgreSqlGroupDao).update(groupTest);
+	}
+
+	@Test
+	void findGroupsByTitleTest() {
+		 when(postgreSqlGroupDao.findByTitle(groupTest.getTitle())).thenReturn(List.of(groupTest));
+
+	        List<Group> groupsListByTitle = groupService.findByTitle(groupTest.getTitle());
+
+	        assertNotNull(groupsListByTitle);
+	        assertEquals(groupsListByTitle.size(), 1);
+	        assertEquals(groupsListByTitle.get(0).getTitle(), groupTest.getTitle());
+
+	        verify(postgreSqlGroupDao).findByTitle(groupTest.getTitle());
+	}
+
+	@Test
+	void findGroupByIdTest() {
+
+		when(postgreSqlGroupDao.findById(groupTest.getKey())).thenReturn(groupsList.get(4));
+
+		Group newGroup = groupService.findById(groupTest.getKey());
+		
+		assertEquals(newGroup.getKey(), groupTest.getKey());
+		assertEquals(newGroup.getTitle(), groupTest.getTitle());
+
+		verify(postgreSqlGroupDao).findById(groupTest.getKey());
+	}
+
+	@Test
+	void findAllGroupsTest() {
+
+		List<Group> groupsEntity = new ArrayList<>();
+
+		for (int i = 1; i < groupsList.size(); i++) {
+			groupsEntity.add(groupsList.get(i));
+		}
+
+		when(postgreSqlGroupDao.findAll()).thenReturn(groupsEntity);
+
+		List<Group> newGroupsEntity = groupService.findAll();
+
+		assertNotNull(groupsEntity);
+		assertEquals(groupsEntity, newGroupsEntity);
+		assertEquals(groupsEntity.get(0).getKey(), newGroupsEntity.get(0).getKey());
+
+		verify(postgreSqlGroupDao).findAll();
 	}
 }

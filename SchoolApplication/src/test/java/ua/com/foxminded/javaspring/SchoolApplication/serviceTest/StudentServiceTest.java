@@ -104,55 +104,6 @@ class StudentServiceTest {
 	}
 
 	@Test
-	void findAllStudentsTest() {
-
-		List<Student> studentsEntity = new ArrayList<>();
-
-		for (int i = 1; i < studentsList.size(); i++) {
-			studentsEntity.add(studentsList.get(i));
-		}
-
-		Student studentFirst = studentsEntity.get(0);
-
-		when(postgreSqlStudentDao.findAll()).thenReturn(studentsEntity);
-
-		List<Student> newStudentsEntity = studentService.findAll();
-
-		assertNotNull(studentsEntity);
-		assertEquals(studentsEntity, newStudentsEntity);
-		assertEquals(studentsEntity.get(0).getKey(), newStudentsEntity.get(0).getKey());
-
-		verify(postgreSqlStudentDao).findAll();
-	}
-
-	@Test
-	void findStudentByIdTest() {
-		
-		when(postgreSqlStudentDao.findById(5L)).thenReturn(studentTest);
-
-		Student newStudent = studentService.findById(5L);
-		
-		assertEquals(newStudent.getKey(), studentTest.getKey());
-		assertEquals(newStudent.getName(), studentTest.getName());
-
-		verify(postgreSqlStudentDao).findById(5L);
-	}
-
-	@Test
-	void findStudentsByNameTest() {
-		
-		 when(postgreSqlStudentDao.findByName(studentTest.getName())).thenReturn(List.of(studentTest));
-
-	        List<Student> studentsListByTitle = studentService.findByName(studentTest.getName());
-
-	        assertNotNull(studentsListByTitle);
-	        assertEquals(studentsListByTitle.size(), 1);
-	        assertEquals(studentsListByTitle.get(0).getName(), studentTest.getName());
-
-	        verify(postgreSqlStudentDao).findByName(studentTest.getName());
-	}
-
-	@Test
 	void deleteStudentTest() {
 		int listSize = studentsList.size();
 		when(postgreSqlStudentDao.delete(studentTest)).thenReturn(true);
@@ -178,5 +129,54 @@ class StudentServiceTest {
 
 		assertNotEquals(studentForCheck, studentTest);
 		verify(postgreSqlStudentDao).update(studentTest);
+	}
+
+	@Test
+	void findStudentsByNameTest() {
+		
+		 when(postgreSqlStudentDao.findByName(studentTest.getName())).thenReturn(List.of(studentTest));
+
+	        List<Student> studentsListByTitle = studentService.findByName(studentTest.getName());
+
+	        assertNotNull(studentsListByTitle);
+	        assertEquals(studentsListByTitle.size(), 1);
+	        assertEquals(studentsListByTitle.get(0).getName(), studentTest.getName());
+
+	        verify(postgreSqlStudentDao).findByName(studentTest.getName());
+	}
+
+	@Test
+	void findStudentByIdTest() {
+		
+		when(postgreSqlStudentDao.findById(5L)).thenReturn(studentTest);
+
+		Student newStudent = studentService.findById(5L);
+		
+		assertEquals(newStudent.getKey(), studentTest.getKey());
+		assertEquals(newStudent.getName(), studentTest.getName());
+
+		verify(postgreSqlStudentDao).findById(5L);
+	}
+
+	@Test
+	void findAllStudentsTest() {
+
+		List<Student> studentsEntity = new ArrayList<>();
+
+		for (int i = 1; i < studentsList.size(); i++) {
+			studentsEntity.add(studentsList.get(i));
+		}
+
+		Student studentFirst = studentsEntity.get(0);
+
+		when(postgreSqlStudentDao.findAll()).thenReturn(studentsEntity);
+
+		List<Student> newStudentsEntity = studentService.findAll();
+
+		assertNotNull(studentsEntity);
+		assertEquals(studentsEntity, newStudentsEntity);
+		assertEquals(studentsEntity.get(0).getKey(), newStudentsEntity.get(0).getKey());
+
+		verify(postgreSqlStudentDao).findAll();
 	}
 }

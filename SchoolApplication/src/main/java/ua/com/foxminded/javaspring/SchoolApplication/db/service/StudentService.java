@@ -104,33 +104,6 @@ public class StudentService {
 		return deleted > 0;
 	}
 
-	public List<Student> findAll() {
-
-		LOGGER.debug("All student findind...");
-		List<Student> studentsList = studentRepository.findAll();
-		LOGGER.info("All students were successfully found");
-
-		return studentsList;
-	}
-
-	public Student findById(long key) {
-
-		LOGGER.debug("Student finding by id");
-		Student student = studentRepository.findById(key);
-		LOGGER.info("Student was successfully found by id - " + key);
-
-		return student;
-	}
-
-	public List<Student> findByName(String name) {
-
-		LOGGER.debug("Student findind by name");
-		List<Student> studentsList = studentRepository.findByName(name);
-		LOGGER.info("Students were successfully found by name - " + name);
-
-		return studentsList;
-	}
-
 	public boolean delete(Student student) {
 
 		LOGGER.debug("Student deleting - " + student.toString());
@@ -147,5 +120,32 @@ public class StudentService {
 		LOGGER.info("Student was successfully updated with id - " + student.getKey());
 
 		return updated;
+	}
+
+	public List<Student> findByName(String name) {
+
+		LOGGER.debug("Student findind by name");
+		List<Student> studentsList = studentRepository.findByName(name);
+		LOGGER.info("Students were successfully found by name - " + name);
+
+		return studentsList;
+	}
+
+	public Student findById(long key) {
+
+		LOGGER.debug("Student finding by id");
+		Student student = studentRepository.findById(key);
+		LOGGER.info("Student was successfully found by id - " + key);
+
+		return student;
+	}
+
+	public List<Student> findAll() {
+
+		LOGGER.debug("All student findind...");
+		List<Student> studentsList = studentRepository.findAll();
+		LOGGER.info("All students were successfully found");
+
+		return studentsList;
 	}
 }
