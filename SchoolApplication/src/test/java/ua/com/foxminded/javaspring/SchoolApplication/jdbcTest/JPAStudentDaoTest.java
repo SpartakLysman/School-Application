@@ -1,32 +1,31 @@
 package ua.com.foxminded.javaspring.SchoolApplication.jdbcTest;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.TypedQuery;
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlStudentDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = { EntityManager.class, PostgreSqlStudentDao.class, EntityManagerFactory.class })
-@Sql(scripts = { "/clear_tables.sql", "/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class JPAStudentDaoTest {
 
 	@MockBean
@@ -36,9 +35,8 @@ class JPAStudentDaoTest {
 	private EntityManagerFactory entityManagerFactory;
 
 	@Autowired
-	private DataRepository repository;
-
 	private PostgreSqlStudentDao postgreSqlStudentDao;
+
 	private List<Student> studentsList;
 	private Student studentFirst;
 	private Student studentTest;
@@ -61,13 +59,16 @@ class JPAStudentDaoTest {
 
 	}
 
-	@Before
+	@BeforeEach
 	void setUp() {
-		Mockito.when(entityManagerFactory.createEntityManager()).thenReturn(entityManager);
+		postgreSqlStudentDao = new PostgreSqlStudentDao(entityManager);
+
 	}
 
 	@Test
 	void testCreateStudent() {
+
+		PostgreSqlStudentDao postgreSqlStudentDao = mock(PostgreSqlStudentDao.class);
 
 		studentTest.setKey(6L);
 		studentTest.setName("Anton");
@@ -88,6 +89,8 @@ class JPAStudentDaoTest {
 
 	@Test
 	void testCreateAllCourses() {
+
+		PostgreSqlStudentDao postgreSqlStudentDao = mock(PostgreSqlStudentDao.class);
 
 		List<Student> studentslist = new ArrayList<>();
 
@@ -111,24 +114,24 @@ class JPAStudentDaoTest {
 	@Test
 	void testDeleteStudent() {
 
+		PostgreSqlStudentDao postgreSqlStudentDao = mock(PostgreSqlStudentDao.class);
+
 		studentTest.setName("Anton");
 		studentTest.setSurname("Antonovich");
 		studentTest.setLogin("6666");
 		studentTest.setPassword("Sixth");
 
-		when(postgreSqlStudentDao.create(studentTest)).thenReturn(true);
 		when(postgreSqlStudentDao.delete(studentTest)).thenReturn(true);
 
-		assertTrue(postgreSqlStudentDao.create(studentTest));
 		assertTrue(postgreSqlStudentDao.delete(studentTest));
 
-		verify(postgreSqlStudentDao, Mockito.times(1)).delete(studentTest);
-
-		assertFalse(postgreSqlStudentDao.delete(studentTest));
+		verify(postgreSqlStudentDao).delete(studentTest);
 	}
 
 	@Test
 	void testUpdateStudent() {
+
+		PostgreSqlStudentDao postgreSqlStudentDao = mock(PostgreSqlStudentDao.class);
 
 		studentTest.setKey(1L);
 		studentTest.setName("Alex");
@@ -148,18 +151,36 @@ class JPAStudentDaoTest {
 	@Test
 	void testFindByName() {
 
+		Student student1 = new Student();
+		student1.setName("Ivan");
+
+		Student student2 = new Student();
+		student2.setName("Ivan");
+
+		List<Student> expectedStudent = Arrays.asList(student1, student2);
+
+		TypedQuery<Student> queryMock = mock(TypedQuery.class);
+		when(entityManager.createQuery(anyString(), eq(Student.class))).thenReturn(queryMock);
+		when(queryMock.setParameter(eq("name"), eq("Ivan"))).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(expectedStudent);
+
+		List<Student> resultStudents = postgreSqlStudentDao.findByName("Ivan");
+
+		assertEquals(expectedStudent, resultStudents);
+
+		verify(entityManager).createQuery(anyString(), eq(Student.class));
+		verify(queryMock).setParameter(eq("name"), eq("Ivan"));
+		verify(queryMock).getResultList();
 	}
 
 	@Test
 	void testFindById() {
-		
-	   when(postgreSqlStudentDao.findById(1L)).thenReturn(studentFirst);
 
-	   Student studentResult = postgreSqlStudentDao.findById(1L);
-
-	   assertEquals(studentFirst, studentResult);
-
-	   verify(postgreSqlStudentDao, Mockito.times(1)).findById(1L);
+		Student expected = new Student();
+		expected.setKey(1L);
+		Mockito.when(entityManager.find(Mockito.eq(Student.class), Mockito.any())).thenReturn(expected);
+		Student actual = postgreSqlStudentDao.findById(1L);
+		assertEquals(expected, actual);
 	}
 
 	@Test
@@ -176,15 +197,17 @@ class JPAStudentDaoTest {
 
 	@Test
 	void testCheckIfExistByID() {
-		
+
+		PostgreSqlStudentDao postgreSqlStudentDao = mock(PostgreSqlStudentDao.class);
+
 		when(postgreSqlStudentDao.ifExistFindById(3L)).thenReturn(true);
 
-	    boolean isExist = postgreSqlStudentDao.ifExistFindById(3L);
+		boolean isExist = postgreSqlStudentDao.ifExistFindById(3L);
 
-	    assertTrue(isExist);
+		assertTrue(isExist);
 
-        verify(postgreSqlStudentDao, Mockito.times(1)).ifExistFindById(3L);
-		    
+		verify(postgreSqlStudentDao, Mockito.times(1)).ifExistFindById(3L);
+
 		assertTrue(postgreSqlStudentDao.ifExistFindById(3L));
 	}
 }

@@ -52,8 +52,8 @@ public class PostgreSqlCourseDao implements CourseDao {
 				entityManager.persist(course);
 			}
 			return true;
-
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}

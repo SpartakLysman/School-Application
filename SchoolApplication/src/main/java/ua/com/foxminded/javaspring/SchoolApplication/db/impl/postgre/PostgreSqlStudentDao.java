@@ -94,6 +94,7 @@ public class PostgreSqlStudentDao implements StudentDao {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}

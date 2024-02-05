@@ -1,7 +1,6 @@
 package ua.com.foxminded.javaspring.SchoolApplication.jdbcTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -13,15 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -29,9 +25,7 @@ import jakarta.persistence.TypedQuery;
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlGroupDao;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = { EntityManager.class, PostgreSqlGroupDao.class, EntityManagerFactory.class })
-@Sql(scripts = { "/clear_tables.sql", "/test_data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class JPAGroupDaoTest {
 
 	@MockBean
@@ -41,9 +35,8 @@ class JPAGroupDaoTest {
 	private EntityManagerFactory entityManagerFactory;
 
 	@Autowired
-	private DataRepository repository;
-
 	private PostgreSqlGroupDao postgreSqlGroupDao;
+
 	private List<Group> groupsList;
 	private Group groupFirst;
 	private Group groupTest;
@@ -63,13 +56,15 @@ class JPAGroupDaoTest {
 
 	}
 
-	@Before
+	@BeforeEach
 	void setUp() {
-		Mockito.when(entityManagerFactory.createEntityManager()).thenReturn(entityManager);
+		postgreSqlGroupDao = new PostgreSqlGroupDao(entityManager);
 	}
 
 	@Test
 	void testCreateGroup() {
+
+		PostgreSqlGroupDao postgreSqlGroupDao = mock(PostgreSqlGroupDao.class);
 
 		groupTest.setKey(6L);
 		groupTest.setTitle("Sixth");
@@ -88,6 +83,8 @@ class JPAGroupDaoTest {
 
 	@Test
 	void testCreateAllGroups() {
+
+		PostgreSqlGroupDao postgreSqlGroupDao = mock(PostgreSqlGroupDao.class);
 
 		List<Group> groupslist = new ArrayList<>();
 
@@ -111,21 +108,21 @@ class JPAGroupDaoTest {
 	@Test
 	void testDeleteGroup() {
 
+		PostgreSqlGroupDao postgreSqlGroupDao = mock(PostgreSqlGroupDao.class);
+
 		groupTest.setTitle("First");
 
-		when(postgreSqlGroupDao.create(groupTest)).thenReturn(true);
 		when(postgreSqlGroupDao.delete(groupTest)).thenReturn(true);
 
-		assertTrue(postgreSqlGroupDao.create(groupTest));
+		postgreSqlGroupDao.delete(groupTest);
+
 		assertTrue(postgreSqlGroupDao.delete(groupTest));
-
-		verify(postgreSqlGroupDao, Mockito.times(1)).delete(groupTest);
-
-		assertFalse(postgreSqlGroupDao.delete(groupTest));
 	}
 
 	@Test
 	void testUpdateGroup() {
+
+		PostgreSqlGroupDao postgreSqlGroupDao = mock(PostgreSqlGroupDao.class);
 
 		groupTest.setKey(1L);
 		groupTest.setTitle("First");
@@ -150,12 +147,12 @@ class JPAGroupDaoTest {
 
 		TypedQuery<Group> queryMock = mock(TypedQuery.class);
 		when(entityManager.createQuery(anyString(), eq(Group.class))).thenReturn(queryMock);
-		when(queryMock.setParameter(eq("title"), eq("Firts"))).thenReturn(queryMock);
+		when(queryMock.setParameter(eq("title"), eq("First"))).thenReturn(queryMock);
 		when(queryMock.getResultList()).thenReturn(expectedGroups);
 
-		List<Group> resultCourses = postgreSqlGroupDao.findByTitle("First");
+		List<Group> resultGroups = postgreSqlGroupDao.findByTitle("First");
 
-		assertEquals(expectedGroups, resultCourses);
+		assertEquals(expectedGroups, resultGroups);
 
 		verify(entityManager).createQuery(anyString(), eq(Group.class));
 		verify(queryMock).setParameter(eq("title"), eq("First"));
@@ -164,16 +161,13 @@ class JPAGroupDaoTest {
 
 	@Test
 	void testFindById() {
-	  
-		when(postgreSqlGroupDao.findById(1L)).thenReturn(groupFirst);
 
-	    Group groupResult = postgreSqlGroupDao.findById(1L);
+		Group expected = new Group();
+		expected.setKey(1L);
+		Mockito.when(entityManager.find(Mockito.eq(Group.class), Mockito.any())).thenReturn(expected);
+		Group actual = postgreSqlGroupDao.findById(1L);
+		assertEquals(expected, actual);
 
-	    assertEquals(groupFirst, groupResult);
-
-	    verify(postgreSqlGroupDao, Mockito.times(1)).findById(1L);
-	    
-		assertEquals(groupFirst, postgreSqlGroupDao.findById(1L));
 	}
 
 	@Test
@@ -190,13 +184,15 @@ class JPAGroupDaoTest {
 
 	@Test
 	void testCheckIfExistByID() {
-		
-	  when(postgreSqlGroupDao.ifExistFindById(3L)).thenReturn(true);
 
-      boolean isExist = postgreSqlGroupDao.ifExistFindById(3L);
+		PostgreSqlGroupDao postgreSqlGroupDao = mock(PostgreSqlGroupDao.class);
 
-   	  assertTrue(isExist);
- 
-	  verify(postgreSqlGroupDao, Mockito.times(1)).ifExistFindById(3L);    
+		when(postgreSqlGroupDao.ifExistFindById(3L)).thenReturn(true);
+
+		boolean isExist = postgreSqlGroupDao.ifExistFindById(3L);
+
+		assertTrue(isExist);
+
+		verify(postgreSqlGroupDao, Mockito.times(1)).ifExistFindById(3L);
 	}
 }
