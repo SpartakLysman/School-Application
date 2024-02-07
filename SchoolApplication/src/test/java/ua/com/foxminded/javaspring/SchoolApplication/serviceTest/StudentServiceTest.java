@@ -147,7 +147,7 @@ class StudentServiceTest {
 	@Test
 	void findStudentByIdTest() {
 		
-		when(postgreSqlStudentDao.findById(5L)).thenReturn(studentTest);
+		when(postgreSqlStudentDao.findById(5L)).thenReturn(Optional.of(studentTest));
 
 		Optional<Student> newStudent = studentService.findById(5L);
 		

@@ -151,7 +151,7 @@ class CourseServiceTest {
 	@Test
 	void findCoursesByIdTest() {	
 
-		when(postgreSqlCourseDao.findById(courseTest.getKey())).thenReturn(coursesList.get(4));
+		when(postgreSqlCourseDao.findById(courseTest.getKey())).thenReturn(Optional.of(coursesList.get(4)));
 
 		Optional<Course> newCourse = courseService.findById(courseTest.getKey());
 

@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlCourseDao;
-import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlGroupDao;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.CourseRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.GroupRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
@@ -25,9 +23,6 @@ public class CourseService {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-
-	private PostgreSqlCourseDao postgreSqlCourseDao;
-	private PostgreSqlGroupDao postgreSqlGroupDao;
 
 	private CourseRepository courseRepository;
 
@@ -44,40 +39,45 @@ public class CourseService {
 	public CourseService() {
 
 		this.group = new Group();
-		this.postgreSqlCourseDao = new PostgreSqlCourseDao(courseRepository);
-		this.postgreSqlGroupDao = new PostgreSqlGroupDao(groupRepository);
 
 	}
 
 	public boolean create(Course course) {
 
 		LOGGER.debug("Course creating - " + course.toString());
-		boolean created = postgreSqlCourseDao.create(course);
-		LOGGER.info("Course was created successfully with id - " + course.getKey());
-
-		return created;
+		try {
+			courseRepository.save(course);
+			LOGGER.info("Course was created successfully with id - " + course.getKey());
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public boolean createAll(List<Course> coursesList) {
 
 		LOGGER.debug("All courses creating...");
-		boolean createdAll = postgreSqlCourseDao.createAll(coursesList);
-		LOGGER.info("All courses were successfully created - " + coursesList.toString());
-
-		return createdAll;
+		try {
+			courseRepository.saveAll(coursesList);
+			LOGGER.info("All courses were successfully created - " + coursesList.toString());
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public boolean addCourseToGroup(Course course, long groupId) {
 
 		boolean isCourseNotInGroup = !group.getCourses().contains(course);
-		boolean isGroupExist = postgreSqlGroupDao.findById(groupId) != null;
-		boolean isCourseExist = postgreSqlCourseDao.findById(course.getKey()) != null;
+		boolean isGroupExist = groupRepository.findById(groupId) != null;
+		boolean isCourseExist = courseRepository.findById(course.getKey()) != null;
 
 		if (isGroupExist && isCourseExist && isCourseNotInGroup) {
-			Optional<Group> group = postgreSqlGroupDao.findById(groupId);
+			Optional<Group> group = groupRepository.findById(groupId);
 			group.get().addCourse(course);
 			course.addGroup(group.get());
-			postgreSqlCourseDao.update(course);
+			courseRepository.save(course);
 
 		} else {
 
@@ -93,7 +93,7 @@ public class CourseService {
 	public boolean delete(Course course) {
 
 		LOGGER.debug("Course deleting - " + course.toString());
-		boolean deleted = postgreSqlCourseDao.deleteCourse(course);
+		boolean deleted = courseRepository.deleteCourse(course);
 		LOGGER.info("Course successfully deleted with id - " + course.getKey());
 
 		return deleted;
@@ -102,14 +102,14 @@ public class CourseService {
 	public boolean deleteCourseFromGroup(Course course, long groupId) {
 
 		boolean isCourseInGroup = group.getCourses().contains(course);
-		boolean isGroupExist = postgreSqlGroupDao.findById(groupId) != null;
-		boolean isCourseExist = postgreSqlCourseDao.findById(course.getKey()) != null;
+		boolean isGroupExist = groupRepository.findById(groupId) != null;
+		boolean isCourseExist = courseRepository.findById(course.getKey()) != null;
 
 		if (isGroupExist && isCourseExist && isCourseInGroup) {
-			Optional<Group> group = postgreSqlGroupDao.findById(groupId);
+			Optional<Group> group = groupRepository.findById(groupId);
 			group.get().deleteCourse(course);
 			course.deleteGroup(group);
-			postgreSqlCourseDao.update(course);
+			courseRepository.save(course);
 
 		} else {
 
@@ -125,16 +125,19 @@ public class CourseService {
 	public boolean update(Course course) {
 
 		LOGGER.debug("Course updating - " + course.toString());
-		boolean updated = postgreSqlCourseDao.update(course);
-		LOGGER.info("Course was successfully updated with id - " + course.getKey());
-
-		return updated;
+		try {
+			courseRepository.save(course);
+			LOGGER.info("Course was successfully updated with id - " + course.getKey());
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public List<Course> findByTitle(String title) {
 
 		LOGGER.debug("Courses finding by title");
-		List<Course> coursesList = postgreSqlCourseDao.findByTitle(title);
+		List<Course> coursesList = courseRepository.findByTitle(title);
 		LOGGER.info("Courses were successfully found by title - " + title);
 
 		return coursesList;
@@ -143,7 +146,7 @@ public class CourseService {
 	public Optional<Course> findById(long key) {
 
 		LOGGER.debug("Course finding - " + key);
-		Optional<Course> course = postgreSqlCourseDao.findById(key);
+		Optional<Course> course = courseRepository.findById(key);
 		LOGGER.info("Course was successfully found by id - " + key);
 
 		return course;
@@ -152,7 +155,7 @@ public class CourseService {
 	public List<Course> findAll() {
 
 		LOGGER.debug("All courses finding...");
-		List<Course> coursesList = postgreSqlCourseDao.findAll();
+		List<Course> coursesList = courseRepository.findAll();
 		LOGGER.info("All courses were successfully found");
 
 		return coursesList;

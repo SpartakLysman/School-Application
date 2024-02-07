@@ -8,15 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlGroupDao;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.GroupRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
 import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
 
 @Service
 public class GroupService {
-
-	private PostgreSqlGroupDao postgreSqlGroupDao;
 
 	private GroupRepository groupRepository;
 
@@ -25,32 +22,37 @@ public class GroupService {
 	@Autowired
 	public GroupService() {
 
-		this.postgreSqlGroupDao = new PostgreSqlGroupDao(groupRepository);
-
 	}
 
 	public boolean create(Group group) {
 
 		LOGGER.debug("Group creating - " + group.toString());
-		boolean created = postgreSqlGroupDao.create(group);
-		LOGGER.info("Group was successfully created with id - " + group.getKey());
-
-		return created;
+		try {
+			groupRepository.save(group);
+			LOGGER.info("Group was successfully created with id - " + group.getKey());
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public boolean createAll(List<Group> groupsList) {
 
 		LOGGER.debug("All groups creating...");
-		boolean createdAll = postgreSqlGroupDao.createAll(groupsList);
-		LOGGER.info("All groups were successfully created " + groupsList.toString());
-
-		return createdAll;
+		try {
+			groupRepository.saveAll(groupsList);
+			LOGGER.info("All groups were successfully created " + groupsList.toString());
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public boolean delete(Group group) {
 
 		LOGGER.debug("Group deleting - " + group.toString());
-		boolean deleted = postgreSqlGroupDao.deleteGroup(group);
+		boolean deleted = groupRepository.deleteGroup(group);
 		LOGGER.info("Group was successfully removed with id - " + group.getKey());
 
 		return deleted;
@@ -59,16 +61,19 @@ public class GroupService {
 	public boolean update(Group group) {
 
 		LOGGER.debug("Group updating - " + group.toString());
-		boolean updated = postgreSqlGroupDao.update(group);
-		LOGGER.info("Group was successfully updated with id - " + group.getKey());
-
-		return updated;
+		try {
+			groupRepository.save(group);
+			LOGGER.info("Group was successfully updated with id - " + group.getKey());
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public List<Group> findByTitle(String title) {
 
 		LOGGER.debug("Group finding by title");
-		List<Group> groupsList = postgreSqlGroupDao.findByTitle(title);
+		List<Group> groupsList = groupRepository.findByTitle(title);
 		LOGGER.info("Groups were successfully found by title - " + title);
 
 		return groupsList;
@@ -77,7 +82,7 @@ public class GroupService {
 	public Optional<Group> findById(long key) {
 
 		LOGGER.debug("Group findind by id");
-		Optional<Group> group = postgreSqlGroupDao.findById(key);
+		Optional<Group> group = groupRepository.findById(key);
 		LOGGER.info("Group was successfully found by id - " + key);
 
 		return group;
@@ -86,7 +91,7 @@ public class GroupService {
 	public List<Group> findAll() {
 
 		LOGGER.debug("All groups findind...");
-		List<Group> groupsList = postgreSqlGroupDao.findAll();
+		List<Group> groupsList = groupRepository.findAll();
 		LOGGER.info("All groups were successfully found ");
 
 		return groupsList;

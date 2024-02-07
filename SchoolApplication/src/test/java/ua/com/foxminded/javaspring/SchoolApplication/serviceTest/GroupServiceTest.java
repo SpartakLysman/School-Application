@@ -151,7 +151,7 @@ class GroupServiceTest {
 	@Test
 	void findGroupByIdTest() {
 
-		when(postgreSqlGroupDao.findById(groupTest.getKey())).thenReturn(groupsList.get(4));
+		when(postgreSqlGroupDao.findById(groupTest.getKey())).thenReturn(Optional.of(groupsList.get(4)));
 
 		Optional<Group> newGroup = groupService.findById(groupTest.getKey());
 		

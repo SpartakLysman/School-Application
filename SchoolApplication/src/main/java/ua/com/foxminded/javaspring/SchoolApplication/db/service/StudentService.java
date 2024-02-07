@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlCourseDao;
-import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlStudentDao;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.CourseRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.StudentRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
@@ -26,10 +24,6 @@ public class StudentService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	private PostgreSqlStudentDao postgreSqlStudentDao;
-
-	private PostgreSqlCourseDao postgreSqlCourseDao;
-
 	private StudentRepository studentRepository;
 
 	private CourseRepository courseRepository;
@@ -41,45 +35,48 @@ public class StudentService {
 	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
 
 	@Autowired
-	public StudentService(StudentRepository studentRepository) {
+	public StudentService() {
 
 		this.course = new Course();
-		this.studentRepository = studentRepository;
-		this.courseRepository = courseRepository;
 
-		this.postgreSqlCourseDao = new PostgreSqlCourseDao(courseRepository);
-		this.postgreSqlStudentDao = new PostgreSqlStudentDao(studentRepository);
 	}
 
 	public boolean create(Student student) {
 
 		LOGGER.debug("Student creating...");
-		boolean created = postgreSqlStudentDao.create(student);
-		LOGGER.info("Students was successfully created" + student.toString());
-
-		return created;
+		try {
+			studentRepository.save(student);
+			LOGGER.info("Students was successfully created" + student.toString());
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public boolean createAll(List<Student> studentsList) {
 
 		LOGGER.debug("Student creating...");
-		boolean createdAll = postgreSqlStudentDao.createAll(studentsList);
-		LOGGER.info("All students were successfully created" + studentsList.toString());
-
-		return createdAll;
+		try {
+			studentRepository.saveAll(studentsList);
+			LOGGER.info("All students were successfully created" + studentsList.toString());
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public boolean addStudentToCourse(Student student, long courseId) {
 
 		boolean isStudentNotOnCourse = !course.getStudents().contains(student);
-		boolean isCourseExist = postgreSqlStudentDao.findById(courseId) != null;
-		boolean isStudentExist = postgreSqlStudentDao.findById(student.getKey()) != null;
+		boolean isCourseExist = courseRepository.findById(courseId) != null;
+		boolean isStudentExist = studentRepository.findById(student.getKey()) != null;
 
 		if (isStudentExist && isCourseExist && isStudentNotOnCourse) {
-			Optional<Course> course = postgreSqlCourseDao.findById(courseId);
+			Optional<Course> course = courseRepository.findById(courseId);
 			course.get().addStudent(student);
 			student.deleteCourse(course.get());
-			studentRepository.update(student);
+			studentRepository.save(student);
 
 		} else {
 
@@ -94,15 +91,15 @@ public class StudentService {
 
 	public boolean deleteStudentFromCourse(Student student, long courseId) {
 
-		boolean isCourseExist = postgreSqlCourseDao.findById(courseId) != null;
-		boolean isStudentExist = postgreSqlStudentDao.findById(student.getKey()) != null;
+		boolean isCourseExist = courseRepository.findById(courseId) != null;
+		boolean isStudentExist = studentRepository.findById(student.getKey()) != null;
 		boolean isStudentOnCourse = course.getStudents().contains(student);
 
 		if (isStudentExist && isCourseExist && isStudentOnCourse) {
-			Optional<Course> course = postgreSqlCourseDao.findById(courseId);
+			Optional<Course> course = courseRepository.findById(courseId);
 			course.get().deleteStudent(student);
 			student.deleteCourse(course.get());
-			studentRepository.update(student);
+			studentRepository.save(student);
 
 		} else {
 
@@ -118,7 +115,7 @@ public class StudentService {
 	public boolean delete(Student student) {
 
 		LOGGER.debug("Student deleting - " + student.toString());
-		boolean deleted = postgreSqlStudentDao.deleteStudent(student);
+		boolean deleted = studentRepository.deleteStudent(student);
 		LOGGER.info("Student was successfully deleted with id - " + student.getKey());
 
 		return deleted;
@@ -127,16 +124,19 @@ public class StudentService {
 	public boolean update(Student student) {
 
 		LOGGER.debug("Student updating - " + student.toString());
-		boolean updated = postgreSqlStudentDao.update(student);
-		LOGGER.info("Student was successfully updated with id - " + student.getKey());
-
-		return updated;
+		try {
+			studentRepository.save(student);
+			LOGGER.info("Student was successfully updated with id - " + student.getKey());
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public List<Student> findByName(String name) {
 
 		LOGGER.debug("Student findind by name");
-		List<Student> studentsList = postgreSqlStudentDao.findByName(name);
+		List<Student> studentsList = studentRepository.findByName(name);
 		LOGGER.info("Students were successfully found by name - " + name);
 
 		return studentsList;
@@ -145,7 +145,7 @@ public class StudentService {
 	public Optional<Student> findById(long key) {
 
 		LOGGER.debug("Student finding by id");
-		Optional<Student> student = postgreSqlStudentDao.findById(key);
+		Optional<Student> student = studentRepository.findById(key);
 		LOGGER.info("Student was successfully found by id - " + key);
 
 		return student;
@@ -154,7 +154,7 @@ public class StudentService {
 	public List<Student> findAll() {
 
 		LOGGER.debug("All student findind...");
-		List<Student> studentsList = postgreSqlStudentDao.findAll();
+		List<Student> studentsList = studentRepository.findAll();
 		LOGGER.info("All students were successfully found");
 
 		return studentsList;
