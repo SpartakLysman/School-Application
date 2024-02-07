@@ -1,6 +1,7 @@
 package ua.com.foxminded.javaspring.SchoolApplication.db.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,9 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlCourseDao;
+import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlGroupDao;
+import ua.com.foxminded.javaspring.SchoolApplication.db.repository.CourseRepository;
+import ua.com.foxminded.javaspring.SchoolApplication.db.repository.GroupRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
 import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
@@ -22,8 +26,12 @@ public class CourseService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	private GroupService groupService;
-	private PostgreSqlCourseDao courseRepository;
+	private PostgreSqlCourseDao postgreSqlCourseDao;
+	private PostgreSqlGroupDao postgreSqlGroupDao;
+
+	private CourseRepository courseRepository;
+
+	private GroupRepository groupRepository;
 
 	private static final String SQL_ADD_COURSE_TO_GROUP = " insert into application.groups_courses (group_id, course_id) "
 			+ "	values (?, ?) ";
@@ -33,18 +41,18 @@ public class CourseService {
 	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
 
 	@Autowired
-	public CourseService(EntityManager entityManager) {
+	public CourseService() {
 
 		this.group = new Group();
-		this.groupService = new GroupService(entityManager);
-		this.courseRepository = new PostgreSqlCourseDao(entityManager);
+		this.postgreSqlCourseDao = new PostgreSqlCourseDao(courseRepository);
+		this.postgreSqlGroupDao = new PostgreSqlGroupDao(groupRepository);
 
 	}
 
 	public boolean create(Course course) {
 
 		LOGGER.debug("Course creating - " + course.toString());
-		boolean created = courseRepository.create(course);
+		boolean created = postgreSqlCourseDao.create(course);
 		LOGGER.info("Course was created successfully with id - " + course.getKey());
 
 		return created;
@@ -53,7 +61,7 @@ public class CourseService {
 	public boolean createAll(List<Course> coursesList) {
 
 		LOGGER.debug("All courses creating...");
-		boolean createdAll = courseRepository.createAll(coursesList);
+		boolean createdAll = postgreSqlCourseDao.createAll(coursesList);
 		LOGGER.info("All courses were successfully created - " + coursesList.toString());
 
 		return createdAll;
@@ -62,14 +70,14 @@ public class CourseService {
 	public boolean addCourseToGroup(Course course, long groupId) {
 
 		boolean isCourseNotInGroup = !group.getCourses().contains(course);
-		boolean isGroupExist = groupService.findById(groupId) != null;
-		boolean isCourseExist = courseRepository.findById(course.getKey()) != null;
+		boolean isGroupExist = postgreSqlGroupDao.findById(groupId) != null;
+		boolean isCourseExist = postgreSqlCourseDao.findById(course.getKey()) != null;
 
 		if (isGroupExist && isCourseExist && isCourseNotInGroup) {
-			Group group = groupService.findById(groupId);
-			group.addCourse(course);
-			course.addGroup(group);
-			courseRepository.update(course);
+			Optional<Group> group = postgreSqlGroupDao.findById(groupId);
+			group.get().addCourse(course);
+			course.addGroup(group.get());
+			postgreSqlCourseDao.update(course);
 
 		} else {
 
@@ -85,7 +93,7 @@ public class CourseService {
 	public boolean delete(Course course) {
 
 		LOGGER.debug("Course deleting - " + course.toString());
-		boolean deleted = courseRepository.delete(course);
+		boolean deleted = postgreSqlCourseDao.deleteCourse(course);
 		LOGGER.info("Course successfully deleted with id - " + course.getKey());
 
 		return deleted;
@@ -94,14 +102,14 @@ public class CourseService {
 	public boolean deleteCourseFromGroup(Course course, long groupId) {
 
 		boolean isCourseInGroup = group.getCourses().contains(course);
-		boolean isGroupExist = groupService.findById(groupId) != null;
-		boolean isCourseExist = courseRepository.findById(course.getKey()) != null;
+		boolean isGroupExist = postgreSqlGroupDao.findById(groupId) != null;
+		boolean isCourseExist = postgreSqlCourseDao.findById(course.getKey()) != null;
 
 		if (isGroupExist && isCourseExist && isCourseInGroup) {
-			Group group = groupService.findById(groupId);
-			group.deleteCourse(course);
+			Optional<Group> group = postgreSqlGroupDao.findById(groupId);
+			group.get().deleteCourse(course);
 			course.deleteGroup(group);
-			courseRepository.update(course);
+			postgreSqlCourseDao.update(course);
 
 		} else {
 
@@ -117,7 +125,7 @@ public class CourseService {
 	public boolean update(Course course) {
 
 		LOGGER.debug("Course updating - " + course.toString());
-		boolean updated = courseRepository.update(course);
+		boolean updated = postgreSqlCourseDao.update(course);
 		LOGGER.info("Course was successfully updated with id - " + course.getKey());
 
 		return updated;
@@ -126,26 +134,25 @@ public class CourseService {
 	public List<Course> findByTitle(String title) {
 
 		LOGGER.debug("Courses finding by title");
-		List<Course> coursesList = courseRepository.findByTitle(title);
+		List<Course> coursesList = postgreSqlCourseDao.findByTitle(title);
 		LOGGER.info("Courses were successfully found by title - " + title);
 
 		return coursesList;
 	}
 
-	public Course findById(long key) {
+	public Optional<Course> findById(long key) {
 
 		LOGGER.debug("Course finding - " + key);
-		Course course = courseRepository.findById(key);
+		Optional<Course> course = postgreSqlCourseDao.findById(key);
 		LOGGER.info("Course was successfully found by id - " + key);
 
 		return course;
-
 	}
 
 	public List<Course> findAll() {
 
 		LOGGER.debug("All courses finding...");
-		List<Course> coursesList = courseRepository.findAll();
+		List<Course> coursesList = postgreSqlCourseDao.findAll();
 		LOGGER.info("All courses were successfully found");
 
 		return coursesList;

@@ -2,7 +2,6 @@ package ua.com.foxminded.javaspring.SchoolApplication.jdbcTest;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -13,6 +12,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +25,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlCourseDao;
+import ua.com.foxminded.javaspring.SchoolApplication.db.repository.CourseRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 
 @SpringBootTest(classes = { EntityManager.class, PostgreSqlCourseDao.class, EntityManagerFactory.class })
@@ -38,6 +39,8 @@ class JPACourseDaoTest {
 
 	@Autowired
 	private PostgreSqlCourseDao postgreSqlCourseDao;
+
+	private CourseRepository courseRepository;
 
 	private List<Course> coursesList;
 	private Course courseFirst;
@@ -60,7 +63,8 @@ class JPACourseDaoTest {
 
 	@BeforeEach
 	void setUp() {
-		postgreSqlCourseDao = new PostgreSqlCourseDao(entityManager);
+
+		postgreSqlCourseDao = new PostgreSqlCourseDao(courseRepository);
 	}
 
 	@Test
@@ -115,11 +119,11 @@ class JPACourseDaoTest {
 		courseTest.setTitle("Sixth");
 		courseTest.setDescription("Programming");
 
-		when(postgreSqlCourseDao.delete(courseTest)).thenReturn(true);
+		when(postgreSqlCourseDao.deleteCourse(courseTest)).thenReturn(true);
 
-		postgreSqlCourseDao.delete(courseTest);
+		postgreSqlCourseDao.deleteCourse(courseTest);
 
-		assertTrue(postgreSqlCourseDao.delete(courseTest));
+		assertTrue(postgreSqlCourseDao.deleteCourse(courseTest));
 	}
 
 	@Test
@@ -173,22 +177,23 @@ class JPACourseDaoTest {
 		Course expected = new Course();
 		expected.setKey(1L);
 		Mockito.when(entityManager.find(Mockito.eq(Course.class), Mockito.any())).thenReturn(expected);
-		Course actual = postgreSqlCourseDao.findById(1L);
+		Optional<Course> actual = postgreSqlCourseDao.findById(1L);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	void testFindAll() {
 
-		 when(postgreSqlCourseDao.findAll()).thenReturn(coursesList);
+		TypedQuery<Course> typedQuery = (TypedQuery<Course>) mock(TypedQuery.class);
 
-		    List<Course> newCoursesEntity = postgreSqlCourseDao.findAll();
+		when(entityManager.createQuery(Mockito.anyString(), Mockito.eq(Course.class))).thenReturn(typedQuery);
+		when(typedQuery.getResultList()).thenReturn(coursesList);
 
-		    assertNotNull(newCoursesEntity);
-		    assertEquals(coursesList, newCoursesEntity);
-		    assertEquals(coursesList.get(0).getKey(), newCoursesEntity.get(0).getKey());
+		List<Course> result = postgreSqlCourseDao.findAll();
 
-		    verify(postgreSqlCourseDao).findAll();
+		assertEquals(coursesList, result);
+
+		verify(typedQuery, Mockito.times(1)).getResultList();
 	}
 
 	@Test

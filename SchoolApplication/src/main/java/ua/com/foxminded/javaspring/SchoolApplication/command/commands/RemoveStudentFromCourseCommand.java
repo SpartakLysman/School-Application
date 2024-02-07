@@ -1,6 +1,7 @@
 package ua.com.foxminded.javaspring.SchoolApplication.command.commands;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class RemoveStudentFromCourseCommand implements Command {
 		students.forEach(a -> System.out.println(a.getKey()));
 
 		long studentId = scanner.nextLong();
-		Student student = studentService.findById(studentId);
+		Optional<Student> student = studentService.findById(studentId);
 
 		List<Course> courses = courseService.findAll();
 		System.out.println("Enter the id for your course: ");
@@ -40,7 +41,7 @@ public class RemoveStudentFromCourseCommand implements Command {
 
 		long courseId = scanner.nextLong();
 
-		studentService.deleteStudentFromCourse(student, courseId);
+		studentService.deleteStudentFromCourse(student.get(), courseId);
 		System.out.println("Student was removed");
 	}
 

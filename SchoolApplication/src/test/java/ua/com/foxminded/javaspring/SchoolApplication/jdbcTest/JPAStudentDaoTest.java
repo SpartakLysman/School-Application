@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import ua.com.foxminded.javaspring.SchoolApplication.db.impl.postgre.PostgreSqlStudentDao;
+import ua.com.foxminded.javaspring.SchoolApplication.db.repository.StudentRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 
 @SpringBootTest(classes = { EntityManager.class, PostgreSqlStudentDao.class, EntityManagerFactory.class })
@@ -36,6 +38,8 @@ class JPAStudentDaoTest {
 
 	@Autowired
 	private PostgreSqlStudentDao postgreSqlStudentDao;
+
+	private StudentRepository studentRepository;
 
 	private List<Student> studentsList;
 	private Student studentFirst;
@@ -61,7 +65,7 @@ class JPAStudentDaoTest {
 
 	@BeforeEach
 	void setUp() {
-		postgreSqlStudentDao = new PostgreSqlStudentDao(entityManager);
+		postgreSqlStudentDao = new PostgreSqlStudentDao(studentRepository);
 
 	}
 
@@ -84,7 +88,7 @@ class JPAStudentDaoTest {
 
 		verify(postgreSqlStudentDao, Mockito.times(1)).create(studentTest);
 
-		postgreSqlStudentDao.delete(studentTest);
+		postgreSqlStudentDao.deleteStudent(studentTest);
 	}
 
 	@Test
@@ -121,11 +125,11 @@ class JPAStudentDaoTest {
 		studentTest.setLogin("6666");
 		studentTest.setPassword("Sixth");
 
-		when(postgreSqlStudentDao.delete(studentTest)).thenReturn(true);
+		when(postgreSqlStudentDao.deleteStudent(studentTest)).thenReturn(true);
 
-		assertTrue(postgreSqlStudentDao.delete(studentTest));
+		assertTrue(postgreSqlStudentDao.deleteStudent(studentTest));
 
-		verify(postgreSqlStudentDao).delete(studentTest);
+		verify(postgreSqlStudentDao).deleteStudent(studentTest);
 	}
 
 	@Test
@@ -179,20 +183,23 @@ class JPAStudentDaoTest {
 		Student expected = new Student();
 		expected.setKey(1L);
 		Mockito.when(entityManager.find(Mockito.eq(Student.class), Mockito.any())).thenReturn(expected);
-		Student actual = postgreSqlStudentDao.findById(1L);
+		Optional<Student> actual = postgreSqlStudentDao.findById(1L);
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	void testFindAll() {
-		
-		when(postgreSqlStudentDao.findAll()).thenReturn(studentsList);
 
-	    List<Student> result = postgreSqlStudentDao.findAll();
+		TypedQuery<Student> typedQuery = (TypedQuery<Student>) mock(TypedQuery.class);
 
-	    assertEquals(studentsList, result);
+		when(entityManager.createQuery(Mockito.anyString(), Mockito.eq(Student.class))).thenReturn(typedQuery);
+		when(typedQuery.getResultList()).thenReturn(studentsList);
 
-	    verify(postgreSqlStudentDao, Mockito.times(1)).findAll();   
+		List<Student> result = postgreSqlStudentDao.findAll();
+
+		assertEquals(studentsList, result);
+
+		verify(typedQuery, Mockito.times(1)).getResultList();
 	}
 
 	@Test

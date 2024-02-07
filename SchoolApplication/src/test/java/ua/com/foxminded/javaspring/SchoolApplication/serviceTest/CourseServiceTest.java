@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +97,7 @@ class CourseServiceTest {
 	@Test
 	void deleteCourseTest() {
 		
-		when(postgreSqlCourseDao.delete(courseTest)).thenReturn(true);
+		when(postgreSqlCourseDao.deleteCourse(courseTest)).thenReturn(true);
 		
 		Course courseOne = new Course(1L, "Biology", "Animals");
 		Course courseTwo = new Course(2L, "Math", "Derivatives");
@@ -117,7 +118,7 @@ class CourseServiceTest {
 	assertEquals(isDeleted, true);
 		assertEquals(newCoursesList.size(), (coursesList.size() - 1));
 		
-		verify(postgreSqlCourseDao).delete(courseTest);
+		verify(postgreSqlCourseDao).deleteCourse(courseTest);
 	}
 
 	@Test
@@ -152,10 +153,10 @@ class CourseServiceTest {
 
 		when(postgreSqlCourseDao.findById(courseTest.getKey())).thenReturn(coursesList.get(4));
 
-		Course newCourse = courseService.findById(courseTest.getKey());
+		Optional<Course> newCourse = courseService.findById(courseTest.getKey());
 
-		assertEquals(newCourse.getTitle(), courseTest.getTitle());
-		assertEquals(newCourse.getDescription(), courseTest.getDescription());
+		assertEquals(newCourse.get().getTitle(), courseTest.getTitle());
+		assertEquals(newCourse.get().getDescription(), courseTest.getDescription());
 
 		verify(postgreSqlCourseDao).findById(courseTest.getKey());
 	}

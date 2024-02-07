@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,8 +80,6 @@ class GroupServiceTest {
 		groupslist.add(groupNewOne);
 		groupslist.add(groupNewTwo);
 
-		// int[] sizeNew = new int[2];
-
 		when(postgreSqlGroupDao.createAll(groupslist)).thenReturn(true);
 
 		List<Group> newGroupsList = List.of(groupNewOne, groupNewTwo);
@@ -96,7 +95,7 @@ class GroupServiceTest {
 	@Test
 	void deleteGroupTest() {
 		
-		when(postgreSqlGroupDao.delete(groupTest)).thenReturn(true);
+		when(postgreSqlGroupDao.deleteGroup(groupTest)).thenReturn(true);
 		
 		Group gorupOne = new Group(1L, "1001");
 		Group gorupTwo = new Group(2L, "1002");
@@ -116,10 +115,9 @@ class GroupServiceTest {
 		boolean isDeleted = groupService.delete(groupTest);
 		
 		assertEquals(isDeleted, true);
-			assertEquals(newGroupsList.size(), (groupsList.size() - 1));
-			//assertNotEquals(newStudentsList, studentsList);
+		assertEquals(newGroupsList.size(), (groupsList.size() - 1));
 			
-			verify(postgreSqlGroupDao).delete(groupTest);
+		verify(postgreSqlGroupDao).deleteGroup(groupTest);
 	}
 
 	@Test
@@ -155,10 +153,10 @@ class GroupServiceTest {
 
 		when(postgreSqlGroupDao.findById(groupTest.getKey())).thenReturn(groupsList.get(4));
 
-		Group newGroup = groupService.findById(groupTest.getKey());
+		Optional<Group> newGroup = groupService.findById(groupTest.getKey());
 		
-		assertEquals(newGroup.getKey(), groupTest.getKey());
-		assertEquals(newGroup.getTitle(), groupTest.getTitle());
+		assertEquals(newGroup.get().getKey(), groupTest.getKey());
+		assertEquals(newGroup.get().getTitle(), groupTest.getTitle());
 
 		verify(postgreSqlGroupDao).findById(groupTest.getKey());
 	}

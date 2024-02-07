@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class Entity<K> {
+public class Entity<K extends Comparable<K>> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

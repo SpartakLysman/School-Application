@@ -3,6 +3,7 @@ package ua.com.foxminded.javaspring.SchoolApplication.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
@@ -56,7 +57,7 @@ public class Course extends Entity<Long> implements Serializable {
 		this.groups.add(group);
 	}
 
-	public void deleteGroup(Group group) {
+	public void deleteGroup(Optional<Group> group) {
 		this.groups.remove(group);
 	}
 

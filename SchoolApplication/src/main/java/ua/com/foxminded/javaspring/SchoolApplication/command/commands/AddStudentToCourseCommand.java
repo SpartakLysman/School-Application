@@ -1,6 +1,7 @@
 package ua.com.foxminded.javaspring.SchoolApplication.command.commands;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class AddStudentToCourseCommand implements Command {
 		students.forEach((a) -> System.out.println(a.getKey()));
 
 		long studentId = scanner.nextLong();
-		Student student = studentService.findById(studentId);
+		Optional<Student> student = studentService.findById(studentId);
 
 		List<Course> courses = courseService.findAll();
 		System.out.println("Enter the id for your course: ");
@@ -42,7 +43,7 @@ public class AddStudentToCourseCommand implements Command {
 
 		long courseId = scanner.nextLong();
 
-		studentService.addStudentToCourse(student, courseId);
+		studentService.addStudentToCourse(student.get(), courseId);
 		System.out.println("Student with id " + studentId + " was added to course with id " + courseId);
 	}
 

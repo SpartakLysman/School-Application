@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,8 +90,6 @@ class StudentServiceTest {
 		usersStudent.add(studentNewOne);
 		usersStudent.add(studentNewTwo);
 
-		// int[] sizeNew = new int[2];
-
 		when(postgreSqlStudentDao.createAll(usersStudent)).thenReturn(true);
 
 		List<Student> newStudentsList = List.of(studentNewOne, studentNewTwo);
@@ -106,14 +105,14 @@ class StudentServiceTest {
 	@Test
 	void deleteStudentTest() {
 		int listSize = studentsList.size();
-		when(postgreSqlStudentDao.delete(studentTest)).thenReturn(true);
+		when(postgreSqlStudentDao.deleteStudent(studentTest)).thenReturn(true);
 
 		boolean isDeleted = studentService.delete(studentTest);
 
 		assertEquals(isDeleted, true);
 		assertEquals((listSize - 1), studentsList.size());
 
-		verify(postgreSqlStudentDao).delete(studentTest);
+		verify(postgreSqlStudentDao).deleteStudent(studentTest);
 	}
 
 	@Test
@@ -150,10 +149,10 @@ class StudentServiceTest {
 		
 		when(postgreSqlStudentDao.findById(5L)).thenReturn(studentTest);
 
-		Student newStudent = studentService.findById(5L);
+		Optional<Student> newStudent = studentService.findById(5L);
 		
-		assertEquals(newStudent.getKey(), studentTest.getKey());
-		assertEquals(newStudent.getName(), studentTest.getName());
+		assertEquals(newStudent.get().getKey(), studentTest.getKey());
+		assertEquals(newStudent.get().getName(), studentTest.getName());
 
 		verify(postgreSqlStudentDao).findById(5L);
 	}
