@@ -7,15 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
 import ua.com.foxminded.javaspring.SchoolApplication.command.commands.Command;
 import ua.com.foxminded.javaspring.SchoolApplication.command.commands.CommandConfig;
 
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
-@ComponentScan("ua.com.foxminded")
+@SpringBootApplication()
+@ComponentScan("ua.com.foxminded.javaspring.SchoolApplication")
 public class Application implements CommandLineRunner {
 
 	private final ApplicationContext applicationContext;

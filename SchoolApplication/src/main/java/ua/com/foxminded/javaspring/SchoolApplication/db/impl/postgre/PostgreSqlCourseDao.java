@@ -6,8 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.CourseRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
@@ -15,9 +13,6 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 @Repository
 @Transactional
 public class PostgreSqlCourseDao {
-
-	@PersistenceContext
-	private EntityManager entityManager;
 
 	private final CourseRepository courseRepository;
 

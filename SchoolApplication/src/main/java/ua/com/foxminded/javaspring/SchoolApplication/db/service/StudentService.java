@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.CourseRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.StudentRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
@@ -19,25 +17,17 @@ import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
 @Service
 public class StudentService {
 
-	private Course course;
+	private final StudentRepository studentRepository;
 
-	@PersistenceContext
-	private EntityManager entityManager;
-
-	private StudentRepository studentRepository;
-
-	private CourseRepository courseRepository;
-
-	private static final String SQL_ADD_STUDENT_TO_COURSE = " insert into application.students_courses (student_id, course_id) "
-			+ "	values (?, ?) ";
-	private static final String SQL_DELETE_STUDENT_FROM_COURSE = " delete from application.students_courses where student_id = ? and course_id = ? ";
+	private final CourseRepository courseRepository;
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
 
 	@Autowired
-	public StudentService() {
+	public StudentService(StudentRepository studentRepository, CourseRepository courseRepository) {
 
-		this.course = new Course();
+		this.studentRepository = studentRepository;
+		this.courseRepository = courseRepository;
 
 	}
 
@@ -68,48 +58,52 @@ public class StudentService {
 
 	public boolean addStudentToCourse(Student student, long courseId) {
 
+		Course course = new Course();
+
 		boolean isStudentNotOnCourse = !course.getStudents().contains(student);
-		boolean isCourseExist = courseRepository.findById(courseId) != null;
-		boolean isStudentExist = studentRepository.findById(student.getKey()) != null;
+		boolean isCourseExist = courseRepository.findById(courseId).isPresent();
+		boolean isStudentExist = studentRepository.findById(student.getKey()).isPresent();
 
 		if (isStudentExist && isCourseExist && isStudentNotOnCourse) {
-			Optional<Course> course = courseRepository.findById(courseId);
-			course.get().addStudent(student);
-			student.deleteCourse(course.get());
-			studentRepository.save(student);
-
+			Optional<Course> courseOptional = courseRepository.findById(courseId);
+			if (courseOptional.isPresent()) {
+				Course course1 = courseOptional.get();
+				course1.addStudent(student);
+				student.deleteCourse(course1);
+				studentRepository.save(student);
+			} else {
+				System.out.println("Course not found");
+			}
 		} else {
-
 			System.out.println("Some problems");
 		}
 
-		int updated = entityManager.createNativeQuery(SQL_ADD_STUDENT_TO_COURSE)
-				.setParameter("students_id", student.getKey()).setParameter("course_id", courseId).executeUpdate();
-
-		return updated > 0;
+		return true;
 	}
 
 	public boolean deleteStudentFromCourse(Student student, long courseId) {
 
-		boolean isCourseExist = courseRepository.findById(courseId) != null;
-		boolean isStudentExist = studentRepository.findById(student.getKey()) != null;
+		Course course = new Course();
+
+		boolean isCourseExist = courseRepository.findById(courseId).isPresent();
+		boolean isStudentExist = studentRepository.findById(student.getKey()).isPresent();
 		boolean isStudentOnCourse = course.getStudents().contains(student);
 
 		if (isStudentExist && isCourseExist && isStudentOnCourse) {
-			Optional<Course> course = courseRepository.findById(courseId);
-			course.get().deleteStudent(student);
-			student.deleteCourse(course.get());
-			studentRepository.save(student);
-
+			Optional<Course> courseOptional = courseRepository.findById(courseId);
+			if (courseOptional.isPresent()) {
+				Course course1 = courseOptional.get();
+				course1.deleteStudent(student);
+				student.deleteCourse(course1);
+				studentRepository.save(student);
+			} else {
+				System.out.println("Course not found");
+			}
 		} else {
-
 			System.out.println("Some problems");
 		}
 
-		int deleted = entityManager.createNativeQuery(SQL_DELETE_STUDENT_FROM_COURSE)
-				.setParameter("students_id", student.getKey()).setParameter("course_id", courseId).executeUpdate();
-
-		return deleted > 0;
+		return true;
 	}
 
 	public boolean delete(Student student) {

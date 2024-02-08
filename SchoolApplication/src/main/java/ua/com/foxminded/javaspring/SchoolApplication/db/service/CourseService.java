@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.CourseRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.GroupRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
@@ -19,26 +17,17 @@ import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
 @Service
 public class CourseService {
 
-	private Group group;
+	private final CourseRepository courseRepository;
 
-	@PersistenceContext
-	private EntityManager entityManager;
-
-	private CourseRepository courseRepository;
-
-	private GroupRepository groupRepository;
-
-	private static final String SQL_ADD_COURSE_TO_GROUP = " insert into application.groups_courses (group_id, course_id) "
-			+ "	values (?, ?) ";
-
-	private static final String SQL_DELETE_COURSE_FROM_GROUP = " delete from application.groups_courses where group_id = ? ";
+	private final GroupRepository groupRepository;
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
 
 	@Autowired
-	public CourseService() {
+	public CourseService(CourseRepository courseRepository, GroupRepository groupRepository) {
 
-		this.group = new Group();
+		this.courseRepository = courseRepository;
+		this.groupRepository = groupRepository;
 
 	}
 
@@ -69,25 +58,27 @@ public class CourseService {
 
 	public boolean addCourseToGroup(Course course, long groupId) {
 
+		Group group = new Group();
+
 		boolean isCourseNotInGroup = !group.getCourses().contains(course);
-		boolean isGroupExist = groupRepository.findById(groupId) != null;
-		boolean isCourseExist = courseRepository.findById(course.getKey()) != null;
+		boolean isGroupExist = groupRepository.findById(groupId).isPresent();
+		boolean isCourseExist = courseRepository.findById(course.getKey()).isPresent();
 
 		if (isGroupExist && isCourseExist && isCourseNotInGroup) {
-			Optional<Group> group = groupRepository.findById(groupId);
-			group.get().addCourse(course);
-			course.addGroup(group.get());
-			courseRepository.save(course);
-
+			Optional<Group> groupOptional = groupRepository.findById(groupId);
+			if (groupOptional.isPresent()) {
+				Group group1 = groupOptional.get();
+				group1.addCourse(course);
+				course.addGroup(group1);
+				courseRepository.save(course);
+			} else {
+				System.out.println("Group not found");
+			}
 		} else {
-
 			System.out.println("Some problems");
 		}
 
-		int updated = entityManager.createNativeQuery(SQL_ADD_COURSE_TO_GROUP).setParameter("groupId", groupId)
-				.setParameter("courseKey", course.getKey()).executeUpdate();
-
-		return updated > 0;
+		return true;
 	}
 
 	public boolean delete(Course course) {
@@ -101,25 +92,27 @@ public class CourseService {
 
 	public boolean deleteCourseFromGroup(Course course, long groupId) {
 
+		Group group = new Group();
+
 		boolean isCourseInGroup = group.getCourses().contains(course);
-		boolean isGroupExist = groupRepository.findById(groupId) != null;
-		boolean isCourseExist = courseRepository.findById(course.getKey()) != null;
+		boolean isGroupExist = groupRepository.findById(groupId).isPresent();
+		boolean isCourseExist = courseRepository.findById(course.getKey()).isPresent();
 
 		if (isGroupExist && isCourseExist && isCourseInGroup) {
-			Optional<Group> group = groupRepository.findById(groupId);
-			group.get().deleteCourse(course);
-			course.deleteGroup(group);
-			courseRepository.save(course);
-
+			Optional<Group> groupOptional = groupRepository.findById(groupId);
+			if (groupOptional.isPresent()) {
+				Group group1 = groupOptional.get();
+				group1.deleteCourse(course);
+				course.deleteGroup(group1);
+				courseRepository.save(course);
+			} else {
+				System.out.println("Group not found");
+			}
 		} else {
-
 			System.out.println("Some problems");
 		}
 
-		int deleted = entityManager.createNativeQuery(SQL_DELETE_COURSE_FROM_GROUP).setParameter("groupId", groupId)
-				.executeUpdate();
-
-		return deleted > 0;
+		return true;
 	}
 
 	public boolean update(Course course) {

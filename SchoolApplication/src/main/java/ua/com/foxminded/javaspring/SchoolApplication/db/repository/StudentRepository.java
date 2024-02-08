@@ -1,6 +1,7 @@
 package ua.com.foxminded.javaspring.SchoolApplication.db.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,7 +13,7 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-	Student login(String login, String password) throws DaoException;
+	Optional<Student> findByLoginAndPassword(String login, String password) throws DaoException;
 
 	@Modifying
 	@Query("delete from application.students s where s = :students")

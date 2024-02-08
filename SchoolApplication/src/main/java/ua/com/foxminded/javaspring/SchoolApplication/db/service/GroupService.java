@@ -15,12 +15,14 @@ import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
 @Service
 public class GroupService {
 
-	private GroupRepository groupRepository;
+	private final GroupRepository groupRepository;
 
 	private final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
 
 	@Autowired
-	public GroupService() {
+	public GroupService(GroupRepository groupRepository) {
+
+		this.groupRepository = groupRepository;
 
 	}
 

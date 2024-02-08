@@ -3,11 +3,11 @@ package ua.com.foxminded.javaspring.SchoolApplication.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @jakarta.persistence.Entity
@@ -20,10 +20,10 @@ public class Course extends Entity<Long> implements Serializable {
 	@Column(name = "description")
 	private String description;
 
-	@ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "groups", fetch = FetchType.LAZY)
 	private List<Group> groups = new ArrayList<>();
 
-	@ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "students", fetch = FetchType.LAZY)
 	private List<Student> students = new ArrayList<>();
 
 	private static final long serialVersionUID = -7353839263354063173L;
@@ -57,8 +57,8 @@ public class Course extends Entity<Long> implements Serializable {
 		this.groups.add(group);
 	}
 
-	public void deleteGroup(Optional<Group> group) {
-		this.groups.remove(group);
+	public void deleteGroup(Group group1) {
+		this.groups.remove(group1);
 	}
 
 	public void setCapacity(int capacity) {
