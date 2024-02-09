@@ -12,7 +12,7 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
 	@Modifying
-	@Query("delete from application.course c where c = :course")
+	@Query("DELETE FROM Course c WHERE c = :course")
 	boolean deleteCourse(@Param("course") Course course);
 
 	List<Course> findByTitle(String title);

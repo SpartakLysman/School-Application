@@ -16,8 +16,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 	Optional<Student> findByLoginAndPassword(String login, String password) throws DaoException;
 
 	@Modifying
-	@Query("delete from application.students s where s = :students")
-	boolean deleteStudent(@Param("students") Student student);
+	@Query("DELETE FROM Student s WHERE s = :student")
+	boolean deleteStudent(@Param("student") Student student);
 
 	List<Student> findByName(String name);
 

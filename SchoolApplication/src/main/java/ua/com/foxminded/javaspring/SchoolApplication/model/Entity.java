@@ -1,9 +1,9 @@
 package ua.com.foxminded.javaspring.SchoolApplication.model;
 
-import org.springframework.data.annotation.Id;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
@@ -11,6 +11,7 @@ public class Entity<K extends Comparable<K>> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "key")
 	private K key;
 
 	public Entity(K key) {
@@ -26,7 +27,7 @@ public class Entity<K extends Comparable<K>> {
 	}
 
 	public void setKey(K newKey) {
-		key = newKey;
+		this.key = newKey;
 	}
 
 	public boolean equals(Object object) {
@@ -53,6 +54,6 @@ public class Entity<K extends Comparable<K>> {
 	}
 
 	public String toString() {
-		return "Id: " + key;
+		return "Id: " + this.key;
 	}
 }

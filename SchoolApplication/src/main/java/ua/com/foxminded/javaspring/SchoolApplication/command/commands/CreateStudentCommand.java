@@ -24,9 +24,6 @@ public class CreateStudentCommand implements Command {
 	@Override
 	public void execute() {
 
-		System.out.println("Enter id: ");
-		long id = scanner.nextLong();
-
 		System.out.println("Enter group id: ");
 		long groupId = scanner.nextLong();
 
@@ -42,8 +39,8 @@ public class CreateStudentCommand implements Command {
 		System.out.println("Enter password: ");
 		String password = scanner.next();
 
-		Student newStudent = new Student(id, groupId, name, surname, login, password);
-		newStudent.setKey(id);
+		Student newStudent = new Student(groupId, name, surname, login, password);
+
 		boolean create = studentService.create(newStudent);
 		if (create == true) {
 			System.out.println(newStudent.getName() + ", Id: " + newStudent.getKey() + "-  was сreated");

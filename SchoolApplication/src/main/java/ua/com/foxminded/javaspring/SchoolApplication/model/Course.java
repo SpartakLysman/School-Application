@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
@@ -12,6 +13,7 @@ import jakarta.persistence.Table;
 
 @jakarta.persistence.Entity
 @Table(name = "courses", schema = "application")
+@AttributeOverride(name = "key", column = @Column(name = "course_id"))
 public class Course extends Entity<Long> implements Serializable {
 
 	@Column(name = "title")
@@ -20,22 +22,24 @@ public class Course extends Entity<Long> implements Serializable {
 	@Column(name = "description")
 	private String description;
 
-	@OneToMany(mappedBy = "groups", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "courses", fetch = FetchType.LAZY)
 	private List<Group> groups = new ArrayList<>();
 
-	@ManyToMany(mappedBy = "students", fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
 	private List<Student> students = new ArrayList<>();
 
-	private static final long serialVersionUID = -7353839263354063173L;
+	private static final long serialVersionUID = -7353139263354063173L;
 
 	public Course(String title, String description) {
+
 		this.title = title;
 		this.description = description;
 
 	}
 
-	public Course(Long id, String title, String description) {
-		super(id);
+	public Course(Long key, String title, String description) {
+
+		super(key);
 		this.title = title;
 		this.description = description;
 
@@ -59,10 +63,6 @@ public class Course extends Entity<Long> implements Serializable {
 
 	public void deleteGroup(Group group1) {
 		this.groups.remove(group1);
-	}
-
-	public void setCapacity(int capacity) {
-		//
 	}
 
 	public List<Student> getStudents() {

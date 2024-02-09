@@ -4,11 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 
 @jakarta.persistence.Entity
-@Table(name = "courses", schema = "application")
+@Table(name = "groups", schema = "application")
+@AttributeOverride(name = "key", column = @Column(name = "group_id"))
 public class Group extends Entity<Long> implements Serializable {
 
 	@Column(name = "title")
@@ -16,11 +18,11 @@ public class Group extends Entity<Long> implements Serializable {
 
 	private List<Course> courses = new ArrayList<>();
 
-	private static final long serialVersionUID = -7353839263354063173L;
+	private static final long serialVersionUID = -7353719263354063173L;
 
-	public Group(long id, String title) {
+	public Group(long key, String title) {
 
-		super(id);
+		super(key);
 		this.title = title;
 
 	}

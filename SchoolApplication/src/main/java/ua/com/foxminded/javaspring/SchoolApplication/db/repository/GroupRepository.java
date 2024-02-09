@@ -12,8 +12,8 @@ import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
 	@Modifying
-	@Query("delete from application.groups g where g = :groups")
-	boolean deleteGroup(@Param("groups") Group group);
+	@Query("DELETE FROM Group g WHERE g = :group")
+	boolean deleteGroup(@Param("group") Group group);
 
 	List<Group> findByTitle(String title);
 

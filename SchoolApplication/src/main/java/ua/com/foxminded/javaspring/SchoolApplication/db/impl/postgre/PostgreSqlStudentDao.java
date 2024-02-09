@@ -7,9 +7,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
-import ua.com.foxminded.javaspring.SchoolApplication.db.dao.DaoException;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.StudentRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Student;
 
@@ -27,18 +25,18 @@ public class PostgreSqlStudentDao {
 		this.studentRepository = studentRepository;
 	}
 
-	public Student login(String login, String password) throws DaoException {
-		try {
-			log.config("Looking for student with the login: " + login + " and password: " + password);
-
-			return studentRepository.findByLoginAndPassword(login, password)
-					.orElseThrow(() -> new NoResultException("No student found for the given login and password"));
-		} catch (NoResultException e) {
-			System.out.println("Some problems with your data :(");
-			return null;
-		}
-
-	}
+//	public Student login(String login, String password) throws DaoException {
+//		try {
+//			log.config("Looking for student with the login: " + login + " and password: " + password);
+//
+//			return studentRepository.findByLoginAndPassword(login, password)
+//					.orElseThrow(() -> new NoResultException("No student found for the given login and password"));
+//		} catch (NoResultException e) {
+//			System.out.println("Some problems with your data :(");
+//			return null;
+//		}
+//
+//	}
 
 	public boolean create(Student student) {
 		try {
