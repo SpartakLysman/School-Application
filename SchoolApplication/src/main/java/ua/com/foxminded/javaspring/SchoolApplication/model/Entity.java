@@ -1,16 +1,16 @@
 package ua.com.foxminded.javaspring.SchoolApplication.model;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Entity<K extends Comparable<K>> {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "key")
 	private K key;
 

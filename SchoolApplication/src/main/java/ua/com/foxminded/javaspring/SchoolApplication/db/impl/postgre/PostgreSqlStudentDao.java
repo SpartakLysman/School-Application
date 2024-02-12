@@ -79,6 +79,12 @@ public class PostgreSqlStudentDao {
 		return studentRepository.findByName(name);
 	}
 
+	public Optional<Student> findMaxId() {
+
+		return studentRepository.findFirstByOrderByKeyDesc();
+
+	}
+
 	public Optional<Student> findById(Long key) {
 		return studentRepository.findById(key);
 	}

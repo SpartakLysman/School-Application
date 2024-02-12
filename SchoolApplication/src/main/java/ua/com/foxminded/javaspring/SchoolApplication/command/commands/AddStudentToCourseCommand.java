@@ -42,7 +42,6 @@ public class AddStudentToCourseCommand implements Command {
 		courses.forEach((a) -> System.out.println(a.getKey()));
 
 		long courseId = scanner.nextLong();
-
 		studentService.addStudentToCourse(student.get(), courseId);
 		System.out.println("Student with id " + studentId + " was added to course with id " + courseId);
 	}

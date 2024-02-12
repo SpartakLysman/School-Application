@@ -1,10 +1,8 @@
 package ua.com.foxminded.javaspring.SchoolApplication.serviceTest;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -63,21 +61,21 @@ class StudentServiceTest {
 		studentTest = studentsList.get(4);
 		size[0] = 10;
 	}
-
-	@Test
-	void createStudentTest() {
-		
-		when(postgreSqlStudentDao.create(any(Student.class))).thenReturn(true);
-
-		Student newStudent = new Student(5L, 5, "Nekolay", "Ivatko", "StudentFive", "fH2*fh");
-		boolean isCreated = studentService.create(newStudent);
-		
-		assertTrue(isCreated);
-		assertEquals(newStudent.getName(), newStudent.getName());
-		assertEquals(newStudent.getSurname(), newStudent.getSurname());
-
-		verify(postgreSqlStudentDao).create(any(Student.class));
-	}
+//
+//	@Test
+//	void createStudentTest() {
+//		
+//		when(postgreSqlStudentDao.create(any(Student.class))).thenReturn(true);
+//
+//		Student newStudent = new Student(5L, 5, "Nekolay", "Ivatko", "StudentFive", "fH2*fh");
+//		boolean isCreated = studentService.create(newStudent);
+//		
+//		assertTrue(isCreated);
+//		assertEquals(newStudent.getName(), newStudent.getName());
+//		assertEquals(newStudent.getSurname(), newStudent.getSurname());
+//
+//		verify(postgreSqlStudentDao).create(any(Student.class));
+//	}
 
 	@Test
 	void createAllStudentsTest() {

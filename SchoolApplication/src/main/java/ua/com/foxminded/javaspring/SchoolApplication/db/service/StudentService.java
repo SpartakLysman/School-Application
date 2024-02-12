@@ -136,6 +136,15 @@ public class StudentService {
 		return studentsList;
 	}
 
+	public Optional<Student> findMaxId() {
+
+		LOGGER.debug("The latest student id findind...");
+		Optional<Student> latestId = studentRepository.findFirstByOrderByKeyDesc();
+		LOGGER.info("The latest student id was found");
+
+		return latestId;
+	}
+
 	public Optional<Student> findById(long key) {
 
 		LOGGER.debug("Student finding by id");

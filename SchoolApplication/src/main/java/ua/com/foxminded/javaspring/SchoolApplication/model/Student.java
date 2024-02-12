@@ -88,6 +88,11 @@ public class Student extends User implements Serializable {
 		return 4;
 	}
 
+	public void setId(long id) {
+		long newId = this.getKey();
+		newId = id;
+	}
+
 	public long getGroupId() {
 		return group_id;
 	}
