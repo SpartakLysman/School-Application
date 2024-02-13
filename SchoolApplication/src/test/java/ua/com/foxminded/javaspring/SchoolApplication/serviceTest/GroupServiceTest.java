@@ -143,7 +143,7 @@ class GroupServiceTest {
 
 	        assertNotNull(groupsListByTitle);
 	        assertEquals(groupsListByTitle.size(), 1);
-	        assertEquals(groupsListByTitle.get(0).getTitle(), groupTest.getTitle());
+	        assertEquals(groupsListByTitle.get(0)..getTitle(), groupTest.getTitle());
 
 	        verify(postgreSqlGroupDao).findByTitle(groupTest.getTitle());
 	}

@@ -10,7 +10,15 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @jakarta.persistence.Entity
 @Table(name = "courses", schema = "application")
 @AttributeOverride(name = "key", column = @Column(name = "course_id"))
@@ -30,25 +38,6 @@ public class Course extends Entity<Long> implements Serializable {
 
 	private static final long serialVersionUID = -7353139263354063173L;
 
-	public Course(String title, String description) {
-
-		this.title = title;
-		this.description = description;
-
-	}
-
-	public Course(Long key, String title, String description) {
-
-		super(key);
-		this.title = title;
-		this.description = description;
-
-	}
-
-	public Course() {
-
-	}
-
 	public void addStudent(Student student) {
 		this.students.add(student);
 	}
@@ -67,31 +56,5 @@ public class Course extends Entity<Long> implements Serializable {
 
 	public List<Student> getStudents() {
 		return students;
-	}
-
-	public List<Group> getGroups() {
-		return groups;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setTitle(String newTitle) {
-		title = newTitle;
-	}
-
-	public void setDescription(String newDescription) {
-		description = newDescription;
-	}
-
-	@Override
-	public String toString() {
-		return "Course info: " + " \nTitle: " + title + ",  Description: " + description + ", " + "\n"
-				+ "Number Of Students: " + students.size();
 	}
 }

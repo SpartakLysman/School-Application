@@ -11,7 +11,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @jakarta.persistence.Entity
 @Table(name = "students", schema = "application")
 @AttributeOverride(name = "key", column = @Column(name = "students_id"))
@@ -25,40 +29,6 @@ public class Student extends User implements Serializable {
 	private List<Course> courses = new ArrayList<>();
 
 	private static final long serialVersionUID = -7353839263354063175L;
-
-	public Student(long key, long group_id, String name, String surname, String login, String password) {
-
-		super(key, name, surname, login, password);
-		this.setGroupId(group_id);
-		this.courses = new ArrayList<>();
-
-	}
-
-	public Student(long group_id, String name, String surname, String login, String passsword) {
-
-		super(group_id, name, surname, login, passsword);
-		this.setGroupId(group_id);
-		this.courses = new ArrayList<>();
-
-	}
-
-	public Student(long group_id, String name, String surname, String login, String password, List<Course> courses) {
-
-		super(group_id, name, surname, login, password);
-		this.setGroupId(group_id);
-		this.courses = new ArrayList<>();
-
-	}
-
-	public Student(String name, String surname, String login, String password) {
-
-		super(name, surname, login, password);
-
-	}
-
-	public Student() {
-
-	}
 
 	public void addCourse(Course course) {
 
@@ -86,23 +56,5 @@ public class Student extends User implements Serializable {
 
 	public int getMaxCourses() {
 		return 4;
-	}
-
-	public void setId(long id) {
-		long newId = this.getKey();
-		newId = id;
-	}
-
-	public long getGroupId() {
-		return group_id;
-	}
-
-	public void setGroupId(long group_id) {
-		this.group_id = group_id;
-	}
-
-	public String toString() {
-
-		return "Group id: " + group_id;
 	}
 }

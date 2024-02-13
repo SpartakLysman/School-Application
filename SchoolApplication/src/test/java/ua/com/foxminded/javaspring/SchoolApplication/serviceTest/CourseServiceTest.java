@@ -137,7 +137,7 @@ class CourseServiceTest {
 
 	@Test
 	void findCoursesByTitleTest() {
-		 when(postgreSqlCourseDao.findByTitle(courseTest.getTitle())).thenReturn(List.of(courseTest));
+		 when(postgreSqlCourseDao.findByTitle(courseTest..getTitle())).thenReturn(List.of(courseTest));
 
 	        List<Course> coursesListByTitle = courseService.findByTitle(courseTest.getTitle());
 

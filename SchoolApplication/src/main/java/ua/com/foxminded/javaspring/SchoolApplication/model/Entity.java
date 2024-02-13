@@ -5,7 +5,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.MappedSuperclass;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Entity<K extends Comparable<K>> {
@@ -20,37 +30,6 @@ public class Entity<K extends Comparable<K>> {
 
 	public Entity() {
 
-	}
-
-	public K getKey() {
-		return key;
-	}
-
-	public void setKey(K newKey) {
-		this.key = newKey;
-	}
-
-	public boolean equals(Object object) {
-
-		if (this == object) {
-			return true;
-		}
-		if (object == null) {
-			return false;
-		}
-		if (this.getClass() != object.getClass()) {
-			return false;
-		}
-
-		Entity<?> entity = (Entity<?>) object;
-		return entity.key.equals(key);
-	}
-
-	public int hashCode() {
-
-		int number = 5;
-		number = number * 5 + key.hashCode();
-		return number;
 	}
 
 	public String toString() {

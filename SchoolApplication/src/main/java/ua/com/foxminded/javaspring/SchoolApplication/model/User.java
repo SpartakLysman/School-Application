@@ -2,7 +2,15 @@ package ua.com.foxminded.javaspring.SchoolApplication.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @MappedSuperclass
 public abstract class User extends Entity<Long> {
 
@@ -21,81 +29,4 @@ public abstract class User extends Entity<Long> {
 	@Column(name = "password")
 	private String password;
 
-	public User(Long key, long group_id, String name, String surname, String login, String password) {
-
-		super(key);
-		this.group_id = group_id;
-		this.name = name;
-		this.surname = surname;
-		this.login = login;
-		this.password = password;
-
-	}
-
-	public User(long group_id, String name, String surname, String login, String password) {
-
-		this.group_id = group_id;
-		this.name = name;
-		this.surname = surname;
-		this.login = login;
-		this.password = password;
-
-	}
-
-	public User(String name, String surname, String login, String password) {
-
-		this.name = name;
-		this.surname = surname;
-		this.login = login;
-		this.password = password;
-
-	}
-
-	public User() {
-
-	}
-
-	public long getGroupId() {
-		return group_id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getSurname() {
-		return surname;
-	}
-
-	public String getLogin() {
-		return login;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setGroupId(long newGroupId) {
-		this.group_id = newGroupId;
-	}
-
-	public void setName(String newName) {
-		this.name = newName;
-	}
-
-	public void setSurname(String newSurname) {
-		this.surname = newSurname;
-	}
-
-	public void setLogin(String newLogin) {
-		this.login = newLogin;
-	}
-
-	public void setPassword(String newPassword) {
-		this.password = newPassword;
-	}
-
-	public String toString() {
-		return "Name: " + name + ",  Surname: " + surname + ",  Login: " + login + ",  Password: " + password;
-	}
 }
