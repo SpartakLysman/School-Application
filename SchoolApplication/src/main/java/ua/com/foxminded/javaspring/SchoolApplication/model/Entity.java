@@ -24,15 +24,4 @@ public class Entity<K extends Comparable<K>> {
 	@Column(name = "key")
 	private K key;
 
-	public Entity(K key) {
-		this.key = key;
-	}
-
-	public Entity() {
-
-	}
-
-	public String toString() {
-		return "Id: " + this.key;
-	}
 }

@@ -50,11 +50,4 @@ public class Student extends User implements Serializable {
 		}
 	}
 
-	public List<Course> getCourses() {
-		return courses;
-	}
-
-	public int getMaxCourses() {
-		return 4;
-	}
 }
