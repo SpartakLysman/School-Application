@@ -105,9 +105,9 @@ class StudentServiceTest {
 		int listSize = studentsList.size();
 		when(postgreSqlStudentDao.deleteStudent(studentTest)).thenReturn(true);
 
-		boolean isDeleted = studentService.delete(studentTest);
+		int isDeleted = studentService.delete(studentTest);
 
-		assertEquals(isDeleted, true);
+		assertEquals(isDeleted, 1);
 		assertEquals((listSize - 1), studentsList.size());
 
 		verify(postgreSqlStudentDao).deleteStudent(studentTest);

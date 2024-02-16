@@ -26,25 +26,31 @@ public class GetGroupsCommand implements Command {
 
 	@Override
 	public void execute() {
-
 		List<Group> groups = groupService.findAll();
-		System.out.println("Enter max number of student: ");
+		System.out.println("Enter max number of students: ");
 		int number = scanner.nextInt();
 
 		List<Group> groupsWithLessOrEqualStudentCount = new ArrayList<>();
 
-		for (int i = 0; i < groups.size(); i++) {
+		for (Group group : groups) {
 
-			if (groups.get(i).getCourses().get(i).getStudents().size() < number) {
-				groupsWithLessOrEqualStudentCount.add(groups.get(i));
+			group = groupService.findByIdWithCourses(group.getKey()).orElse(null);
+
+			if (group != null && group.getCourses() != null) {
+				long studentCount = group.getCourses().stream().flatMap(course -> course.getStudents().stream())
+						.distinct().count();
+
+				if (studentCount <= number) {
+					groupsWithLessOrEqualStudentCount.add(group);
+				}
 			}
 		}
-		groupsWithLessOrEqualStudentCount.forEach((a) -> System.out.println(a));
+
+		groupsWithLessOrEqualStudentCount.forEach(System.out::println);
 	}
 
 	@Override
 	public String getCommandName() {
 		return COMMAND_NAME;
 	}
-
 }

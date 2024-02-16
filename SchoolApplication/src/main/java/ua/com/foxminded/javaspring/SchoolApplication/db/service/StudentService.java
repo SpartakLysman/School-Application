@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.CourseRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.StudentRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
@@ -56,61 +57,69 @@ public class StudentService {
 		}
 	}
 
+	@Transactional
 	public boolean addStudentToCourse(Student student, long courseId) {
-
-		Course course = new Course();
-
-		boolean isStudentNotOnCourse = !course.getStudents().contains(student);
-		boolean isCourseExist = courseRepository.findById(courseId).isPresent();
-		boolean isStudentExist = studentRepository.findById(student.getKey()).isPresent();
-
-		if (isStudentExist && isCourseExist && isStudentNotOnCourse) {
+		try {
 			Optional<Course> courseOptional = courseRepository.findById(courseId);
-			if (courseOptional.isPresent()) {
-				Course course1 = courseOptional.get();
-				course1.addStudent(student);
-				student.deleteCourse(course1);
-				studentRepository.save(student);
-			} else {
-				System.out.println("Course not found");
-			}
-		} else {
-			System.out.println("Some problems");
-		}
+			Optional<Student> studentOptional = studentRepository.findById(student.getKey());
 
-		return true;
+			if (courseOptional.isPresent() && studentOptional.isPresent()) {
+				Course course = courseOptional.get();
+				Student updatedStudent = studentOptional.get();
+
+				course.addStudent(updatedStudent);
+				courseRepository.save(course);
+
+				LOGGER.info("Student added to the course successfully.");
+				return true;
+			} else {
+				LOGGER.error("Course or student not found.");
+				return false;
+			}
+		} catch (Exception e) {
+			LOGGER.error("Error adding student to the course.", e);
+			return false;
+		}
 	}
 
+	@Transactional
 	public boolean deleteStudentFromCourse(Student student, long courseId) {
-
-		Course course = new Course();
-
-		boolean isCourseExist = courseRepository.findById(courseId).isPresent();
-		boolean isStudentExist = studentRepository.findById(student.getKey()).isPresent();
-		boolean isStudentOnCourse = course.getStudents().contains(student);
-
-		if (isStudentExist && isCourseExist && isStudentOnCourse) {
+		try {
 			Optional<Course> courseOptional = courseRepository.findById(courseId);
-			if (courseOptional.isPresent()) {
-				Course course1 = courseOptional.get();
-				course1.deleteStudent(student);
-				student.deleteCourse(course1);
-				studentRepository.save(student);
-			} else {
-				System.out.println("Course not found");
-			}
-		} else {
-			System.out.println("Some problems");
-		}
+			Optional<Student> studentOptional = studentRepository.findById(student.getKey());
 
-		return true;
+			if (courseOptional.isPresent() && studentOptional.isPresent()) {
+				Course course = courseOptional.get();
+				Student updatedStudent = studentOptional.get();
+
+				// Remove the student from the course and save the changes
+				course.deleteStudent(updatedStudent);
+				courseRepository.save(course);
+
+				LOGGER.info("Student removed from the course successfully.");
+				return true;
+			} else {
+				LOGGER.error("Course or student not found.");
+				return false;
+			}
+		} catch (Exception e) {
+			LOGGER.error("Error removing student from the course.", e);
+			return false;
+		}
 	}
 
-	public boolean delete(Student student) {
+	@Transactional
+	public int delete(Student student) {
 
 		LOGGER.debug("Student deleting - " + student.toString());
-		boolean deleted = studentRepository.deleteStudent(student);
-		LOGGER.info("Student was successfully deleted with id - " + student.getKey());
+		int deleted = 0;
+
+		try {
+			deleted = studentRepository.deleteStudent(student);
+			LOGGER.info("Student was successfully deleted with id - " + student.getKey());
+		} catch (Exception e) {
+			LOGGER.error("Error while deleting student", e);
+		}
 
 		return deleted;
 	}
@@ -136,7 +145,7 @@ public class StudentService {
 		return studentsList;
 	}
 
-	public Optional<Student> findMaxId() {
+	public Optional<Student> findStudentWithMaxKey() {
 
 		LOGGER.debug("The latest student id findind...");
 		Optional<Student> latestId = studentRepository.findFirstByOrderByKeyDesc();

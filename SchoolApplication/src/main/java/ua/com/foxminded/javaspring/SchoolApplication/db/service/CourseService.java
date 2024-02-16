@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.CourseRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.GroupRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Course;
@@ -56,20 +57,36 @@ public class CourseService {
 		}
 	}
 
+	@Transactional
 	public boolean addCourseToGroup(Course course, long groupId) {
-
-		Group group = new Group();
-
-		boolean isCourseNotInGroup = !group.getCourses().contains(course);
 		boolean isGroupExist = groupRepository.findById(groupId).isPresent();
 		boolean isCourseExist = courseRepository.findById(course.getKey()).isPresent();
 
-		if (isGroupExist && isCourseExist && isCourseNotInGroup) {
+		if (isGroupExist && isCourseExist) {
 			Optional<Group> groupOptional = groupRepository.findById(groupId);
 			if (groupOptional.isPresent()) {
 				Group group1 = groupOptional.get();
-				group1.addCourse(course);
 				course.addGroup(group1);
+				courseRepository.save(course);
+			} else {
+				System.out.println("Group not found");
+			}
+		} else {
+			System.out.println("Some problems");
+		}
+
+		return true;
+	}
+
+	@Transactional
+	public boolean deleteCourseFromGroup(Course course, long groupId) {
+		boolean isGroupExist = groupRepository.findById(groupId).isPresent();
+		boolean isCourseExist = courseRepository.findById(course.getKey()).isPresent();
+
+		if (isGroupExist && isCourseExist) {
+			Optional<Group> groupOptional = groupRepository.findById(groupId);
+			if (groupOptional.isPresent()) {
+				course.deleteGroup();
 				courseRepository.save(course);
 			} else {
 				System.out.println("Group not found");
@@ -88,31 +105,6 @@ public class CourseService {
 		LOGGER.info("Course successfully deleted with id - " + course.getKey());
 
 		return deleted;
-	}
-
-	public boolean deleteCourseFromGroup(Course course, long groupId) {
-
-		Group group = new Group();
-
-		boolean isCourseInGroup = group.getCourses().contains(course);
-		boolean isGroupExist = groupRepository.findById(groupId).isPresent();
-		boolean isCourseExist = courseRepository.findById(course.getKey()).isPresent();
-
-		if (isGroupExist && isCourseExist && isCourseInGroup) {
-			Optional<Group> groupOptional = groupRepository.findById(groupId);
-			if (groupOptional.isPresent()) {
-				Group group1 = groupOptional.get();
-				group1.deleteCourse(course);
-				course.deleteGroup(group1);
-				courseRepository.save(course);
-			} else {
-				System.out.println("Group not found");
-			}
-		} else {
-			System.out.println("Some problems");
-		}
-
-		return true;
 	}
 
 	public boolean update(Course course) {

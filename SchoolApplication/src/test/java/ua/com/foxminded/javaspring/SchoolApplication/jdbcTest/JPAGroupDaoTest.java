@@ -101,7 +101,7 @@ class JPAGroupDaoTest {
 		List<Group> newGroupsList = List.of(groupNewOne, groupNewTwo);
 		boolean isCreated = postgreSqlGroupDao.createAll(newGroupsList);
 
-		assertEquals(newGroupsList.get(0).getClass().get.getTitle(), groupNewOne.getTitle());
+		assertEquals(newGroupsList.get(0).getTitle(), groupNewOne.getTitle());
 		assertEquals(newGroupsList.get(1).getTitle(), groupNewTwo.getTitle());
 
 		verify(postgreSqlGroupDao).createAll(newGroupsList);

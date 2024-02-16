@@ -43,20 +43,20 @@ public class CreateStudentCommand implements Command {
 
 		Student newStudent = null;
 
-		Optional<Student> student = studentService.findMaxId();
-
-		long currentLargestId = 1L;
+		Optional<Student> student = studentService.findStudentWithMaxKey();
+		boolean create = false;
 
 		if (student.isPresent()) {
 
-			newStudent = new Student(((student.get().getKey()) + 1L), groupId, name, surname, login, password);
+			long newId = student.get().getKey() + 1L;
+			newStudent = new Student(newId, groupId, name, surname, login, password);
+
+			create = studentService.create(newStudent);
 
 		} else {
 			System.out.println("Student do not present");
 		}
 
-		boolean create = studentService.create(newStudent);
-		newStudent.setKey((student.get().getKey() + 1L));
 		if (create == true) {
 			System.out.println(newStudent.getName() + ", Id: " + newStudent.getKey() + "-  was сreated");
 

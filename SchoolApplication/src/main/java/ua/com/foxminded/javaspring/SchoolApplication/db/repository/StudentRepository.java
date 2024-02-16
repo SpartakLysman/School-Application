@@ -17,7 +17,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 	@Modifying
 	@Query("DELETE FROM Student s WHERE s = :student")
-	boolean deleteStudent(@Param("student") Student student);
+	int deleteStudent(@Param("student") Student student);
 
 	Optional<Student> findFirstByOrderByKeyDesc();
 

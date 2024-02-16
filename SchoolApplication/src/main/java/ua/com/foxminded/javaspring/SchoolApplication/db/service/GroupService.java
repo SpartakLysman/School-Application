@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import ua.com.foxminded.javaspring.SchoolApplication.db.repository.GroupRepository;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
 import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
@@ -88,6 +89,11 @@ public class GroupService {
 		LOGGER.info("Group was successfully found by id - " + key);
 
 		return group;
+	}
+
+	@Transactional
+	public Optional<Group> findByIdWithCourses(long key) {
+		return groupRepository.findByIdWithCourses(key);
 	}
 
 	public List<Group> findAll() {
