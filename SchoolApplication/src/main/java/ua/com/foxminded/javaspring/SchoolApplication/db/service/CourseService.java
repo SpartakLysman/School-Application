@@ -86,7 +86,7 @@ public class CourseService {
 		if (isGroupExist && isCourseExist) {
 			Optional<Group> groupOptional = groupRepository.findById(groupId);
 			if (groupOptional.isPresent()) {
-				course.deleteGroup();
+				course.deleteGroup(groupOptional.get());
 				courseRepository.save(course);
 			} else {
 				System.out.println("Group not found");

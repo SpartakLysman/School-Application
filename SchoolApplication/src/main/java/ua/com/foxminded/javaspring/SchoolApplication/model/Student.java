@@ -21,7 +21,7 @@ public class Student extends User implements Serializable {
 	@Column(name = "group_id")
 	private Long group_id;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JoinTable(name = "students_courses", schema = "application", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
 	private List<Course> courses = new ArrayList<>();
 
@@ -96,6 +96,7 @@ public class Student extends User implements Serializable {
 	}
 
 	public String toString() {
+
 		return "Group id: " + group_id;
 	}
 }

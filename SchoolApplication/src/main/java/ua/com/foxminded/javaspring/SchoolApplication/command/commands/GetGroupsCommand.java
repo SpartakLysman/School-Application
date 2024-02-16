@@ -34,7 +34,7 @@ public class GetGroupsCommand implements Command {
 
 		for (Group group : groups) {
 
-			group = groupService.findByIdWithCourses(group.getKey()).orElse(null);
+//			group = groupService.findByIdWithCourses(group.getKey()).orElse(null);
 
 			if (group != null && group.getCourses() != null) {
 				long studentCount = group.getCourses().stream().flatMap(course -> course.getStudents().stream())

@@ -11,7 +11,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @jakarta.persistence.Entity
@@ -29,24 +29,10 @@ public class Course extends Entity<Long> implements Serializable {
 	@JoinTable(name = "students_courses", schema = "application", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
 	private List<Student> students = new ArrayList<>();
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "group_id")
-	private Group group;
+	@OneToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+	private List<Group> groups = new ArrayList<>();
 
 	private static final long serialVersionUID = -7353139263354063173L;
-
-	public Course(Long key, String title, String description, Group group) {
-		super(key);
-		this.title = title;
-		this.description = description;
-		this.group = group;
-	}
-
-	public Course(String title, String description, Group group) {
-		this.title = title;
-		this.description = description;
-		this.group = group;
-	}
 
 	public Course(Long key, String title, String description) {
 		super(key);
@@ -54,8 +40,12 @@ public class Course extends Entity<Long> implements Serializable {
 		this.description = description;
 	}
 
-	public Course() {
+	public Course(String title, String description) {
+		this.title = title;
+		this.description = description;
+	}
 
+	public Course() {
 	}
 
 	public void addStudent(Student student) {
@@ -67,15 +57,11 @@ public class Course extends Entity<Long> implements Serializable {
 	}
 
 	public void addGroup(Group group) {
-		this.group = group;
-		group.getCourses().add(this);
+		this.groups.add(group);
 	}
 
-	public void deleteGroup() {
-		if (this.group != null) {
-			this.group.getCourses().remove(this);
-			this.group = null;
-		}
+	public void deleteGroup(Group group1) {
+		this.groups.remove(group1);
 	}
 
 	public List<Student> getStudents() {
@@ -98,12 +84,8 @@ public class Course extends Entity<Long> implements Serializable {
 		description = newDescription;
 	}
 
-	public Group getGroup() {
-		return group;
-	}
-
-	public void setGroup(Group group) {
-		this.group = group;
+	public List<Group> getGroups() {
+		return groups;
 	}
 
 	@Override
