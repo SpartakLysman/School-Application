@@ -20,5 +20,4 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 	Optional<Group> findByIdWithCourses(@Param("key") Long key);
 
 	List<Group> findByTitle(String title);
-
 }

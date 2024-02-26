@@ -66,7 +66,6 @@ class JPAGroupDaoTest {
 
 	@Test
 	void testCreateGroup() {
-
 		PostgreSqlGroupDao postgreSqlGroupDao = mock(PostgreSqlGroupDao.class);
 
 		groupTest.setKey(6L);
@@ -85,7 +84,6 @@ class JPAGroupDaoTest {
 
 	@Test
 	void testCreateAllGroups() {
-
 		PostgreSqlGroupDao postgreSqlGroupDao = mock(PostgreSqlGroupDao.class);
 
 		List<Group> groupslist = new ArrayList<>();
@@ -109,7 +107,6 @@ class JPAGroupDaoTest {
 
 	@Test
 	void testDeleteGroup() {
-
 		PostgreSqlGroupDao postgreSqlGroupDao = mock(PostgreSqlGroupDao.class);
 
 		groupTest.setTitle("First");
@@ -123,7 +120,6 @@ class JPAGroupDaoTest {
 
 	@Test
 	void testUpdateGroup() {
-
 		PostgreSqlGroupDao postgreSqlGroupDao = mock(PostgreSqlGroupDao.class);
 
 		groupTest.setKey(1L);
@@ -138,7 +134,6 @@ class JPAGroupDaoTest {
 
 	@Test
 	void testFindByTitle() {
-
 		Group group1 = new Group();
 		group1.setTitle("First");
 
@@ -163,7 +158,6 @@ class JPAGroupDaoTest {
 
 	@Test
 	void testFindById() {
-
 		Group expected = new Group();
 		expected.setKey(1L);
 		Mockito.when(entityManager.find(Mockito.eq(Group.class), Mockito.any())).thenReturn(expected);
@@ -173,7 +167,6 @@ class JPAGroupDaoTest {
 
 	@Test
 	void testFindAll() {
-
 		TypedQuery<Group> typedQuery = (TypedQuery<Group>) mock(TypedQuery.class);
 
 		when(entityManager.createQuery(Mockito.anyString(), Mockito.eq(Group.class))).thenReturn(typedQuery);
@@ -188,7 +181,6 @@ class JPAGroupDaoTest {
 
 	@Test
 	void testCheckIfExistByID() {
-
 		PostgreSqlGroupDao postgreSqlGroupDao = mock(PostgreSqlGroupDao.class);
 
 		when(postgreSqlGroupDao.ifExistFindById(3L)).thenReturn(true);

@@ -26,14 +26,11 @@ public class CourseService {
 
 	@Autowired
 	public CourseService(CourseRepository courseRepository, GroupRepository groupRepository) {
-
 		this.courseRepository = courseRepository;
 		this.groupRepository = groupRepository;
-
 	}
 
 	public boolean create(Course course) {
-
 		LOGGER.debug("Course creating - " + course.toString());
 		try {
 			courseRepository.save(course);
@@ -45,7 +42,6 @@ public class CourseService {
 	}
 
 	public boolean createAll(List<Course> coursesList) {
-
 		LOGGER.debug("All courses creating...");
 		try {
 			courseRepository.saveAll(coursesList);
@@ -74,7 +70,6 @@ public class CourseService {
 		} else {
 			System.out.println("Some problems");
 		}
-
 		return true;
 	}
 
@@ -94,12 +89,10 @@ public class CourseService {
 		} else {
 			System.out.println("Some problems");
 		}
-
 		return true;
 	}
 
 	public boolean delete(Course course) {
-
 		LOGGER.debug("Course deleting - " + course.toString());
 		boolean deleted = courseRepository.deleteCourse(course);
 		LOGGER.info("Course successfully deleted with id - " + course.getKey());
@@ -108,7 +101,6 @@ public class CourseService {
 	}
 
 	public boolean update(Course course) {
-
 		LOGGER.debug("Course updating - " + course.toString());
 		try {
 			courseRepository.save(course);
@@ -120,7 +112,6 @@ public class CourseService {
 	}
 
 	public List<Course> findByTitle(String title) {
-
 		LOGGER.debug("Courses finding by title");
 		List<Course> coursesList = courseRepository.findByTitle(title);
 		LOGGER.info("Courses were successfully found by title - " + title);
@@ -129,7 +120,6 @@ public class CourseService {
 	}
 
 	public Optional<Course> findById(long key) {
-
 		LOGGER.debug("Course finding - " + key);
 		Optional<Course> course = courseRepository.findById(key);
 		LOGGER.info("Course was successfully found by id - " + key);
@@ -138,7 +128,6 @@ public class CourseService {
 	}
 
 	public List<Course> findAll() {
-
 		LOGGER.debug("All courses finding...");
 		List<Course> coursesList = courseRepository.findAll();
 		LOGGER.info("All courses were successfully found");

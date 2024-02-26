@@ -28,31 +28,25 @@ public class Student extends User implements Serializable {
 	private static final long serialVersionUID = -7353839263354063175L;
 
 	public Student(long key, long newGroup_id, String name, String surname, String login, String password) {
-
 		super(key, name, surname, login, password);
 		this.group_id = newGroup_id;
 		this.courses = new ArrayList<>();
-
 	}
 
 	public Student(long newGroup_id, String name, String surname, String login, String password, List<Course> courses) {
-
 		super(name, surname, login, password);
 		this.group_id = newGroup_id;
 		this.courses = new ArrayList<>();
 	}
 
 	public Student(long newGroup_id, String name, String surname, String login, String passsword) {
-
 		super(name, surname, login, passsword);
 		this.group_id = newGroup_id;
 		this.courses = new ArrayList<>();
 	}
 
 	public Student(String name, String surname, String login, String password) {
-
 		super(name, surname, login, password);
-
 	}
 
 	public Student() {
@@ -60,21 +54,21 @@ public class Student extends User implements Serializable {
 	}
 
 	public void addCourse(Course course) {
-
 		if (courses.size() < 4) {
 			this.courses.add(course);
 			course.addStudent(this);
 		} else {
+
 			System.out.println("You already added max amount of courses");
 		}
 	}
 
 	public void deleteCourse(Course course) {
-
 		if (courses.contains(course)) {
 			this.courses.remove(course);
 			course.deleteStudent(this);
 		} else {
+
 			System.out.println("The course not faund");
 		}
 	}
@@ -96,7 +90,6 @@ public class Student extends User implements Serializable {
 	}
 
 	public String toString() {
-
 		return "Group id: " + group_id;
 	}
 }

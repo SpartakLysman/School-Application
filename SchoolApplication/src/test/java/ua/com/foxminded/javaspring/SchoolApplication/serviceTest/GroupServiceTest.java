@@ -56,7 +56,6 @@ class GroupServiceTest {
 
 	@Test
 	void createGroupTest() {
-	
 		when(postgreSqlGroupDao.create(any(Group.class))).thenReturn(true);
 
 		Group newGroup = new Group(5L,  "1005");
@@ -71,7 +70,6 @@ class GroupServiceTest {
 
 	@Test
 	void createAllGroupsTest() {
-
 		List<Group> groupslist = new ArrayList<>();
 
 		Group groupNewOne = new Group(11L, "1011");
@@ -94,7 +92,6 @@ class GroupServiceTest {
 
 	@Test
 	void deleteGroupTest() {
-		
 		when(postgreSqlGroupDao.deleteGroup(groupTest)).thenReturn(true);
 		
 		Group gorupOne = new Group(1L, "1001");
@@ -109,7 +106,7 @@ class GroupServiceTest {
 		Group gorupTen = new Group(10L, "1010");
 
 		
-	List<Group> newGroupsList = List.of(gorupOne, gorupTwo, gorupTree, gorupFour, gorupSix, gorupSeven, gorupEight,
+	    List<Group> newGroupsList = List.of(gorupOne, gorupTwo, gorupTree, gorupFour, gorupSix, gorupSeven, gorupEight,
 			gorupNine, gorupTen);
 	
 		boolean isDeleted = groupService.delete(groupTest);
@@ -122,7 +119,6 @@ class GroupServiceTest {
 
 	@Test
 	void updateGroupTest() {
-
 		Group groupForCheck = groupTest;
 
 		when(postgreSqlGroupDao.update(groupTest)).thenReturn(true);
@@ -150,7 +146,6 @@ class GroupServiceTest {
 
 	@Test
 	void findGroupByIdTest() {
-
 		when(postgreSqlGroupDao.findById(groupTest.getKey())).thenReturn(Optional.of(groupsList.get(4)));
 
 		Optional<Group> newGroup = groupService.findById(groupTest.getKey());
@@ -163,7 +158,6 @@ class GroupServiceTest {
 
 	@Test
 	void findAllGroupsTest() {
-
 		List<Group> groupsEntity = new ArrayList<>();
 
 		for (int i = 1; i < groupsList.size(); i++) {

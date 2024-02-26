@@ -46,6 +46,7 @@ public class Course extends Entity<Long> implements Serializable {
 	}
 
 	public Course() {
+
 	}
 
 	public void addStudent(Student student) {

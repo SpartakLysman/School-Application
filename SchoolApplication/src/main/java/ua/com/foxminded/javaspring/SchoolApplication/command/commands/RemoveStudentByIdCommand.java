@@ -27,7 +27,6 @@ public class RemoveStudentByIdCommand implements Command {
 	@Override
 	@Transactional
 	public void execute() {
-
 		List<Student> students = studentService.findAll();
 
 		System.out.println("Enter id for student: ");
@@ -46,7 +45,6 @@ public class RemoveStudentByIdCommand implements Command {
 
 		} else {
 			System.out.println("Student is absent");
-
 		}
 		scanner.close();
 	}

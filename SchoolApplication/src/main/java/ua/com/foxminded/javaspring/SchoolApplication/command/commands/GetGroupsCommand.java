@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import ua.com.foxminded.javaspring.SchoolApplication.db.service.GroupService;
 import ua.com.foxminded.javaspring.SchoolApplication.db.service.StudentService;
 import ua.com.foxminded.javaspring.SchoolApplication.model.Group;
@@ -25,6 +26,7 @@ public class GetGroupsCommand implements Command {
 	}
 
 	@Override
+	@Transactional
 	public void execute() {
 		List<Group> groups = groupService.findAll();
 		System.out.println("Enter max number of students: ");
@@ -33,8 +35,6 @@ public class GetGroupsCommand implements Command {
 		List<Group> groupsWithLessOrEqualStudentCount = new ArrayList<>();
 
 		for (Group group : groups) {
-
-//			group = groupService.findByIdWithCourses(group.getKey()).orElse(null);
 
 			if (group != null && group.getCourses() != null) {
 				long studentCount = group.getCourses().stream().flatMap(course -> course.getStudents().stream())
@@ -45,7 +45,6 @@ public class GetGroupsCommand implements Command {
 				}
 			}
 		}
-
 		groupsWithLessOrEqualStudentCount.forEach(System.out::println);
 	}
 

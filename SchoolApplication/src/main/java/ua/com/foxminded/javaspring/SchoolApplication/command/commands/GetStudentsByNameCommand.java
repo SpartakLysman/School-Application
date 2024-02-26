@@ -22,14 +22,12 @@ public class GetStudentsByNameCommand implements Command {
 
 	@Override
 	public void execute() {
-
 		System.out.println("Enter name: ");
 
 		String name = scanner.next();
 		List<Student> studentsWithName = studentService.findByName(name);
 
 		studentsWithName.forEach((a) -> System.out.println(a.getName() + ", " + a.getKey()));
-
 	}
 
 	@Override

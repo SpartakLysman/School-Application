@@ -23,7 +23,6 @@ public class PostgreSqlStudentDao {
 
 	@Autowired
 	public PostgreSqlStudentDao(StudentRepository studentRepository) {
-
 		this.studentRepository = studentRepository;
 	}
 
@@ -32,7 +31,7 @@ public class PostgreSqlStudentDao {
 			log.config("Looking for student with the login: " + login + " and password: " + password);
 
 			return studentRepository.findByLoginAndPassword(login, password)
-					.orElseThrow(() -> new NoResultException("No student found for the given login and password"));
+					.orElseThrow(() -> new DaoException("No student found for the given login and password"));
 		} catch (NoResultException e) {
 			System.out.println("Some problems with your data :(");
 			return null;
@@ -82,9 +81,7 @@ public class PostgreSqlStudentDao {
 	}
 
 	public Optional<Student> findMaxId() {
-
 		return studentRepository.findFirstByOrderByKeyDesc();
-
 	}
 
 	public Optional<Student> findById(Long key) {

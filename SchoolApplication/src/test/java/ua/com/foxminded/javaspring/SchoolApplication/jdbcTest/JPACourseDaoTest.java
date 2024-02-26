@@ -63,13 +63,11 @@ class JPACourseDaoTest {
 
 	@BeforeEach
 	void setUp() {
-
 		postgreSqlCourseDao = new PostgreSqlCourseDao(courseRepository);
 	}
 
 	@Test
 	void testCreateCourse() {
-
 		PostgreSqlCourseDao postgreSqlCourseDao = mock(PostgreSqlCourseDao.class);
 
 		Course newCourse = new Course();
@@ -90,7 +88,6 @@ class JPACourseDaoTest {
 
 	@Test
 	void testCreateAllCourses() {
-
 		PostgreSqlCourseDao postgreSqlCourseDao = mock(PostgreSqlCourseDao.class);
 
 		List<Course> courseslist = new ArrayList<>();
@@ -113,7 +110,6 @@ class JPACourseDaoTest {
 
 	@Test
 	void testDeleteCourse() {
-
 		PostgreSqlCourseDao postgreSqlCourseDao = mock(PostgreSqlCourseDao.class);
 
 		courseTest.setTitle("Sixth");
@@ -128,7 +124,6 @@ class JPACourseDaoTest {
 
 	@Test
 	void testUpdateCourse() {
-
 		PostgreSqlCourseDao postgreSqlCourseDao = mock(PostgreSqlCourseDao.class);
 
 		courseTest.setKey(1L);
@@ -146,7 +141,6 @@ class JPACourseDaoTest {
 
 	@Test
 	void testFindByTitle() {
-
 		Course course1 = new Course();
 		course1.setTitle("Math");
 		course1.setDescription("Mathematics");
@@ -183,7 +177,6 @@ class JPACourseDaoTest {
 
 	@Test
 	void testFindAll() {
-
 		TypedQuery<Course> typedQuery = (TypedQuery<Course>) mock(TypedQuery.class);
 
 		when(entityManager.createQuery(Mockito.anyString(), Mockito.eq(Course.class))).thenReturn(typedQuery);
@@ -198,7 +191,6 @@ class JPACourseDaoTest {
 
 	@Test
 	void testCheckIfExistByID() {
-
 		long courseIdToCheck = 3L;
 		Course existingCourse = new Course();
 		existingCourse.setKey(courseIdToCheck);

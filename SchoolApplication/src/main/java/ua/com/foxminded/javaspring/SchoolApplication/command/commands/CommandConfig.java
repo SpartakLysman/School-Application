@@ -14,10 +14,6 @@ public class CommandConfig {
 	@Autowired
 	private List<Command> commands;
 
-//	public CommandConfig(List<Command> commands) {
-//		this.commands = commands;
-//	}
-
 	@Bean
 	public Map<String, Command> commandMap() {
 		return commands.stream().collect(Collectors.toMap(command -> command.getCommandName(), command -> command));

@@ -57,21 +57,19 @@ class JPAStudentDaoTest {
 			student.setPassword(student.getPassword());
 			studentsList.add(student);
 		}
+
 		studentFirst = studentsList.get(0);
 		studentTest = new Student();
 		studentTest.setKey(6L);
-
 	}
 
 	@BeforeEach
 	void setUp() {
 		postgreSqlStudentDao = new PostgreSqlStudentDao(studentRepository);
-
 	}
 
 	@Test
 	void testCreateStudent() {
-
 		PostgreSqlStudentDao postgreSqlStudentDao = mock(PostgreSqlStudentDao.class);
 
 		studentTest.setKey(6L);
@@ -93,7 +91,6 @@ class JPAStudentDaoTest {
 
 	@Test
 	void testCreateAllCourses() {
-
 		PostgreSqlStudentDao postgreSqlStudentDao = mock(PostgreSqlStudentDao.class);
 
 		List<Student> studentslist = new ArrayList<>();
@@ -117,7 +114,6 @@ class JPAStudentDaoTest {
 
 	@Test
 	void testDeleteStudent() {
-
 		PostgreSqlStudentDao postgreSqlStudentDao = mock(PostgreSqlStudentDao.class);
 
 		studentTest.setName("Anton");
@@ -134,7 +130,6 @@ class JPAStudentDaoTest {
 
 	@Test
 	void testUpdateStudent() {
-
 		PostgreSqlStudentDao postgreSqlStudentDao = mock(PostgreSqlStudentDao.class);
 
 		studentTest.setKey(1L);
@@ -154,7 +149,6 @@ class JPAStudentDaoTest {
 
 	@Test
 	void testFindByName() {
-
 		Student student1 = new Student();
 		student1.setName("Ivan");
 
@@ -189,7 +183,6 @@ class JPAStudentDaoTest {
 
 	@Test
 	void testFindAll() {
-
 		TypedQuery<Student> typedQuery = (TypedQuery<Student>) mock(TypedQuery.class);
 
 		when(entityManager.createQuery(Mockito.anyString(), Mockito.eq(Student.class))).thenReturn(typedQuery);
@@ -204,7 +197,6 @@ class JPAStudentDaoTest {
 
 	@Test
 	void testCheckIfExistByID() {
-
 		PostgreSqlStudentDao postgreSqlStudentDao = mock(PostgreSqlStudentDao.class);
 
 		when(postgreSqlStudentDao.ifExistFindById(3L)).thenReturn(true);

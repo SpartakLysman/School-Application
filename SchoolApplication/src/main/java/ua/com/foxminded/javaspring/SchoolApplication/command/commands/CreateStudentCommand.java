@@ -25,7 +25,6 @@ public class CreateStudentCommand implements Command {
 
 	@Override
 	public void execute() {
-
 		System.out.println("Enter group id: ");
 		long groupId = scanner.nextLong();
 

@@ -16,5 +16,4 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 	boolean deleteCourse(@Param("course") Course course);
 
 	List<Course> findByTitle(String title);
-
 }

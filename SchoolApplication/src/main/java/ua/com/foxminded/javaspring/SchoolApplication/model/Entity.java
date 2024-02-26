@@ -31,7 +31,6 @@ public class Entity<K extends Comparable<K>> {
 	}
 
 	public boolean equals(Object object) {
-
 		if (this == object) {
 			return true;
 		}
@@ -47,7 +46,6 @@ public class Entity<K extends Comparable<K>> {
 	}
 
 	public int hashCode() {
-
 		int number = 5;
 		number = number * 5 + key.hashCode();
 		return number;

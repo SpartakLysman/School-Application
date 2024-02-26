@@ -3,6 +3,8 @@ package ua.com.foxminded.javaspring.SchoolApplication.serviceTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -61,25 +63,23 @@ class StudentServiceTest {
 		studentTest = studentsList.get(4);
 		size[0] = 10;
 	}
-//
-//	@Test
-//	void createStudentTest() {
-//		
-//		when(postgreSqlStudentDao.create(any(Student.class))).thenReturn(true);
-//
-//		Student newStudent = new Student(5L, 5, "Nekolay", "Ivatko", "StudentFive", "fH2*fh");
-//		boolean isCreated = studentService.create(newStudent);
-//		
-//		assertTrue(isCreated);
-//		assertEquals(newStudent.getName(), newStudent.getName());
-//		assertEquals(newStudent.getSurname(), newStudent.getSurname());
-//
-//		verify(postgreSqlStudentDao).create(any(Student.class));
-//	}
+
+	@Test
+	void createStudentTest() {
+		when(postgreSqlStudentDao.create(any(Student.class))).thenReturn(true);
+
+		Student newStudent = new Student(5L, 5, "Nekolay", "Ivatko", "StudentFive", "fH2*fh");
+		boolean isCreated = studentService.create(newStudent);
+		
+		assertTrue(isCreated);
+		assertEquals(newStudent.getName(), newStudent.getName());
+		assertEquals(newStudent.getSurname(), newStudent.getSurname());
+
+		verify(postgreSqlStudentDao).create(any(Student.class));
+	}
 
 	@Test
 	void createAllStudentsTest() {
-
 		List<Student> usersStudent = new ArrayList<>();
 
 		Student studentNewOne = new Student(21L, 6, "Vasiliy", "Manumanian", "StudentTwentyFirst", "Gj4fss&");
@@ -115,7 +115,6 @@ class StudentServiceTest {
 
 	@Test
 	void updateStudentTest() {
-
 		Student studentForCheck = studentTest;
 
 		when(postgreSqlStudentDao.update(studentTest)).thenReturn(true);
@@ -130,21 +129,19 @@ class StudentServiceTest {
 
 	@Test
 	void findStudentsByNameTest() {
-		
 		 when(postgreSqlStudentDao.findByName(studentTest.getName())).thenReturn(List.of(studentTest));
 
-	        List<Student> studentsListByTitle = studentService.findByName(studentTest.getName());
+	     List<Student> studentsListByTitle = studentService.findByName(studentTest.getName());
 
-	        assertNotNull(studentsListByTitle);
-	        assertEquals(studentsListByTitle.size(), 1);
-	        assertEquals(studentsListByTitle.get(0).getName(), studentTest.getName());
+	     assertNotNull(studentsListByTitle);
+	     assertEquals(studentsListByTitle.size(), 1);
+	     assertEquals(studentsListByTitle.get(0).getName(), studentTest.getName());
 
-	        verify(postgreSqlStudentDao).findByName(studentTest.getName());
+	     verify(postgreSqlStudentDao).findByName(studentTest.getName());
 	}
 
 	@Test
 	void findStudentByIdTest() {
-		
 		when(postgreSqlStudentDao.findById(5L)).thenReturn(Optional.of(studentTest));
 
 		Optional<Student> newStudent = studentService.findById(5L);
@@ -157,7 +154,6 @@ class StudentServiceTest {
 
 	@Test
 	void findAllStudentsTest() {
-
 		List<Student> studentsEntity = new ArrayList<>();
 
 		for (int i = 1; i < studentsList.size(); i++) {

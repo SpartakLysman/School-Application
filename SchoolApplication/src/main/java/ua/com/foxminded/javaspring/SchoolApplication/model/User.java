@@ -19,7 +19,6 @@ public abstract class User extends Entity<Long> {
 	private String password;
 
 	public User(Long key, String name, String surname, String login, String password) {
-
 		super(key);
 		this.name = name;
 		this.surname = surname;
@@ -28,7 +27,6 @@ public abstract class User extends Entity<Long> {
 	}
 
 	public User(String name, String surname, String login, String password) {
-
 		this.name = name;
 		this.surname = surname;
 		this.login = login;
@@ -74,5 +72,4 @@ public abstract class User extends Entity<Long> {
 	public String toString() {
 		return "Name: " + name + ",  Surname: " + surname + ",  Login: " + login + ",  Password: " + password;
 	}
-
 }

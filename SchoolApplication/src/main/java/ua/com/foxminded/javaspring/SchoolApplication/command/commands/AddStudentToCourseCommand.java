@@ -29,7 +29,6 @@ public class AddStudentToCourseCommand implements Command {
 
 	@Override
 	public void execute() {
-
 		List<Student> students = studentService.findAll();
 		System.out.println("Enter the id for your student: ");
 		students.forEach((a) -> System.out.println(a.getKey()));

@@ -26,10 +26,8 @@ public class Group extends Entity<Long> implements Serializable {
 	private static final long serialVersionUID = -7353719263354063173L;
 
 	public Group(long key, String title) {
-
 		super(key);
 		this.title = title;
-
 	}
 
 	public Group() {
@@ -37,7 +35,6 @@ public class Group extends Entity<Long> implements Serializable {
 	}
 
 	public void addCourse(Course course) {
-
 		if (!courses.contains(course)) {
 			this.courses.add(course);
 		} else {
@@ -47,7 +44,6 @@ public class Group extends Entity<Long> implements Serializable {
 	}
 
 	public void deleteCourse(Course course) {
-
 		if (courses.contains(course)) {
 			courses.remove(course);
 		} else {

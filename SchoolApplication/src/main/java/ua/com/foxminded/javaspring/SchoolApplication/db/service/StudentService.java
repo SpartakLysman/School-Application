@@ -26,14 +26,11 @@ public class StudentService {
 
 	@Autowired
 	public StudentService(StudentRepository studentRepository, CourseRepository courseRepository) {
-
 		this.studentRepository = studentRepository;
 		this.courseRepository = courseRepository;
-
 	}
 
 	public boolean create(Student student) {
-
 		LOGGER.debug("Student creating...");
 		try {
 			studentRepository.save(student);
@@ -45,7 +42,6 @@ public class StudentService {
 	}
 
 	public boolean createAll(List<Student> studentsList) {
-
 		LOGGER.debug("Student creating...");
 		try {
 			studentRepository.saveAll(studentsList);
@@ -110,7 +106,6 @@ public class StudentService {
 
 	@Transactional
 	public int delete(Student student) {
-
 		LOGGER.debug("Student deleting - " + student.toString());
 		int deleted = 0;
 
@@ -120,12 +115,10 @@ public class StudentService {
 		} catch (Exception e) {
 			LOGGER.error("Error while deleting student", e);
 		}
-
 		return deleted;
 	}
 
 	public boolean update(Student student) {
-
 		LOGGER.debug("Student updating - " + student.toString());
 		try {
 			studentRepository.save(student);
@@ -137,7 +130,6 @@ public class StudentService {
 	}
 
 	public List<Student> findByName(String name) {
-
 		LOGGER.debug("Student findind by name");
 		List<Student> studentsList = studentRepository.findByName(name);
 		LOGGER.info("Students were successfully found by name - " + name);
@@ -146,7 +138,6 @@ public class StudentService {
 	}
 
 	public Optional<Student> findStudentWithMaxKey() {
-
 		LOGGER.debug("The latest student id findind...");
 		Optional<Student> latestId = studentRepository.findFirstByOrderByKeyDesc();
 		LOGGER.info("The latest student id was found");
@@ -164,7 +155,6 @@ public class StudentService {
 	}
 
 	public List<Student> findAll() {
-
 		LOGGER.debug("All student findind...");
 		List<Student> studentsList = studentRepository.findAll();
 		LOGGER.info("All students were successfully found");

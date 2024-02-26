@@ -55,7 +55,6 @@ class CourseServiceTest {
 
 	@Test
 	void createCourseTest() {
-		
 		when(postgreSqlCourseDao.create(any(Course.class))).thenReturn(true);
 
 		Course newCourse = new Course(5L, "Programing", "Java");
@@ -70,7 +69,6 @@ class CourseServiceTest {
 
 	@Test
 	void createAllCoursesTest() {
-
 		List<Course> courseslist = new ArrayList<>();
 
 		Course courseNewOne = new Course(11L, "English", "Present Simple");
@@ -96,7 +94,6 @@ class CourseServiceTest {
 
 	@Test
 	void deleteCourseTest() {
-		
 		when(postgreSqlCourseDao.deleteCourse(courseTest)).thenReturn(true);
 		
 		Course courseOne = new Course(1L, "Biology", "Animals");
@@ -111,11 +108,11 @@ class CourseServiceTest {
 		Course courseTen = new Course(10L, "English", "Present Continues");
 
 		
-	List<Course> newCoursesList = List.of(courseOne, courseTwo, courseTree, courseFour, courseSix, courseSeven,
+	    List<Course> newCoursesList = List.of(courseOne, courseTwo, courseTree, courseFour, courseSix, courseSeven,
 				courseEight, courseNine, courseTen);
-	boolean isDeleted = courseService.delete(courseTest);
+	    boolean isDeleted = courseService.delete(courseTest);
 	
-	assertEquals(isDeleted, true);
+	    assertEquals(isDeleted, true);
 		assertEquals(newCoursesList.size(), (coursesList.size() - 1));
 		
 		verify(postgreSqlCourseDao).deleteCourse(courseTest);
@@ -150,7 +147,6 @@ class CourseServiceTest {
 
 	@Test
 	void findCoursesByIdTest() {	
-
 		when(postgreSqlCourseDao.findById(courseTest.getKey())).thenReturn(Optional.of(coursesList.get(4)));
 
 		Optional<Course> newCourse = courseService.findById(courseTest.getKey());
@@ -163,7 +159,6 @@ class CourseServiceTest {
 
 	@Test
 	void findAllCoursesTest() {
-
 		List<Course> coursesEntity = new ArrayList<>();
 
 		for (int i = 1; i < coursesList.size(); i++) {
