@@ -70,7 +70,7 @@ class StudentServiceTest {
 
 		Student newStudent = new Student(5L, 5, "Nekolay", "Ivatko", "StudentFive", "fH2*fh");
 		boolean isCreated = studentService.create(newStudent);
-		
+
 		assertTrue(isCreated);
 		assertEquals(newStudent.getName(), newStudent.getName());
 		assertEquals(newStudent.getSurname(), newStudent.getSurname());
@@ -129,15 +129,15 @@ class StudentServiceTest {
 
 	@Test
 	void findStudentsByNameTest() {
-		 when(postgreSqlStudentDao.findByName(studentTest.getName())).thenReturn(List.of(studentTest));
+		when(postgreSqlStudentDao.findByName(studentTest.getName())).thenReturn(List.of(studentTest));
 
-	     List<Student> studentsListByTitle = studentService.findByName(studentTest.getName());
+		List<Student> studentsListByTitle = studentService.findByName(studentTest.getName());
 
-	     assertNotNull(studentsListByTitle);
-	     assertEquals(studentsListByTitle.size(), 1);
-	     assertEquals(studentsListByTitle.get(0).getName(), studentTest.getName());
+		assertNotNull(studentsListByTitle);
+		assertEquals(studentsListByTitle.size(), 1);
+		assertEquals(studentsListByTitle.get(0).getName(), studentTest.getName());
 
-	     verify(postgreSqlStudentDao).findByName(studentTest.getName());
+		verify(postgreSqlStudentDao).findByName(studentTest.getName());
 	}
 
 	@Test
@@ -145,8 +145,8 @@ class StudentServiceTest {
 		when(postgreSqlStudentDao.findById(5L)).thenReturn(Optional.of(studentTest));
 
 		Optional<Student> newStudent = studentService.findById(5L);
-		
-		assertEquals(newStudent.get().getKey(), studentTest.getKey());
+
+		assertEquals(newStudent.get().getId(), studentTest.getId());
 		assertEquals(newStudent.get().getName(), studentTest.getName());
 
 		verify(postgreSqlStudentDao).findById(5L);
@@ -168,7 +168,7 @@ class StudentServiceTest {
 
 		assertNotNull(studentsEntity);
 		assertEquals(studentsEntity, newStudentsEntity);
-		assertEquals(studentsEntity.get(0).getKey(), newStudentsEntity.get(0).getKey());
+		assertEquals(studentsEntity.get(0).getId(), newStudentsEntity.get(0).getId());
 
 		verify(postgreSqlStudentDao).findAll();
 	}

@@ -30,7 +30,7 @@ public class RemoveStudentByIdCommand implements Command {
 		List<Student> students = studentService.findAll();
 
 		System.out.println("Enter id for student: ");
-		students.forEach((a) -> System.out.println(a.getKey()));
+		students.forEach((a) -> System.out.println(a.getId()));
 
 		int id = scanner.nextInt();
 
@@ -41,7 +41,7 @@ public class RemoveStudentByIdCommand implements Command {
 		if (student.isPresent()) {
 
 			studentService.delete(student.get());
-			System.out.println(student.get().getName() + ", Id: " + student.get().getKey() + "-  was removed");
+			System.out.println(student.get().getName() + ", Id: " + student.get().getId() + "-  was removed");
 
 		} else {
 			System.out.println("Student is absent");

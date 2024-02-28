@@ -27,7 +27,7 @@ public class GetStudentsByNameCommand implements Command {
 		String name = scanner.next();
 		List<Student> studentsWithName = studentService.findByName(name);
 
-		studentsWithName.forEach((a) -> System.out.println(a.getName() + ", " + a.getKey()));
+		studentsWithName.forEach((a) -> System.out.println(a.getName() + ", " + a.getId()));
 	}
 
 	@Override

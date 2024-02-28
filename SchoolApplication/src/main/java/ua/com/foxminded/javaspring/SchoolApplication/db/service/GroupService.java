@@ -16,7 +16,7 @@ import ua.com.foxminded.javaspring.SchoolApplication.util.LoggingController;
 public class GroupService {
 
 	private final GroupRepository groupRepository;
-public final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
+	public final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
 
 	@Autowired
 	public GroupService(GroupRepository groupRepository) {
@@ -27,7 +27,7 @@ public final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.cl
 		LOGGER.debug("Group creating - " + group.toString());
 		try {
 			groupRepository.save(group);
-			LOGGER.info("Group was successfully created with id - " + group.getKey());
+			LOGGER.info("Group was successfully created with id - " + group.getId());
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -49,7 +49,7 @@ public final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.cl
 	public boolean delete(Group group) {
 		LOGGER.debug("Group deleting - " + group.toString());
 		boolean deleted = groupRepository.deleteGroup(group);
-		LOGGER.info("Group was successfully removed with id - " + group.getKey());
+		LOGGER.info("Group was successfully removed with id - " + group.getId());
 
 		return deleted;
 	}
@@ -58,7 +58,7 @@ public final static Logger LOGGER = LoggerFactory.getLogger(LoggingController.cl
 		LOGGER.debug("Group updating - " + group.toString());
 		try {
 			groupRepository.save(group);
-			LOGGER.info("Group was successfully updated with id - " + group.getKey());
+			LOGGER.info("Group was successfully updated with id - " + group.getId());
 			return true;
 		} catch (Exception e) {
 			return false;

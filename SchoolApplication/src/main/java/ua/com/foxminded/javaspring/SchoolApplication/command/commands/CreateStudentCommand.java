@@ -47,7 +47,7 @@ public class CreateStudentCommand implements Command {
 
 		if (student.isPresent()) {
 
-			long newId = student.get().getKey() + 1L;
+			long newId = student.get().getId() + 1L;
 			newStudent = new Student(newId, groupId, name, surname, login, password);
 
 			create = studentService.create(newStudent);
@@ -57,7 +57,7 @@ public class CreateStudentCommand implements Command {
 		}
 
 		if (create == true) {
-			System.out.println(newStudent.getName() + ", Id: " + newStudent.getKey() + "-  was сreated");
+			System.out.println(newStudent.getName() + ", Id: " + newStudent.getId() + "-  was сreated");
 
 		} else {
 

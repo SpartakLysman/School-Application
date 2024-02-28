@@ -11,23 +11,23 @@ import jakarta.persistence.MappedSuperclass;
 public class Entity<K extends Comparable<K>> {
 
 	@Id
-	@Column(name = "key")
-	private K key;
+	@Column(name = "id")
+	private K id;
 
-	public Entity(K key) {
-		this.key = key;
+	public Entity(K id) {
+		this.id = id;
 	}
 
 	public Entity() {
 
 	}
 
-	public K getKey() {
-		return key;
+	public K getId() {
+		return id;
 	}
 
-	public void setKey(K newKey) {
-		this.key = newKey;
+	public void setId(K newId) {
+		this.id = newId;
 	}
 
 	public boolean equals(Object object) {
@@ -42,16 +42,16 @@ public class Entity<K extends Comparable<K>> {
 		}
 
 		Entity<?> entity = (Entity<?>) object;
-		return entity.key.equals(key);
+		return entity.id.equals(id);
 	}
 
 	public int hashCode() {
 		int number = 5;
-		number = number * 5 + key.hashCode();
+		number = number * 5 + id.hashCode();
 		return number;
 	}
 
 	public String toString() {
-		return "Id: " + this.key;
+		return "Id: " + this.id;
 	}
 }

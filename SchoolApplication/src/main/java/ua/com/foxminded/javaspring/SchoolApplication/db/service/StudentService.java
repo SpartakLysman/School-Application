@@ -57,7 +57,7 @@ public class StudentService {
 	public boolean addStudentToCourse(Student student, long courseId) {
 		try {
 			Optional<Course> courseOptional = courseRepository.findById(courseId);
-			Optional<Student> studentOptional = studentRepository.findById(student.getKey());
+			Optional<Student> studentOptional = studentRepository.findById(student.getId());
 
 			if (courseOptional.isPresent() && studentOptional.isPresent()) {
 				Course course = courseOptional.get();
@@ -82,7 +82,7 @@ public class StudentService {
 	public boolean deleteStudentFromCourse(Student student, long courseId) {
 		try {
 			Optional<Course> courseOptional = courseRepository.findById(courseId);
-			Optional<Student> studentOptional = studentRepository.findById(student.getKey());
+			Optional<Student> studentOptional = studentRepository.findById(student.getId());
 
 			if (courseOptional.isPresent() && studentOptional.isPresent()) {
 				Course course = courseOptional.get();
@@ -111,7 +111,7 @@ public class StudentService {
 
 		try {
 			deleted = studentRepository.deleteStudent(student);
-			LOGGER.info("Student was successfully deleted with id - " + student.getKey());
+			LOGGER.info("Student was successfully deleted with id - " + student.getId());
 		} catch (Exception e) {
 			LOGGER.error("Error while deleting student", e);
 		}
@@ -122,7 +122,7 @@ public class StudentService {
 		LOGGER.debug("Student updating - " + student.toString());
 		try {
 			studentRepository.save(student);
-			LOGGER.info("Student was successfully updated with id - " + student.getKey());
+			LOGGER.info("Student was successfully updated with id - " + student.getId());
 			return true;
 		} catch (Exception e) {
 			return false;

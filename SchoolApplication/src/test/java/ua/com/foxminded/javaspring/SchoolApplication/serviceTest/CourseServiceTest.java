@@ -59,7 +59,7 @@ class CourseServiceTest {
 
 		Course newCourse = new Course(5L, "Programing", "Java");
 		boolean isCreated = courseService.create(newCourse);
-			
+
 		assertTrue(isCreated);
 		assertEquals(newCourse.getTitle(), coursesList.get(4).getTitle());
 		assertEquals(newCourse.getDescription(), coursesList.get(4).getDescription());
@@ -95,26 +95,25 @@ class CourseServiceTest {
 	@Test
 	void deleteCourseTest() {
 		when(postgreSqlCourseDao.deleteCourse(courseTest)).thenReturn(true);
-		
+
 		Course courseOne = new Course(1L, "Biology", "Animals");
 		Course courseTwo = new Course(2L, "Math", "Derivatives");
 		Course courseTree = new Course(3L, "Geography", "Japan");
 		Course courseFour = new Course(4L, "Geography", "Ukraine");
-		
+
 		Course courseSix = new Course(6L, "Computer Science", "CPU");
 		Course courseSeven = new Course(7L, "Programing", "C++");
 		Course courseEight = new Course(8L, "Programing", "Phyton");
 		Course courseNine = new Course(9L, "Geography", "Black Sea");
 		Course courseTen = new Course(10L, "English", "Present Continues");
 
-		
-	    List<Course> newCoursesList = List.of(courseOne, courseTwo, courseTree, courseFour, courseSix, courseSeven,
+		List<Course> newCoursesList = List.of(courseOne, courseTwo, courseTree, courseFour, courseSix, courseSeven,
 				courseEight, courseNine, courseTen);
-	    boolean isDeleted = courseService.delete(courseTest);
-	
-	    assertEquals(isDeleted, true);
+		boolean isDeleted = courseService.delete(courseTest);
+
+		assertEquals(isDeleted, true);
 		assertEquals(newCoursesList.size(), (coursesList.size() - 1));
-		
+
 		verify(postgreSqlCourseDao).deleteCourse(courseTest);
 	}
 
@@ -134,27 +133,27 @@ class CourseServiceTest {
 
 	@Test
 	void findCoursesByTitleTest() {
-		 when(postgreSqlCourseDao.findByTitle(courseTest.getTitle())).thenReturn(List.of(courseTest));
+		when(postgreSqlCourseDao.findByTitle(courseTest.getTitle())).thenReturn(List.of(courseTest));
 
-	        List<Course> coursesListByTitle = courseService.findByTitle(courseTest.getTitle());
+		List<Course> coursesListByTitle = courseService.findByTitle(courseTest.getTitle());
 
-	        assertNotNull(coursesListByTitle);
-	        assertEquals(coursesListByTitle.size(), 1);
-	        assertEquals(coursesListByTitle.get(0).getTitle(), courseTest.getTitle());
+		assertNotNull(coursesListByTitle);
+		assertEquals(coursesListByTitle.size(), 1);
+		assertEquals(coursesListByTitle.get(0).getTitle(), courseTest.getTitle());
 
-	        verify(postgreSqlCourseDao).findByTitle(courseTest.getTitle());
+		verify(postgreSqlCourseDao).findByTitle(courseTest.getTitle());
 	}
 
 	@Test
-	void findCoursesByIdTest() {	
-		when(postgreSqlCourseDao.findById(courseTest.getKey())).thenReturn(Optional.of(coursesList.get(4)));
+	void findCoursesByIdTest() {
+		when(postgreSqlCourseDao.findById(courseTest.getId())).thenReturn(Optional.of(coursesList.get(4)));
 
-		Optional<Course> newCourse = courseService.findById(courseTest.getKey());
+		Optional<Course> newCourse = courseService.findById(courseTest.getId());
 
 		assertEquals(newCourse.get().getTitle(), courseTest.getTitle());
 		assertEquals(newCourse.get().getDescription(), courseTest.getDescription());
 
-		verify(postgreSqlCourseDao).findById(courseTest.getKey());
+		verify(postgreSqlCourseDao).findById(courseTest.getId());
 	}
 
 	@Test
@@ -171,7 +170,7 @@ class CourseServiceTest {
 
 		assertNotNull(coursesEntity);
 		assertEquals(coursesEntity, newCoursesEntity);
-		assertEquals(coursesEntity.get(0).getKey(), newCoursesEntity.get(0).getKey());
+		assertEquals(coursesEntity.get(0).getId(), newCoursesEntity.get(0).getId());
 
 		verify(postgreSqlCourseDao).findAll();
 	}

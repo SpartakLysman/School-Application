@@ -34,7 +34,7 @@ public class CourseService {
 		LOGGER.debug("Course creating - " + course.toString());
 		try {
 			courseRepository.save(course);
-			LOGGER.info("Course was created successfully with id - " + course.getKey());
+			LOGGER.info("Course was created successfully with id - " + course.getId());
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -56,7 +56,7 @@ public class CourseService {
 	@Transactional
 	public boolean addCourseToGroup(Course course, long groupId) {
 		boolean isGroupExist = groupRepository.findById(groupId).isPresent();
-		boolean isCourseExist = courseRepository.findById(course.getKey()).isPresent();
+		boolean isCourseExist = courseRepository.findById(course.getId()).isPresent();
 
 		if (isGroupExist && isCourseExist) {
 			Optional<Group> groupOptional = groupRepository.findById(groupId);
@@ -76,7 +76,7 @@ public class CourseService {
 	@Transactional
 	public boolean deleteCourseFromGroup(Course course, long groupId) {
 		boolean isGroupExist = groupRepository.findById(groupId).isPresent();
-		boolean isCourseExist = courseRepository.findById(course.getKey()).isPresent();
+		boolean isCourseExist = courseRepository.findById(course.getId()).isPresent();
 
 		if (isGroupExist && isCourseExist) {
 			Optional<Group> groupOptional = groupRepository.findById(groupId);
@@ -95,7 +95,7 @@ public class CourseService {
 	public boolean delete(Course course) {
 		LOGGER.debug("Course deleting - " + course.toString());
 		boolean deleted = courseRepository.deleteCourse(course);
-		LOGGER.info("Course successfully deleted with id - " + course.getKey());
+		LOGGER.info("Course successfully deleted with id - " + course.getId());
 
 		return deleted;
 	}
@@ -104,7 +104,7 @@ public class CourseService {
 		LOGGER.debug("Course updating - " + course.toString());
 		try {
 			courseRepository.save(course);
-			LOGGER.info("Course was successfully updated with id - " + course.getKey());
+			LOGGER.info("Course was successfully updated with id - " + course.getId());
 			return true;
 		} catch (Exception e) {
 			return false;

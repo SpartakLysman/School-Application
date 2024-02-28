@@ -31,14 +31,14 @@ public class AddStudentToCourseCommand implements Command {
 	public void execute() {
 		List<Student> students = studentService.findAll();
 		System.out.println("Enter the id for your student: ");
-		students.forEach((a) -> System.out.println(a.getKey()));
+		students.forEach((a) -> System.out.println(a.getId()));
 
 		long studentId = scanner.nextLong();
 		Optional<Student> student = studentService.findById(studentId);
 
 		List<Course> courses = courseService.findAll();
 		System.out.println("Enter the id for your course: ");
-		courses.forEach((a) -> System.out.println(a.getKey()));
+		courses.forEach((a) -> System.out.println(a.getId()));
 
 		long courseId = scanner.nextLong();
 		studentService.addStudentToCourse(student.get(), courseId);

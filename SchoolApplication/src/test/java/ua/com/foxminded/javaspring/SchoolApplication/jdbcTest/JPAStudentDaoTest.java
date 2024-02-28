@@ -49,7 +49,7 @@ class JPAStudentDaoTest {
 		studentsList = new ArrayList<>();
 		for (int i = 1; i < 5; i++) {
 			Student student = new Student();
-			student.setKey((long) i);
+			student.setId((long) i);
 			student.setGroupId(student.getGroupId());
 			student.setName(student.getName());
 			student.setSurname(student.getSurname());
@@ -60,7 +60,7 @@ class JPAStudentDaoTest {
 
 		studentFirst = studentsList.get(0);
 		studentTest = new Student();
-		studentTest.setKey(6L);
+		studentTest.setId(6L);
 	}
 
 	@BeforeEach
@@ -72,7 +72,7 @@ class JPAStudentDaoTest {
 	void testCreateStudent() {
 		PostgreSqlStudentDao postgreSqlStudentDao = mock(PostgreSqlStudentDao.class);
 
-		studentTest.setKey(6L);
+		studentTest.setId(6L);
 		studentTest.setName("Anton");
 		studentTest.setSurname("Antonovich");
 		studentTest.setLogin("6666");
@@ -132,7 +132,7 @@ class JPAStudentDaoTest {
 	void testUpdateStudent() {
 		PostgreSqlStudentDao postgreSqlStudentDao = mock(PostgreSqlStudentDao.class);
 
-		studentTest.setKey(1L);
+		studentTest.setId(1L);
 		studentTest.setName("Alex");
 		studentTest.setSurname("Alexandrovich");
 		studentTest.setLogin("1111");
@@ -175,7 +175,7 @@ class JPAStudentDaoTest {
 	void testFindById() {
 
 		Student expected = new Student();
-		expected.setKey(1L);
+		expected.setId(1L);
 		Mockito.when(entityManager.find(Mockito.eq(Student.class), Mockito.any())).thenReturn(expected);
 		Optional<Student> actual = postgreSqlStudentDao.findById(1L);
 		assertEquals(expected, actual);

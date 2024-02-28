@@ -50,7 +50,7 @@ class JPACourseDaoTest {
 		coursesList = new ArrayList<>();
 		for (int i = 1; i < 5; i++) {
 			Course course = new Course();
-			course.setKey((long) i);
+			course.setId((long) i);
 			course.setTitle(course.getTitle());
 			course.setDescription(course.getDescription());
 
@@ -58,7 +58,7 @@ class JPACourseDaoTest {
 		}
 		courseFirst = coursesList.get(0);
 		courseTest = new Course();
-		courseTest.setKey(6L);
+		courseTest.setId(6L);
 	}
 
 	@BeforeEach
@@ -72,7 +72,7 @@ class JPACourseDaoTest {
 
 		Course newCourse = new Course();
 
-		newCourse.setKey(5L);
+		newCourse.setId(5L);
 		newCourse.setTitle("Programing");
 		newCourse.setDescription("Java");
 
@@ -126,7 +126,7 @@ class JPACourseDaoTest {
 	void testUpdateCourse() {
 		PostgreSqlCourseDao postgreSqlCourseDao = mock(PostgreSqlCourseDao.class);
 
-		courseTest.setKey(1L);
+		courseTest.setId(1L);
 		courseTest.setTitle("First");
 		courseTest.setDescription("History");
 
@@ -169,7 +169,7 @@ class JPACourseDaoTest {
 	void testFindById() {
 
 		Course expected = new Course();
-		expected.setKey(1L);
+		expected.setId(1L);
 		Mockito.when(entityManager.find(Mockito.eq(Course.class), Mockito.any())).thenReturn(expected);
 		Optional<Course> actual = postgreSqlCourseDao.findById(1L);
 		assertEquals(expected, actual);
@@ -193,7 +193,7 @@ class JPACourseDaoTest {
 	void testCheckIfExistByID() {
 		long courseIdToCheck = 3L;
 		Course existingCourse = new Course();
-		existingCourse.setKey(courseIdToCheck);
+		existingCourse.setId(courseIdToCheck);
 
 		when(entityManager.find(Course.class, courseIdToCheck)).thenReturn(existingCourse);
 

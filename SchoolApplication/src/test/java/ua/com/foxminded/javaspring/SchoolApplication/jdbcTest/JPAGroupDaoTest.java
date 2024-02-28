@@ -49,14 +49,14 @@ class JPAGroupDaoTest {
 		groupsList = new ArrayList<>();
 		for (int i = 1; i < 5; i++) {
 			Group group = new Group();
-			group.setKey((long) i);
+			group.setId((long) i);
 			group.setTitle(group.getTitle());
 
 			groupsList.add(group);
 		}
 		groupFirst = groupsList.get(0);
 		groupTest = new Group();
-		groupTest.setKey(5L);
+		groupTest.setId(5L);
 	}
 
 	@BeforeEach
@@ -68,7 +68,7 @@ class JPAGroupDaoTest {
 	void testCreateGroup() {
 		PostgreSqlGroupDao postgreSqlGroupDao = mock(PostgreSqlGroupDao.class);
 
-		groupTest.setKey(6L);
+		groupTest.setId(6L);
 		groupTest.setTitle("Sixth");
 
 		when(postgreSqlGroupDao.create(groupTest)).thenReturn(true);
@@ -122,7 +122,7 @@ class JPAGroupDaoTest {
 	void testUpdateGroup() {
 		PostgreSqlGroupDao postgreSqlGroupDao = mock(PostgreSqlGroupDao.class);
 
-		groupTest.setKey(1L);
+		groupTest.setId(1L);
 		groupTest.setTitle("First");
 
 		when(postgreSqlGroupDao.update(groupTest)).thenReturn(true);
@@ -159,7 +159,7 @@ class JPAGroupDaoTest {
 	@Test
 	void testFindById() {
 		Group expected = new Group();
-		expected.setKey(1L);
+		expected.setId(1L);
 		Mockito.when(entityManager.find(Mockito.eq(Group.class), Mockito.any())).thenReturn(expected);
 		Optional<Group> actual = postgreSqlGroupDao.findById(1L);
 		assertEquals(expected, actual);
