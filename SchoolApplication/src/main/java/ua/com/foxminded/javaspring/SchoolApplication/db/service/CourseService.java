@@ -30,15 +30,13 @@ public class CourseService {
 		this.groupRepository = groupRepository;
 	}
 
-	public boolean create(Course course) {
+	public Course create(Course course) {
 		LOGGER.debug("Course creating - " + course.toString());
-		try {
-			courseRepository.save(course);
-			LOGGER.info("Course was created successfully with id - " + course.getId());
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
+
+		Course newCourse = courseRepository.save(course);
+		LOGGER.info("Course was created successfully with id - " + course.getId());
+
+		return newCourse;
 	}
 
 	public boolean createAll(List<Course> coursesList) {
@@ -100,15 +98,13 @@ public class CourseService {
 		return deleted;
 	}
 
-	public boolean update(Course course) {
+	public Course update(Course course) {
 		LOGGER.debug("Course updating - " + course.toString());
-		try {
-			courseRepository.save(course);
-			LOGGER.info("Course was successfully updated with id - " + course.getId());
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
+
+		Course newCourse = courseRepository.save(course);
+		LOGGER.info("Course was successfully updated with id - " + course.getId());
+
+		return newCourse;
 	}
 
 	public List<Course> findByTitle(String title) {

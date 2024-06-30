@@ -32,7 +32,17 @@ public class Course extends Entity<Long> implements Serializable {
 	@OneToMany(mappedBy = "courses", fetch = FetchType.LAZY)
 	private List<Group> groups = new ArrayList<>();
 
+	@OneToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+	private Teacher teacher;
+
 	private static final long serialVersionUID = -7353139263354063173L;
+
+	public Course(Long key, String title, String description, Teacher teacher) {
+		super(key);
+		this.title = title;
+		this.description = description;
+		this.teacher = teacher;
+	}
 
 	public Course(Long key, String title, String description) {
 		super(key);
@@ -87,6 +97,10 @@ public class Course extends Entity<Long> implements Serializable {
 
 	public List<Group> getGroups() {
 		return groups;
+	}
+
+	public Teacher getTeacher() {
+		return teacher;
 	}
 
 	@Override

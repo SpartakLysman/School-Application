@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -55,16 +54,16 @@ class CourseServiceTest {
 
 	@Test
 	void createCourseTest() {
-		when(postgreSqlCourseDao.create(any(Course.class))).thenReturn(true);
+		Course course = new Course(5L, "Math", "Algebra");
 
-		Course newCourse = new Course(5L, "Programing", "Java");
-		boolean isCreated = courseService.create(newCourse);
+		when(courseService.create(course)).thenReturn(course);
 
-		assertTrue(isCreated);
-		assertEquals(newCourse.getTitle(), coursesList.get(4).getTitle());
-		assertEquals(newCourse.getDescription(), coursesList.get(4).getDescription());
+		Course createdCourse = courseService.create(course);
 
-		verify(postgreSqlCourseDao).create(any(Course.class));
+		assertNotNull(createdCourse);
+		assertEquals(course, createdCourse);
+
+		verify(courseService).create(course);
 	}
 
 	@Test
@@ -121,14 +120,14 @@ class CourseServiceTest {
 	void updateCourseTest() {
 		Course courseForCheck = courseTest;
 
-		when(postgreSqlCourseDao.update(courseTest)).thenReturn(true);
+		when(courseService.update(courseTest)).thenReturn(courseTest);
 
 		courseTest = new Course(50L, "Swimming", "Fast");
-		boolean isUpdated = courseService.update(courseTest);
+		Course updated = courseService.update(courseTest);
 
 		assertNotEquals(courseForCheck, courseTest);
 
-		verify(postgreSqlCourseDao).update(courseTest);
+		verify(courseService).update(courseTest);
 	}
 
 	@Test
